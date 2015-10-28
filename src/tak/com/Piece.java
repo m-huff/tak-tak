@@ -1,5 +1,6 @@
 package tak.com;
 
+import java.util.ArrayList;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -15,6 +16,7 @@ public class Piece {
 	 * Possible front colors - orange, blue, green
 	 * Possible back colors - black, white
 	 */
+        private static ArrayList<Piece> stack = new ArrayList<Piece>();
 	
 	private int value;
 	private Color backColor;
@@ -57,7 +59,18 @@ public class Piece {
 	public int getValue() {
 		return value;
 	}
-	
+	public void addStacktoStack(ArrayList<Piece> _stack) {
+               for(int index = 0; index < _stack.size(); index++)
+               {
+                   stack.add(_stack.get(index));
+               }
+	}
+        public Piece getTopPiece(){
+               return(stack.get(stack.size()-1));
+        }
+        public ArrayList<Piece> getWholeStack(){
+            return(stack);
+        }
 	public void setBackgroundColor(Color _backColor) {
 		backColor = _backColor;
 	}
