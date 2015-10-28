@@ -9,10 +9,12 @@ import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.Random;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import tak.com.Piece;
 
 @SuppressWarnings("serial")
 public class MenuWindow extends JFrame implements Runnable {
@@ -42,6 +44,8 @@ public class MenuWindow extends JFrame implements Runnable {
 	
 	//Does not reset itself when the user escapes to the main menu after playing
 	public static int textPosition = WINDOW_WIDTH;
+        
+        public static ArrayList<Piece> pieces = new ArrayList<Piece>();
 
 	public MenuWindow() {
 
@@ -49,7 +53,7 @@ public class MenuWindow extends JFrame implements Runnable {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 		setIconImage(icon.getImage());
-		setTitle("Tak•Tak");
+		setTitle("Tak-Tak");
 		setLocation(CENTER_X, CENTER_Y);
 
 		addKeyListener(new KeyAdapter() {
@@ -96,13 +100,28 @@ public class MenuWindow extends JFrame implements Runnable {
 		}
 		
 		//Gotta make the text stand out more, a background maybe
+                
+                int index = 0;
+                for (int x = 0; x < WINDOW_WIDTH; x += 80) {
+                    for (int y = 0; y < WINDOW_HEIGHT; y += 80) {
+                        
+                        if (index <= pieces.size() - 2 && pieces.get(index) != null) {
+                            pieces.get(index).draw(g, x, y);
+                            if (index < pieces.size() - 2) {
+                                index++;
+                            } else {
+                                index = 0;
+                            }
+                        }
+                    }
+                }
         
-        g.setColor(new Color(100, 100, 100, 100));
-        g.fillRect(0, 0, WINDOW_WIDTH, 140);
+                g.setColor(new Color(0, 0, 0, 150));
+                g.fillRect(0, 0, WINDOW_WIDTH, 140);
         
-		g.setColor(new Color(10, 10, 10));
+		g.setColor(new Color(240, 240, 240));
 		g.setFont(new Font("Arial", Font.BOLD, 42));
-		g.drawString("TAK•TAK", textPosition, 80);
+		g.drawString("TAK-TAK", textPosition, 80);
 
 		g.setFont(new Font("Arial", Font.BOLD, 14));
 		g.drawString("Press X to play", textPosition, 105);
@@ -127,6 +146,11 @@ public class MenuWindow extends JFrame implements Runnable {
 	}
 
 	public void reset() {
+            for (int i = 0; i < 20; i++) {
+                Color[] colors = {Color.orange, Color.blue, Color.green};
+                Piece p = new Piece((rand.nextInt(4) * 10) + 10, colors[rand.nextInt(colors.length)], rand.nextBoolean() ? Color.black : Color.white);
+                pieces.add(p);
+            }
 	}
 
 	public void animate() {
