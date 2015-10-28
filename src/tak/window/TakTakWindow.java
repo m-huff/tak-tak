@@ -10,6 +10,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.util.Random;
 
 import javax.swing.ImageIcon;
@@ -20,10 +21,10 @@ import tak.com.Piece;
 @SuppressWarnings("serial")
 public class TakTakWindow extends JFrame implements Runnable {
 
-	static final int WINDOW_WIDTH = 600;
-	static final int WINDOW_HEIGHT = 700;
-	final int XBORDER = 20;
-	final int YBORDER = 20;
+	static final int WINDOW_WIDTH = 590;
+	static final int WINDOW_HEIGHT = 740;
+	final int XBORDER = 15;
+	final int YBORDER = 40;
 	final int YTITLE = 25;
 	boolean animateFirstTime = true;
 	int xsize = -1;
@@ -53,7 +54,7 @@ public class TakTakWindow extends JFrame implements Runnable {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 		setResizable(false);
-		setTitle("Tak-Tak");
+		setTitle("Tak•Tak");
 		setLocation(CENTER_X, CENTER_Y);
 		setIconImage(icon.getImage());
 
@@ -66,20 +67,22 @@ public class TakTakWindow extends JFrame implements Runnable {
 				repaint();
 			}
 		});
-		//
-		//    addMouseMotionListener(new MouseMotionAdapter() {
-		//      public void mouseDragged(MouseEvent e) {
-		//        repaint();
-		//      }
-		//    });
-		//
-		//    addMouseMotionListener(new MouseMotionAdapter() {
-		//      public void mouseMoved(MouseEvent e) {
-		//
-		//        repaint();
-		//      }
-		//    });
-		//
+		addMouseMotionListener(new MouseMotionAdapter() {
+			public void mouseMoved(MouseEvent e) {
+				//TODO - draw a small info tooltip where the mouse is
+				//       tooltip should visually indicate how many pieces
+				//       are stacked, and the total value of the stack.
+				//
+				//       if the player has already selected (clicked on)
+				//       the piece they're using for their turn, hovering
+				//       over other pieces won't do anything. The space where
+				//       the piece currently is will be shaded darker, and the
+				//       space where the mouse is currently at will be either
+				//       red or green, dictating whether or not the player can
+				//       move that piece to that particular space.
+		    }
+		});
+		
 		addKeyListener(new KeyAdapter() {
 
 			public void keyPressed(KeyEvent e) {
@@ -125,9 +128,9 @@ public class TakTakWindow extends JFrame implements Runnable {
 		g.setColor(Color.white);
 		g.fillPolygon(x, y, 4);
 
-		//Light blue rectangles as the 'safe zones'
+		//Light green rectangles as the 'safe zones'
 
-		g.setColor(new Color(0, 200, 200, 50));
+		g.setColor(new Color(64, 128, 64, 150));
 		g.fillRect(getX(0), getY(0), getWidth2(), 2 * (getHeight2() / ROWS) + 2);
 		g.fillRect(getX(0), getY(0) + 5 * (getHeight2() / ROWS) + 5, getWidth2(), 2 * (getHeight2() / ROWS) + 2);
 
@@ -178,10 +181,7 @@ public class TakTakWindow extends JFrame implements Runnable {
 
 	public void reset() {
 		board = new Piece[ROWS][COLUMNS];
-
-		//For testing
-//		board[3][5] = new Piece(20, Color.orange, Color.white);
-//		board[5][3] = new Piece(20, Color.green, Color.black);
+		resetBoard();
 	}
 
 	public void animate() {
@@ -195,7 +195,29 @@ public class TakTakWindow extends JFrame implements Runnable {
 		}
 	}
 
-	////////////////////////////////////////////////////////////////////////////
+	public void resetBoard() {
+		
+		//This method doesn't work like it should, the board should
+		//randomly place down four pieces of each color, each with
+		//a different point value. This doesn't know which pieces
+		//it has already placed down, so it's completely random.
+
+		Color[] colors = {Color.orange, Color.green, Color.blue};
+
+		for (int x = 0; x < COLUMNS; x++) {
+			for (int y = 5; y < ROWS; y++) {
+				Color color = colors[rand.nextInt(colors.length)];
+				int value = (rand.nextInt(3) + 1) * 10;
+				board[y][x] = new Piece(value, color, Color.white);
+			}
+			for (int y = 0; y < 2; y++) {
+				Color color = colors[rand.nextInt(colors.length)];
+				int value = (rand.nextInt(3) + 1) * 10;
+				board[y][x] = new Piece(value, color, Color.black);
+			}
+		}
+	}
+	
 	public void start() {
 		if (relaxer == null) {
 			relaxer = new Thread(this);

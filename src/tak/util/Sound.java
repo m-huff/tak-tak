@@ -8,12 +8,12 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.SourceDataLine;
 
-public class AudioPlayer implements Runnable {
+public class Sound implements Runnable {
 	Thread myThread;
 	File soundFile;
 	public boolean donePlaying = false;
 
-	public AudioPlayer (String _name) {
+	public Sound (String _name) {
 		soundFile = new File(_name);
 		myThread = new Thread(this);
 		myThread.start();

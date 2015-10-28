@@ -37,7 +37,6 @@ public class MenuWindow extends JFrame implements Runnable {
 
 	public static Random rand = new Random();
 	public static ImageIcon icon = new ImageIcon(MenuWindow.class.getResource("/tak/assets/icon.png"));
-    //public static ImageIcon back = new ImageIcon(MenuWindow.class.getResource("/tak/assets/background.jpg"));
 
 	private final MenuWindow frame = this;
 	
@@ -50,7 +49,7 @@ public class MenuWindow extends JFrame implements Runnable {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 		setIconImage(icon.getImage());
-		setTitle("Tak-Tak");
+		setTitle("Tak•Tak");
 		setLocation(CENTER_X, CENTER_Y);
 
 		addKeyListener(new KeyAdapter() {
@@ -60,6 +59,9 @@ public class MenuWindow extends JFrame implements Runnable {
 				if (e.VK_X == e.getKeyCode()) {
 					new TakTakWindow();
 					frame.dispose();
+				}
+				if (e.VK_X == e.getKeyCode()) {
+					//TODO - add window with the rules in it
 				}
 
 				repaint();
@@ -92,18 +94,21 @@ public class MenuWindow extends JFrame implements Runnable {
 			gOld.drawImage(image, 0, 0, null);
 			return;
 		}
-                
-//        g.drawImage(back.getImage(), 0, 0, back.getIconWidth(), back.getIconHeight(), this);
+		
+		//Gotta make the text stand out more, a background maybe
         
         g.setColor(new Color(100, 100, 100, 100));
-        g.fillRect(0, 0, WINDOW_WIDTH, 120);
+        g.fillRect(0, 0, WINDOW_WIDTH, 140);
         
-		g.setColor(Color.BLACK);
+		g.setColor(new Color(10, 10, 10));
 		g.setFont(new Font("Arial", Font.BOLD, 42));
-		g.drawString("TAK-TAK", textPosition, 80);
+		g.drawString("TAK•TAK", textPosition, 80);
 
 		g.setFont(new Font("Arial", Font.BOLD, 14));
 		g.drawString("Press X to play", textPosition, 105);
+		
+		g.setFont(new Font("Arial", Font.BOLD, 14));
+		g.drawString("Press Z to learn the rules", textPosition, 125);
 
 		gOld.drawImage(image, 0, 0, null);
 	}
@@ -137,8 +142,8 @@ public class MenuWindow extends JFrame implements Runnable {
 		}
 		
 		if (textPosition >= 35) {
-			if (textPosition >= 400) textPosition -= 15;
-			else if (textPosition < 400 && textPosition >= 250) textPosition -= 12;
+			if (textPosition >= 400) textPosition -= 20;
+			else if (textPosition < 400 && textPosition >= 250) textPosition -= 16;
 			else if (textPosition < 250 && textPosition >= 100) textPosition -= 10;
 			else if (textPosition < 100) textPosition -= 6;
 		}
