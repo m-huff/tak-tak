@@ -1,13 +1,21 @@
-package taktak;
+package tak.window;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.ImageObserver;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.Toolkit;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.Random;
-import javax.swing.*;
+
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 
 @SuppressWarnings("serial")
-public class MainWindow extends JFrame implements Runnable {
+public class MenuWindow extends JFrame implements Runnable {
 
 	static final int XBORDER = 20;
 	static final int YBORDER = 20;
@@ -28,12 +36,15 @@ public class MainWindow extends JFrame implements Runnable {
 	private static final int CENTER_Y = (SCREEN_HEIGHT / 2) - (WINDOW_HEIGHT / 2);
 
 	public static Random rand = new Random();
-	public static ImageIcon icon = new ImageIcon(MainWindow.class.getResource("/taktak/assets/icon.png"));
-        public static ImageIcon back = new ImageIcon(MainWindow.class.getResource("/taktak/assets/background.jpg"));
+	public static ImageIcon icon = new ImageIcon(MenuWindow.class.getResource("/tak/assets/icon.png"));
+    //public static ImageIcon back = new ImageIcon(MenuWindow.class.getResource("/tak/assets/background.jpg"));
 
-	private final MainWindow frame = this;
+	private final MenuWindow frame = this;
+	
+	//Does not reset itself when the user escapes to the main menu after playing
+	public static int textPosition = WINDOW_WIDTH;
 
-	public MainWindow() {
+	public MenuWindow() {
 
 		setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -82,13 +93,17 @@ public class MainWindow extends JFrame implements Runnable {
 			return;
 		}
                 
-                g.drawImage(back.getImage(), 0, 0, back.getIconWidth(), back.getIconHeight(), this);
+//        g.drawImage(back.getImage(), 0, 0, back.getIconWidth(), back.getIconHeight(), this);
+        
+        g.setColor(new Color(100, 100, 100, 100));
+        g.fillRect(0, 0, WINDOW_WIDTH, 120);
+        
 		g.setColor(Color.BLACK);
 		g.setFont(new Font("Arial", Font.BOLD, 42));
-		g.drawString("Tak-Tak", 30, 80);
+		g.drawString("TAK-TAK", textPosition, 80);
 
 		g.setFont(new Font("Arial", Font.BOLD, 14));
-		g.drawString("Press X to play", 30, 105);
+		g.drawString("Press X to play", textPosition, 105);
 
 		gOld.drawImage(image, 0, 0, null);
 	}
@@ -119,6 +134,13 @@ public class MainWindow extends JFrame implements Runnable {
 			}
 
 			reset();
+		}
+		
+		if (textPosition >= 35) {
+			if (textPosition >= 400) textPosition -= 15;
+			else if (textPosition < 400 && textPosition >= 250) textPosition -= 12;
+			else if (textPosition < 250 && textPosition >= 100) textPosition -= 10;
+			else if (textPosition < 100) textPosition -= 6;
 		}
 	}
 
