@@ -100,5 +100,14 @@ public class Piece {
 		g.setFont(new Font("Arial Bold", Font.PLAIN, 18));
 		g.drawString(String.valueOf(value), x + 38, y + 53);
 	}
-
+        public void drawLilWinda(Graphics2D g,int mousex, int mousey){
+            
+            g.setColor(new Color(254, 254, 254, 100)); 
+            g.drawRect(mousex, mousey, 100, 150);
+            g.setColor(new Color(50,50,50));
+            int xcords[] = {mousex, mousex+100, mousex+100, mousex};
+            int ycords[] = {mousey,mousey,mousey+150,mousey+150};
+            g.drawPolyline(xcords,ycords, 4);
+            
+        }
 }
