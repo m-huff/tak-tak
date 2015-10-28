@@ -20,7 +20,6 @@ import javax.swing.JFrame;
 
 import tak.com.Piece;
 
-@SuppressWarnings("serial")
 public class TakTakWindow extends JFrame implements Runnable {
 
 	static final int WINDOW_WIDTH = 590;
@@ -112,16 +111,10 @@ public class TakTakWindow extends JFrame implements Runnable {
 
 	Thread relaxer;
 
-	////////////////////////////////////////////////////////////////////////////
 	public void init() {
 		requestFocus();
 	}
 
-	////////////////////////////////////////////////////////////////////////////
-	public void destroy() {
-	}
-
-	////////////////////////////////////////////////////////////////////////////
 	public void paint(Graphics gOld) {
 		if (image == null || xsize != getSize().width || ysize != getSize().height) {
 			xsize = getSize().width;
@@ -177,10 +170,8 @@ public class TakTakWindow extends JFrame implements Runnable {
 		}
                 
                 g.setFont(new Font("Arial Bold", Font.PLAIN, 14));
-                
-                
                 System.out.println(tipTime);
-                g.drawString(HINT_PREFIX + HINTS[rand.nextInt(HINTS.length)], 15, 725);
+                g.drawString(currentHint, 15, 725);
 
 		gOld.drawImage(image, 0, 0, null);
 	}
@@ -214,104 +205,107 @@ public class TakTakWindow extends JFrame implements Runnable {
 				ysize = getSize().height;
 			}
 			reset();
-		}          
+		}        
+                
+                if (tipTime < 150) {
+                    tipTime++;
+                } else {
+                    tipTime = 0;
+                    currentHint = HINT_PREFIX + HINTS[rand.nextInt(HINTS.length)];
+                }
 	}
 
 	public void resetBoard() {
             
             int value = 10;
-            
-		for (int x = 0; x < COLUMNS; x++) {
-			for (int y = 5; y < ROWS; y++) {
-				for (int blue = 0; blue < 4 ; blue++) {
-                                    int row = rand.nextInt(2) + 5;
-                                    int column = rand.nextInt(COLUMNS);
-                                    
-                                    while (board[row][column] != null) {
-                                        row = rand.nextInt(2) + 5;
-                                        column = rand.nextInt(COLUMNS);
-                                    }
-                                    
-                                    board[row][column] = new Piece(value, Color.blue, Color.white);
-                                    value += 10;
-                                }
-                                
-                                value = 10;
-                                
-                                for (int orange = 0; orange < 4 ; orange++) {
-                                    int row = rand.nextInt(2) + 5;
-                                    int column = rand.nextInt(COLUMNS);
-                                    
-                                    while (board[row][column] != null) {
-                                        row = rand.nextInt(2) + 5;
-                                        column = rand.nextInt(COLUMNS);
-                                    }
-                                    
-                                    board[row][column] = new Piece(value, Color.orange, Color.white);
-                                    value += 10;
-                                }
-                                
-                                value = 10;
-                                
-                                for (int green = 0; green < 4 ; green++) {
-                                    int row = rand.nextInt(2) + 5;
-                                    int column = rand.nextInt(COLUMNS);
-                                    
-                                    while (board[row][column] != null) {
-                                        row = rand.nextInt(2) + 5;
-                                        column = rand.nextInt(COLUMNS);
-                                    }
-                                    
-                                    board[row][column] = new Piece(value, Color.green, Color.white);
-                                    value += 10;
-                                }
-                                
-                                value = 10;
-                                
-                                for (int blue = 0; blue < 4 ; blue++) {
-                                    int row = rand.nextInt(2);
-                                    int column = rand.nextInt(COLUMNS);
-                                    
-                                    while (board[row][column] != null) {
-                                        row = rand.nextInt(2);
-                                        column = rand.nextInt(COLUMNS);
-                                    }
-                                    
-                                    board[row][column] = new Piece(value, Color.blue, Color.black);
-                                    value += 10;
-                                }
-                                
-                                value = 10;
-                                
-                                for (int orange = 0; orange < 4 ; orange++) {
-                                    int row = rand.nextInt(2);
-                                    int column = rand.nextInt(COLUMNS);
-                                    
-                                    while (board[row][column] != null) {
-                                        row = rand.nextInt(2);
-                                        column = rand.nextInt(COLUMNS);
-                                    }
-                                    
-                                    board[row][column] = new Piece(value, Color.orange, Color.black);
-                                    value += 10;
-                                }
-                                
-                                value = 10;
-                                
-                                for (int green = 0; green < 4 ; green++) {
-                                    int row = rand.nextInt(2);
-                                    int column = rand.nextInt(COLUMNS);
-                                    
-                                    while (board[row][column] != null) {
-                                        row = rand.nextInt(2);
-                                        column = rand.nextInt(COLUMNS);
-                                    }
-                                    
-                                    board[row][column] = new Piece(value, Color.green, Color.black);
-                                    value += 10;
-                                }
-			}
-		}
+
+            for (int blue = 0; blue < 4 ; blue++) {
+                int row = rand.nextInt(2) + 5;
+                int column = rand.nextInt(COLUMNS);
+
+                while (board[row][column] != null) {
+                    row = rand.nextInt(2) + 5;
+                    column = rand.nextInt(COLUMNS);
+                }
+
+                board[row][column] = new Piece(value, Color.blue, Color.white);
+                value += 10;
+            }
+
+            value = 10;
+
+            for (int orange = 0; orange < 4 ; orange++) {
+                int row = rand.nextInt(2) + 5;
+                int column = rand.nextInt(COLUMNS);
+
+                while (board[row][column] != null) {
+                    row = rand.nextInt(2) + 5;
+                    column = rand.nextInt(COLUMNS);
+                }
+
+                board[row][column] = new Piece(value, Color.orange, Color.white);
+                value += 10;
+            }
+
+            value = 10;
+
+            for (int green = 0; green < 4 ; green++) {
+                int row = rand.nextInt(2) + 5;
+                int column = rand.nextInt(COLUMNS);
+
+                while (board[row][column] != null) {
+                    row = rand.nextInt(2) + 5;
+                    column = rand.nextInt(COLUMNS);
+                }
+                
+                board[row][column] = new Piece(value, Color.green, Color.white);
+                value += 10;
+            }
+
+            value = 10;
+
+            for (int blue = 0; blue < 4 ; blue++) {
+                int row = rand.nextInt(2);
+                int column = rand.nextInt(COLUMNS);
+
+                while (board[row][column] != null) {
+                    row = rand.nextInt(2);
+                    column = rand.nextInt(COLUMNS);
+                }
+
+                board[row][column] = new Piece(value, Color.blue, Color.black);
+                value += 10;
+            }
+
+            value = 10;
+
+            for (int orange = 0; orange < 4 ; orange++) {
+                int row = rand.nextInt(2);
+                int column = rand.nextInt(COLUMNS);
+
+                while (board[row][column] != null) {
+                    row = rand.nextInt(2);
+                    column = rand.nextInt(COLUMNS);
+                }
+
+                board[row][column] = new Piece(value, Color.orange, Color.black);
+                value += 10;
+            }
+
+            value = 10;
+
+            for (int green = 0; green < 4; green++) {
+                int row = rand.nextInt(2);
+                int column = rand.nextInt(COLUMNS);
+
+                while (board[row][column] != null) {
+                    row = rand.nextInt(2);
+                    column = rand.nextInt(COLUMNS);
+                }
+
+                board[row][column] = new Piece(value, Color.green, Color.black);
+                value += 10;
+            }
 	}
 	
 	public void start() {
