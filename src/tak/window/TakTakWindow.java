@@ -48,17 +48,23 @@ public class TakTakWindow extends JFrame implements Runnable {
 	Piece[][] board;
 
 	private final TakTakWindow frame = this;
-        
-        public static int tipTime;
-        public static String HINT_PREFIX = "Tip: ";
-        public static String currentHint;
-        public static String[] HINTS = {"Stack your pieces to move across the board faster!",
-                                        "The king piece moves twice as fast, but won't stack anything on top of it!",
-                                        "The king piece can also move backwards!",
-                                        "Press the ESC key to quit the game and return to the main menu!",
-                                        "Hover over a piece to see the stack size and total value!",
-                                        "Press BACKSPACE after you've selected a piece to cancel the selection.",
-                                        "Once you've selected a piece, all valid spaces to move turn green."};
+	
+	public static int turn;
+	public static boolean p1Turn;
+	
+	public static int selectedRow;
+	public static int selectedColumn;
+
+	public static int tipTime;
+	public static String HINT_PREFIX = "Tip: ";
+	public static String currentHint;
+	public static String[] HINTS = {"Stack your pieces to move across the board faster!",
+			"The king piece moves twice as fast, but won't stack anything on top of it!",
+			"The king piece can also move backwards!",
+			"Press the ESC key to quit the game and return to the main menu!",
+			"Right-click a piece to see the stack size and total value!",
+			"Press BACKSPACE after you've selected a piece to cancel the selection.",
+			"Once you've selected a piece, all valid spaces to move turn green." };
 
 	public TakTakWindow() {
 
@@ -79,22 +85,46 @@ public class TakTakWindow extends JFrame implements Runnable {
 				repaint();
 			}
 		});
-		addMouseMotionListener(new MouseMotionAdapter() {
-			public void mouseMoved(MouseEvent e) {
-				//TODO - draw a small info tooltip where the mouse is
-				//       tooltip should visually indicate how many pieces
-				//       are stacked, and the total value of the stack.
-				//
-				//       if the player has already selected (clicked on)
-				//       the piece they're using for their turn, hovering
-				//       over other pieces won't do anything. The space where
-				//       the piece currently is will be shaded darker, and the
-				//       space where the mouse is currently at will be either
-				//       red or green, dictating whether or not the player can
-				//       move that piece to that particular space.
-		    }
-		});
 		
+		addMouseListener(new MouseAdapter() {
+			@SuppressWarnings("static-access")
+			public void mousePressed(MouseEvent e) {
+				if (e.BUTTON1 == e.getButton()) {
+
+					int xpos = e.getX() - getX(0);
+					int ypos = e.getY() - getY(0);
+					if (xpos < 0 || ypos < 0 || xpos > getWidth2() || ypos > getHeight2())
+						return;
+					
+					//Calculate the width and height of each board square.
+					int ydelta = getHeight2()/ROWS;
+					int xdelta = getWidth2() / COLUMNS;
+					int currentColumn = xpos / xdelta;
+					int currentRow = ypos / ydelta;
+
+					if (currentRow > ROWS - 1) {
+						currentRow = ROWS - 1;
+					}
+
+					if (currentColumn > COLUMNS - 1) {
+						currentColumn = COLUMNS - 1;
+					}
+					
+					if (selectedRow == 999 && board[currentRow][currentColumn] != null) {
+						selectedRow = currentRow;
+						selectedColumn = currentColumn;
+					}
+					else if (board[currentRow][currentColumn] == null){
+						//Tell the player the spot is empty
+					}
+					else if (selectedRow != 999) {
+						//Try to move the piece to the selected location
+					}
+				}
+				repaint();
+			}
+		});
+
 		addKeyListener(new KeyAdapter() {
 
 			public void keyPressed(KeyEvent e) {
@@ -128,8 +158,8 @@ public class TakTakWindow extends JFrame implements Runnable {
 
 		g.setColor(Color.black);
 		g.fillRect(0, 0, xsize, ysize);
-                
-                if (animateFirstTime) {
+
+		if (animateFirstTime) {
 			gOld.drawImage(image, 0, 0, null);
 			return;
 		}
@@ -138,6 +168,11 @@ public class TakTakWindow extends JFrame implements Runnable {
 		int y[] = {getY(0), getY(0), getY(getHeight2()), getY(getHeight2()), getY(0) };
 		g.setColor(Color.white);
 		g.fillPolygon(x, y, 4);
+
+		g.setColor(new Color(64, 150, 64, 100));
+		g.setFont(new Font("Arial Bold", Font.BOLD, 72));
+		g.drawString("SAFE ZONE", 90, 635);
+		g.drawString("SAFE ZONE", 90, 180);
 
 		//Light green rectangles as the 'safe zones'
 
@@ -168,10 +203,14 @@ public class TakTakWindow extends JFrame implements Runnable {
 				}
 			}
 		}
-                
-                g.setFont(new Font("Arial Bold", Font.PLAIN, 14));
-                System.out.println(tipTime);
-                g.drawString(currentHint, 15, 725);
+		
+		if (selectedRow != 999) {
+			displayAllValidMoves(g, selectedRow, selectedColumn);
+		}
+
+		g.setColor(Color.white);
+		g.setFont(new Font("Arial Bold", Font.PLAIN, 14));
+		g.drawString(currentHint, 15, 725);
 
 		gOld.drawImage(image, 0, 0, null);
 	}
@@ -192,9 +231,15 @@ public class TakTakWindow extends JFrame implements Runnable {
 	public void reset() {
 		board = new Piece[ROWS][COLUMNS];
 		resetBoard();
-                
-                tipTime = 0;
-                currentHint = HINT_PREFIX + HINTS[rand.nextInt(HINTS.length)];
+
+		tipTime = 0;
+		currentHint = HINT_PREFIX + HINTS[rand.nextInt(HINTS.length)];
+		
+		turn = 0;
+		p1Turn = true;
+		
+		selectedRow = 999;
+		selectedColumn = 999;
 	}
 
 	public void animate() {
@@ -205,109 +250,133 @@ public class TakTakWindow extends JFrame implements Runnable {
 				ysize = getSize().height;
 			}
 			reset();
-		}        
-                
-                if (tipTime < 150) {
-                    tipTime++;
-                } else {
-                    tipTime = 0;
-                    currentHint = HINT_PREFIX + HINTS[rand.nextInt(HINTS.length)];
-                }
+		}
+
+		if (tipTime < 150) {
+			tipTime++;
+		} else {
+			tipTime = 0;
+			currentHint = HINT_PREFIX + HINTS[rand.nextInt(HINTS.length)];
+		}
 	}
 
 	public void resetBoard() {
-            
-            int value = 10;
 
-            for (int blue = 0; blue < 4 ; blue++) {
-                int row = rand.nextInt(2) + 5;
-                int column = rand.nextInt(COLUMNS);
+		int value = 10;
 
-                while (board[row][column] != null) {
-                    row = rand.nextInt(2) + 5;
-                    column = rand.nextInt(COLUMNS);
-                }
+		for (int blue = 0; blue < 4; blue++) {
+			int row = rand.nextInt(2) + 5;
+			int column = rand.nextInt(COLUMNS);
 
-                board[row][column] = new Piece(value, Color.blue, Color.white);
-                value += 10;
-            }
+			while (board[row][column] != null) {
+				row = rand.nextInt(2) + 5;
+				column = rand.nextInt(COLUMNS);
+			}
 
-            value = 10;
+			board[row][column] = new Piece(value, Color.blue, Color.white);
+			value += 10;
+		}
 
-            for (int orange = 0; orange < 4 ; orange++) {
-                int row = rand.nextInt(2) + 5;
-                int column = rand.nextInt(COLUMNS);
+		value = 10;
 
-                while (board[row][column] != null) {
-                    row = rand.nextInt(2) + 5;
-                    column = rand.nextInt(COLUMNS);
-                }
+		for (int orange = 0; orange < 4; orange++) {
+			int row = rand.nextInt(2) + 5;
+			int column = rand.nextInt(COLUMNS);
 
-                board[row][column] = new Piece(value, Color.orange, Color.white);
-                value += 10;
-            }
+			while (board[row][column] != null) {
+				row = rand.nextInt(2) + 5;
+				column = rand.nextInt(COLUMNS);
+			}
 
-            value = 10;
+			board[row][column] = new Piece(value, Color.orange, Color.white);
+			value += 10;
+		}
 
-            for (int green = 0; green < 4 ; green++) {
-                int row = rand.nextInt(2) + 5;
-                int column = rand.nextInt(COLUMNS);
+		value = 10;
 
-                while (board[row][column] != null) {
-                    row = rand.nextInt(2) + 5;
-                    column = rand.nextInt(COLUMNS);
-                }
-                
-                board[row][column] = new Piece(value, Color.green, Color.white);
-                value += 10;
-            }
+		for (int green = 0; green < 4; green++) {
+			int row = rand.nextInt(2) + 5;
+			int column = rand.nextInt(COLUMNS);
 
-            value = 10;
+			while (board[row][column] != null) {
+				row = rand.nextInt(2) + 5;
+				column = rand.nextInt(COLUMNS);
+			}
 
-            for (int blue = 0; blue < 4 ; blue++) {
-                int row = rand.nextInt(2);
-                int column = rand.nextInt(COLUMNS);
+			board[row][column] = new Piece(value, Color.green, Color.white);
+			value += 10;
+		}
 
-                while (board[row][column] != null) {
-                    row = rand.nextInt(2);
-                    column = rand.nextInt(COLUMNS);
-                }
+		value = 10;
 
-                board[row][column] = new Piece(value, Color.blue, Color.black);
-                value += 10;
-            }
+		for (int blue = 0; blue < 4; blue++) {
+			int row = rand.nextInt(2);
+			int column = rand.nextInt(COLUMNS);
 
-            value = 10;
+			while (board[row][column] != null) {
+				row = rand.nextInt(2);
+				column = rand.nextInt(COLUMNS);
+			}
 
-            for (int orange = 0; orange < 4 ; orange++) {
-                int row = rand.nextInt(2);
-                int column = rand.nextInt(COLUMNS);
+			board[row][column] = new Piece(value, Color.blue, Color.black);
+			value += 10;
+		}
 
-                while (board[row][column] != null) {
-                    row = rand.nextInt(2);
-                    column = rand.nextInt(COLUMNS);
-                }
+		value = 10;
 
-                board[row][column] = new Piece(value, Color.orange, Color.black);
-                value += 10;
-            }
+		for (int orange = 0; orange < 4; orange++) {
+			int row = rand.nextInt(2);
+			int column = rand.nextInt(COLUMNS);
 
-            value = 10;
+			while (board[row][column] != null) {
+				row = rand.nextInt(2);
+				column = rand.nextInt(COLUMNS);
+			}
 
-            for (int green = 0; green < 4; green++) {
-                int row = rand.nextInt(2);
-                int column = rand.nextInt(COLUMNS);
+			board[row][column] = new Piece(value, Color.orange, Color.black);
+			value += 10;
+		}
 
-                while (board[row][column] != null) {
-                    row = rand.nextInt(2);
-                    column = rand.nextInt(COLUMNS);
-                }
+		value = 10;
 
-                board[row][column] = new Piece(value, Color.green, Color.black);
-                value += 10;
-            }
+		for (int green = 0; green < 4; green++) {
+			int row = rand.nextInt(2);
+			int column = rand.nextInt(COLUMNS);
+
+			while (board[row][column] != null) {
+				row = rand.nextInt(2);
+				column = rand.nextInt(COLUMNS);
+			}
+
+			board[row][column] = new Piece(value, Color.green, Color.black);
+			value += 10;
+		}
+		
+		//Puts the kings on the board
+		
+		int row = rand.nextInt(2);
+		int column = rand.nextInt(COLUMNS);
+		Piece blackKing = new Piece(value, Color.black, Color.black);
+		blackKing.setKing(true);
+		board[row][column] = blackKing;
+		
+		row = rand.nextInt(2) + 5;
+		column = rand.nextInt(COLUMNS);
+		Piece whiteKing = new Piece(value, Color.white, Color.white);
+		whiteKing.setKing(true);
+		board[row][column] = whiteKing;
 	}
 	
+	public void displayAllValidMoves(Graphics2D g, int row, int column) {
+		//Make the selected spot appear faded
+		g.setColor(new Color(10, 10, 10, 150));
+		g.fillRect(column * (getWidth2() / COLUMNS) + getX(0), row * (getHeight2() / ROWS) + getY(0), 94, 94);
+		
+		//Display the moves the piece can make (forward and diagonal, unless it's a king)
+		//Pieces can't move into the enemy safe zone unless the spot is empty
+		//Maybe instead of just highlighting the valid moves in green, draw checkmarks to emphasize
+	}
+
 	public void start() {
 		if (relaxer == null) {
 			relaxer = new Thread(this);

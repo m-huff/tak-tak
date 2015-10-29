@@ -17,14 +17,14 @@ import javax.swing.JFrame;
 import tak.com.Piece;
 
 @SuppressWarnings("serial")
-public class MenuWindow extends JFrame implements Runnable {
+public class RulesWindow extends JFrame implements Runnable {
 
 	static final int XBORDER = 20;
 	static final int YBORDER = 20;
 	static final int YTITLE = 30;
 	static final int WINDOW_BORDER = 8;
-	static final int WINDOW_WIDTH = 2 * (WINDOW_BORDER + XBORDER) + 495;
-	static final int WINDOW_HEIGHT = YTITLE + WINDOW_BORDER + 2 * YBORDER + 225;
+	static final int WINDOW_WIDTH = 590;
+	static final int WINDOW_HEIGHT = 640;
 	boolean animateFirstTime = true;
 	int xsize = -1;
 	int ysize = -1;
@@ -37,17 +37,17 @@ public class MenuWindow extends JFrame implements Runnable {
 	private static final int CENTER_X = (SCREEN_WIDTH / 2) - (WINDOW_WIDTH / 2);
 	private static final int CENTER_Y = (SCREEN_HEIGHT / 2) - (WINDOW_HEIGHT / 2);
 
-	public static Random rand = new Random();
-	public static ImageIcon icon = new ImageIcon(MenuWindow.class.getResource("/tak/assets/icon.png"));
+	public static ImageIcon icon = new ImageIcon(RulesWindow.class.getResource("/tak/assets/icon.png"));
 
-	private final MenuWindow frame = this;
+	private final RulesWindow frame = this;
+	
+	//Can't implement this until the game is fully working
+	public static ArrayList<Image> images = new ArrayList<Image>();
+	public static String[] imageText = {""};
+	
+	public static int currentSlide;
 
-	//Does not reset itself when the user escapes to the main menu after playing
-	public static int textPosition = WINDOW_WIDTH;
-
-	public static ArrayList<Piece> pieces = new ArrayList<Piece>();
-
-	public MenuWindow() {
+	public RulesWindow() {
 
 		setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -60,12 +60,8 @@ public class MenuWindow extends JFrame implements Runnable {
 
 			@SuppressWarnings("static-access")
 			public void keyPressed(KeyEvent e) {
-				if (e.VK_X == e.getKeyCode()) {
-					new TakTakWindow();
+				if (e.VK_ESCAPE == e.getKeyCode()) {
 					frame.dispose();
-				}
-				if (e.VK_Z == e.getKeyCode()) {
-					new RulesWindow();
 				}
 
 				repaint();
@@ -99,35 +95,17 @@ public class MenuWindow extends JFrame implements Runnable {
 			return;
 		}
 
-		//Gotta make the text stand out more, a background maybe
-
-		int index = 0;
-		for (int x = 0; x < WINDOW_WIDTH; x += 80) {
-			for (int y = 0; y < WINDOW_HEIGHT; y += 80) {
-
-				if (index <= pieces.size() - 2 && pieces.get(index) != null) {
-					pieces.get(index).draw(g, x, y);
-					if (index < pieces.size() - 2) {
-						index++;
-					} else {
-						index = 0;
-					}
-				}
-			}
-		}
-
-		g.setColor(new Color(0, 0, 0, 150));
-		g.fillRect(0, 0, WINDOW_WIDTH, 140);
+		g.setColor(new Color(100, 100, 100, 80));
+		g.fillRect(0, 0, WINDOW_WIDTH, 110);
 
 		g.setColor(new Color(240, 240, 240));
 		g.setFont(new Font("Arial", Font.BOLD, 42));
-		g.drawString("TAK-TAK", textPosition, 80);
+		g.drawString("TAK-TAK Rules", 30, 80);
 
-		g.setFont(new Font("Arial", Font.BOLD, 14));
-		g.drawString("Press X to play", textPosition, 105);
-
-		g.setFont(new Font("Arial", Font.BOLD, 14));
-		g.drawString("Press Z to learn the rules", textPosition, 125);
+		g.setFont(new Font("Arial", Font.BOLD, 18));
+		g.drawString("Image Text", 30, 500);
+		g.drawString("Left-click to go to the next slide", 30, 550);
+		g.drawString("Right-click to go back a slide", 30, 570);
 
 		gOld.drawImage(image, 0, 0, null);
 	}
@@ -146,12 +124,7 @@ public class MenuWindow extends JFrame implements Runnable {
 	}
 
 	public void reset() {
-		for (int i = 0; i < 20; i++) {
-			Color[] colors = {Color.orange, Color.blue, Color.green };
-			Piece p = new Piece((rand.nextInt(4) * 10) + 10, colors[rand.nextInt(colors.length)],
-					rand.nextBoolean() ? Color.black : Color.white);
-			pieces.add(p);
-		}
+		currentSlide = 1;
 	}
 
 	public void animate() {
@@ -164,17 +137,6 @@ public class MenuWindow extends JFrame implements Runnable {
 			}
 
 			reset();
-		}
-
-		if (textPosition >= 35) {
-			if (textPosition >= 400)
-				textPosition -= 20;
-			else if (textPosition < 400 && textPosition >= 250)
-				textPosition -= 16;
-			else if (textPosition < 250 && textPosition >= 100)
-				textPosition -= 10;
-			else if (textPosition < 100)
-				textPosition -= 6;
 		}
 	}
 
