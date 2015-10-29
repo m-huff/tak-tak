@@ -19,6 +19,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 import tak.com.Piece;
+import tak.util.OrderedPair;
 
 public class TakTakWindow extends JFrame implements Runnable {
 
@@ -50,7 +51,12 @@ public class TakTakWindow extends JFrame implements Runnable {
 	private final TakTakWindow frame = this;
 	
 	public static int turn;
-	public static boolean p1Turn;
+	public static boolean myTurn;
+        
+        int serverInitRow;
+        int serverInitCol;
+        int serverMovedRow;
+        int serverMovedCol;
 	
 	public static int selectedRow;
 	public static int selectedColumn;
@@ -58,6 +64,8 @@ public class TakTakWindow extends JFrame implements Runnable {
 	public static int lilWindaColumn;
         public static int mousex;
         public static int mousey;
+        
+        public static ArrayList<OrderedPair> validMoves = new ArrayList<OrderedPair>();
         
 	public static int tipTime;
 	public static String HINT_PREFIX = "Tip: ";
@@ -109,16 +117,31 @@ public class TakTakWindow extends JFrame implements Runnable {
 					if (currentColumn > COLUMNS - 1) {
 						currentColumn = COLUMNS - 1;
 					}
+                                        
+                                        if (currentRow < 0) {
+						currentRow = 0;
+					}
+
+					if (currentColumn < 0) {
+						currentColumn = 0;
+					}
 					
 					if (selectedRow == 999 && board[currentRow][currentColumn] != null) {
 						selectedRow = currentRow;
 						selectedColumn = currentColumn;
 					}
-					else if (board[currentRow][currentColumn] == null){
-						//Tell the player the spot is empty
-					}
 					else if (selectedRow != 999) {
-						//Try to move the piece to the selected location
+                                            System.out.println("Got move");
+                                            
+                                            for (int i = 0; i < validMoves.size(); i++) {
+                                                System.out.println(validMoves.get(i).toString());
+                                            }
+                                            System.out.println("====");
+                                            System.out.println("(" + currentRow + ", " + currentColumn + ")");
+                                            if (validMoves.contains(new OrderedPair(currentRow, currentColumn))) {
+                                                System.out.println("Good location");
+                                                movePieceToLocation(new OrderedPair(selectedRow, selectedColumn), new OrderedPair(currentRow, currentColumn));
+                                            }
 					}
 				}
                                 if (e.BUTTON3 == e.getButton()) {
@@ -141,6 +164,14 @@ public class TakTakWindow extends JFrame implements Runnable {
 					if (currentColumn > COLUMNS - 1) {
 						currentColumn = COLUMNS - 1;
 					}
+                                        
+                                        if (currentRow < 0) {
+						currentRow = 0;
+					}
+
+					if (currentColumn < 0) {
+						currentColumn = 0;
+					}
 					
 					if (lilWindaRow == 999 && board[currentRow][currentColumn] != null) {
 						lilWindaRow = currentRow;
@@ -152,7 +183,7 @@ public class TakTakWindow extends JFrame implements Runnable {
 						//Tell the player the spot is empty
 					}
 					else if (lilWindaRow != 999) {
-						//Try to move the piece to the selected location
+    
 					}
 				}
 				repaint();
@@ -169,6 +200,7 @@ public class TakTakWindow extends JFrame implements Runnable {
                                 if (KeyEvent.VK_BACK_SPACE == e.getKeyCode()) {
                                     selectedRow = 999;
                                     selectedColumn = 999;
+                                    validMoves.clear();
                                 }
 				repaint();
 			}
@@ -270,11 +302,17 @@ public class TakTakWindow extends JFrame implements Runnable {
 		currentHint = HINT_PREFIX + HINTS[rand.nextInt(HINTS.length)];
 		
 		turn = 0;
-		p1Turn = true;
+		myTurn = true;
 		
 		selectedRow = 999;
 		selectedColumn = 999;
+                
+                validMoves.clear();
 	}
+        
+//        public static void closeGame() {
+//            new MenuWindow();
+//        }
 
 	public void animate() {
 		if (animateFirstTime) {
@@ -293,6 +331,19 @@ public class TakTakWindow extends JFrame implements Runnable {
 			currentHint = HINT_PREFIX + HINTS[rand.nextInt(HINTS.length)];
 		}
 	}
+        
+        public void movePieceToLocation(OrderedPair piece, OrderedPair location) {
+            Piece movingPiece = board[piece.getX()][piece.getY()];
+            Piece moveLocation = board[location.getX()][location.getY()];
+            
+            if (moveLocation != null) {
+                
+            }
+            else {
+                moveLocation = movingPiece;
+                movingPiece = null;
+            }
+        }
 
 	public void resetBoard() {
 
@@ -422,63 +473,81 @@ public class TakTakWindow extends JFrame implements Runnable {
             if (p.isKing()) {
                 if (canPieceMoveToLocation(p, row + 1, column)) {
                     g.fillRect(column * (getWidth2() / COLUMNS) + getX(0), (row + 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
+                    validMoves.add(new OrderedPair(row + 1, column));
                 }
                 if (canPieceMoveToLocation(p, row + 2, column)) {
                         g.fillRect(column * (getWidth2() / COLUMNS) + getX(0), (row + 2) * (getHeight2() / ROWS) + getY(0), 94, 94);
+                        validMoves.add(new OrderedPair(row + 2, column));
                 }
                 if (canPieceMoveToLocation(p, row + 1, column + 1)) {
                         g.fillRect((column + 1) * (getWidth2() / COLUMNS) + getX(0), (row + 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
+                        validMoves.add(new OrderedPair(row + 1, column + 1));
                 }
                 if (canPieceMoveToLocation(p, row + 2, column + 2)) {
                         g.fillRect((column + 2) * (getWidth2() / COLUMNS) + getX(0), (row + 2) * (getHeight2() / ROWS) + getY(0), 94, 94);
+                        validMoves.add(new OrderedPair(row + 2, column + 2));
                 }
                 if (canPieceMoveToLocation(p, row + 1, column - 1)) {
                         g.fillRect((column - 1) * (getWidth2() / COLUMNS) + getX(0), (row + 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
+                        validMoves.add(new OrderedPair(row + 1, column - 1));
                 }
                 if (canPieceMoveToLocation(p, row + 2, column - 2)) {
                         g.fillRect((column - 2) * (getWidth2() / COLUMNS) + getX(0), (row + 2) * (getHeight2() / ROWS) + getY(0), 94, 94);
+                        validMoves.add(new OrderedPair(row + 2, column - 2));
                 }
                 if (canPieceMoveToLocation(p, row - 1, column)) {
                         g.fillRect(column * (getWidth2() / COLUMNS) + getX(0), (row - 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
+                        validMoves.add(new OrderedPair(row - 1, column));
                 }
                 if (canPieceMoveToLocation(p, row - 2, column)) {
                         g.fillRect(column * (getWidth2() / COLUMNS) + getX(0), (row - 2) * (getHeight2() / ROWS) + getY(0), 94, 94);
+                        validMoves.add(new OrderedPair(row - 2, column));
                 }
                 if (canPieceMoveToLocation(p, row - 1, column + 1)) {
                         g.fillRect((column + 1) * (getWidth2() / COLUMNS) + getX(0), (row - 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
+                        validMoves.add(new OrderedPair(row - 1, column + 1));
                 }
                 if (canPieceMoveToLocation(p, row - 2, column + 2)) {
                         g.fillRect((column + 2) * (getWidth2() / COLUMNS) + getX(0), (row - 2) * (getHeight2() / ROWS) + getY(0), 94, 94);
+                        validMoves.add(new OrderedPair(row - 2, column + 2));
                 }
                 if (canPieceMoveToLocation(p, row - 1, column - 1)) {
                         g.fillRect((column - 1) * (getWidth2() / COLUMNS) + getX(0), (row - 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
+                        validMoves.add(new OrderedPair(row - 1, column - 1));
                 }
                 if (canPieceMoveToLocation(p, row - 2, column - 2)) {
                         g.fillRect((column - 2) * (getWidth2() / COLUMNS) + getX(0), (row - 2) * (getHeight2() / ROWS) + getY(0), 94, 94);
+                        validMoves.add(new OrderedPair(row - 2, column - 2));
                 }
             }
 
             if (!p.isKing() && pieceDirection == 1) {
                 if (canPieceMoveToLocation(p, row - 1, column)) {
                         g.fillRect(column * (getWidth2() / COLUMNS) + getX(0), (row - 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
+                        validMoves.add(new OrderedPair(row - 1, column));
                 }
                 if (canPieceMoveToLocation(p, row - 1, column + 1)) {
                         g.fillRect((column + 1) * (getWidth2() / COLUMNS) + getX(0), (row - 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
+                        validMoves.add(new OrderedPair(row - 1, column + 1));
                 }
                 if (canPieceMoveToLocation(p, row - 1, column - 1)) {
                         g.fillRect((column - 1) * (getWidth2() / COLUMNS) + getX(0), (row - 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
+                        validMoves.add(new OrderedPair(row - 1, column - 1));
                 }
             }
 
             if (!p.isKing() && pieceDirection == 0) {
                 if (canPieceMoveToLocation(p, row + 1, column)) {
                         g.fillRect(column * (getWidth2() / COLUMNS) + getX(0), (row + 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
+                        validMoves.add(new OrderedPair(row + 1, column));
                 }
                 if (canPieceMoveToLocation(p, row + 1, column + 1)) {
                         g.fillRect((column + 1) * (getWidth2() / COLUMNS) + getX(0), (row + 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
+                        validMoves.add(new OrderedPair(row + 1, column + 1));
                 }
                 if (canPieceMoveToLocation(p, row + 1, column - 1)) {
                         g.fillRect((column - 1) * (getWidth2() / COLUMNS) + getX(0), (row + 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
+                        validMoves.add(new OrderedPair(row + 1, column - 1));
                 }
             }
 	}
