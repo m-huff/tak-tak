@@ -115,12 +115,14 @@ public class Piece {
 
 	public void drawLilWinda(Graphics2D g, int mousex, int mousey) {
 
-		g.setColor(new Color(254, 254, 254, 100));
-		g.drawRect(mousex, mousey, 100, 150);
+		g.setColor(new Color(254, 254, 254, 150));
+		g.fillRect(mousex, mousey, 100, 150);
 		g.setColor(new Color(50, 50, 50));
 		int xcords[] = {mousex, mousex + 100, mousex + 100, mousex };
 		int ycords[] = {mousey, mousey, mousey + 150, mousey + 150 };
 		g.drawPolyline(xcords, ycords, 4);
-
+                g.setColor(Color.RED);
+		g.setFont(new Font("Arial Bold", Font.BOLD, 11));
+		g.drawString("Total value is "+ value, mousex + 8, mousey+14);
 	}
 }

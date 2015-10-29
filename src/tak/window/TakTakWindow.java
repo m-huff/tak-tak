@@ -54,7 +54,11 @@ public class TakTakWindow extends JFrame implements Runnable {
 	
 	public static int selectedRow;
 	public static int selectedColumn;
-
+        public static int lilWindaRow;
+	public static int lilWindaColumn;
+        public static int mousex;
+        public static int mousey;
+        
 	public static int tipTime;
 	public static String HINT_PREFIX = "Tip: ";
 	public static String currentHint;
@@ -75,7 +79,14 @@ public class TakTakWindow extends JFrame implements Runnable {
 		setTitle("Tak-Tak");
 		setLocation(CENTER_X, CENTER_Y);
 		setIconImage(icon.getImage());
-
+		
+                addMouseMotionListener(new MouseMotionAdapter() {
+                      public void mouseMoved(MouseEvent e) {
+                      lilWindaRow = 999;
+                      lilWindaColumn = 999;   
+                      repaint();
+                      }
+                });
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				if (MouseEvent.BUTTON1 == e.getButton()) {
@@ -107,6 +118,40 @@ public class TakTakWindow extends JFrame implements Runnable {
 						//Tell the player the spot is empty
 					}
 					else if (selectedRow != 999) {
+						//Try to move the piece to the selected location
+					}
+				}
+                                if (e.BUTTON3 == e.getButton()) {
+                                        
+					int xpos = e.getX() - getX(0);
+					int ypos = e.getY() - getY(0);
+					if (xpos < 0 || ypos < 0 || xpos > getWidth2() || ypos > getHeight2())
+						return;
+					
+					//Calculate the width and height of each board square.
+					int ydelta = getHeight2()/ROWS;
+					int xdelta = getWidth2() / COLUMNS;
+					int currentColumn = xpos / xdelta;
+					int currentRow = ypos / ydelta;
+
+					if (currentRow > ROWS - 1) {
+						currentRow = ROWS - 1;
+					}
+
+					if (currentColumn > COLUMNS - 1) {
+						currentColumn = COLUMNS - 1;
+					}
+					
+					if (lilWindaRow == 999 && board[currentRow][currentColumn] != null) {
+						lilWindaRow = currentRow;
+						lilWindaColumn = currentColumn;
+                                                mousex = e.getX();
+                                                mousey = e.getY();
+					}
+					else if (board[currentRow][currentColumn] == null){
+						//Tell the player the spot is empty
+					}
+					else if (lilWindaRow != 999) {
 						//Try to move the piece to the selected location
 					}
 				}
@@ -190,7 +235,9 @@ public class TakTakWindow extends JFrame implements Runnable {
 		if (selectedRow != 999) {
 			displayAllValidMoves(g, selectedRow, selectedColumn);
 		}
-
+                if(lilWindaRow != 999){
+                    board[lilWindaRow][lilWindaColumn].drawLilWinda(g, mousex, mousey);
+                }
 		g.setColor(Color.white);
 		g.setFont(new Font("Arial Bold", Font.PLAIN, 14));
 		g.drawString(currentHint, 15, 725);
