@@ -1,13 +1,11 @@
 package tak.com;
 
-import java.util.ArrayList;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
-
-import tak.window.TakTakWindow;
 
 public class Piece {
 
@@ -97,14 +95,14 @@ public class Piece {
 	}
 
 	public void draw(Graphics2D g, int x, int y) {
-
+		g.setColor(backColor);
 		g.drawImage((backColor == Color.black ? black.getImage() : white.getImage()), x + 10, y + 8, 75, 75, null);
 
 		if (!isKing) {
 			g.drawImage((frontColor == Color.orange ? orange.getImage()
 					: frontColor == Color.blue ? blue.getImage() : green.getImage()), x + 10, y + 8, 75, 75, null);
 	
-			g.setColor(backColor);
+			
 			g.setFont(new Font("Arial Bold", Font.PLAIN, 18));
 			g.drawString(String.valueOf(value), x + 38, y + 53);
 		} else {

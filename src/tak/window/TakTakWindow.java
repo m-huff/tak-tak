@@ -77,19 +77,8 @@ public class TakTakWindow extends JFrame implements Runnable {
 		setIconImage(icon.getImage());
 
 		addMouseListener(new MouseAdapter() {
-			@SuppressWarnings("static-access")
 			public void mousePressed(MouseEvent e) {
-				if (e.BUTTON1 == e.getButton()) {
-
-				}
-				repaint();
-			}
-		});
-		
-		addMouseListener(new MouseAdapter() {
-			@SuppressWarnings("static-access")
-			public void mousePressed(MouseEvent e) {
-				if (e.BUTTON1 == e.getButton()) {
+				if (MouseEvent.BUTTON1 == e.getButton()) {
 
 					int xpos = e.getX() - getX(0);
 					int ypos = e.getY() - getY(0);
@@ -128,7 +117,7 @@ public class TakTakWindow extends JFrame implements Runnable {
 		addKeyListener(new KeyAdapter() {
 
 			public void keyPressed(KeyEvent e) {
-				if (e.VK_ESCAPE == e.getKeyCode()) {
+				if (KeyEvent.VK_ESCAPE == e.getKeyCode()) {
 					new MenuWindow();
 					frame.dispose();
 				}
@@ -154,8 +143,6 @@ public class TakTakWindow extends JFrame implements Runnable {
 			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		}
 
-		//Drawing the initial board
-
 		g.setColor(Color.black);
 		g.fillRect(0, 0, xsize, ysize);
 
@@ -174,13 +161,9 @@ public class TakTakWindow extends JFrame implements Runnable {
 		g.drawString("SAFE ZONE", 90, 635);
 		g.drawString("SAFE ZONE", 90, 180);
 
-		//Light green rectangles as the 'safe zones'
-
 		g.setColor(new Color(64, 128, 64, 150));
 		g.fillRect(getX(0), getY(0), getWidth2(), 2 * (getHeight2() / ROWS) + 2);
 		g.fillRect(getX(0), getY(0) + 5 * (getHeight2() / ROWS) + 5, getWidth2(), 2 * (getHeight2() / ROWS) + 2);
-
-		//Draw a dark grey rectangle over the middle of the board
 
 		g.setColor(new Color(0, 0, 0, 150));
 		g.fillRect(getX(0), 2 * (getHeight2() / ROWS) + getY(0), getWidth2(), 3 * (getHeight2() / ROWS) + 5);
@@ -219,7 +202,7 @@ public class TakTakWindow extends JFrame implements Runnable {
 		while (true) {
 			animate();
 			repaint();
-			double seconds = 0.04;//time that 1 frame takes.
+			double seconds = 0.04;
 			int miliseconds = (int) (1000.0 * seconds);
 			try {
 				Thread.sleep(miliseconds);
@@ -252,7 +235,7 @@ public class TakTakWindow extends JFrame implements Runnable {
 			reset();
 		}
 
-		if (tipTime < 150) {
+		if (tipTime < 200) {
 			tipTime++;
 		} else {
 			tipTime = 0;
@@ -368,13 +351,81 @@ public class TakTakWindow extends JFrame implements Runnable {
 	}
 	
 	public void displayAllValidMoves(Graphics2D g, int row, int column) {
-		//Make the selected spot appear faded
+
 		g.setColor(new Color(10, 10, 10, 150));
 		g.fillRect(column * (getWidth2() / COLUMNS) + getX(0), row * (getHeight2() / ROWS) + getY(0), 94, 94);
 		
+		Piece p = board[row][column];
+		int pieceDirection = (p.getBackgroundColor() == Color.black ? 0 : 1);
+		
+		g.setColor(new Color(64, 128, 64, 150));
+		
+		if (p.isKing()) {
+			if (row + 1 < ROWS) {
+				g.fillRect(column * (getWidth2() / COLUMNS) + getX(0), (row + 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
+			}
+			if (row + 2 < ROWS) {
+				g.fillRect(column * (getWidth2() / COLUMNS) + getX(0), (row + 2) * (getHeight2() / ROWS) + getY(0), 94, 94);
+			}
+			if (row + 1 < ROWS && column + 1 < COLUMNS) {
+				g.fillRect((column + 1) * (getWidth2() / COLUMNS) + getX(0), (row + 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
+			}
+			if (row + 2 < ROWS && column + 2 < COLUMNS) {
+				g.fillRect((column + 2) * (getWidth2() / COLUMNS) + getX(0), (row + 2) * (getHeight2() / ROWS) + getY(0), 94, 94);
+			}
+			if (row + 1 < ROWS && column - 1 >= 0) {
+				g.fillRect((column - 1) * (getWidth2() / COLUMNS) + getX(0), (row + 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
+			}
+			if (row + 2 < ROWS && column - 2 >= 0) {
+				g.fillRect((column - 2) * (getWidth2() / COLUMNS) + getX(0), (row + 2) * (getHeight2() / ROWS) + getY(0), 94, 94);
+			}
+			if (row - 1 >= 0) {
+				g.fillRect(column * (getWidth2() / COLUMNS) + getX(0), (row - 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
+			}
+			if (row - 2 >= 0) {
+				g.fillRect(column * (getWidth2() / COLUMNS) + getX(0), (row - 2) * (getHeight2() / ROWS) + getY(0), 94, 94);
+			}
+			if (row - 1 >= 0 && column + 1 < COLUMNS) {
+				g.fillRect((column + 1) * (getWidth2() / COLUMNS) + getX(0), (row - 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
+			}
+			if (row - 2 >= 0 && column + 2 < COLUMNS) {
+				g.fillRect((column + 2) * (getWidth2() / COLUMNS) + getX(0), (row - 2) * (getHeight2() / ROWS) + getY(0), 94, 94);
+			}
+			if (row - 1 >= 0 && column - 1 >= 0) {
+				g.fillRect((column - 1) * (getWidth2() / COLUMNS) + getX(0), (row - 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
+			}
+			if (row - 2 >= 0 && column - 2 >= 0) {
+				g.fillRect((column - 2) * (getWidth2() / COLUMNS) + getX(0), (row - 2) * (getHeight2() / ROWS) + getY(0), 94, 94);
+			}
+		}
+		
+		if (!p.isKing() && pieceDirection == 1) {
+			if (row - 1 >= 0) {
+				g.fillRect(column * (getWidth2() / COLUMNS) + getX(0), (row - 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
+			}
+			if (row - 1 >= 0 && column + 1 < COLUMNS) {
+				g.fillRect((column + 1) * (getWidth2() / COLUMNS) + getX(0), (row - 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
+			}
+			if (row - 1 >= 0 && column - 1 >= 0) {
+				g.fillRect((column - 1) * (getWidth2() / COLUMNS) + getX(0), (row - 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
+			}
+		}
+		
+		if (!p.isKing() && pieceDirection == 0) {
+			if (row + 1 < ROWS) {
+				g.fillRect(column * (getWidth2() / COLUMNS) + getX(0), (row + 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
+			}
+			if (row + 1 < ROWS && column + 1 < COLUMNS) {
+				g.fillRect((column + 1) * (getWidth2() / COLUMNS) + getX(0), (row + 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
+			}
+			if (row + 1 < ROWS && column - 1 >= 0) {
+				g.fillRect((column - 1) * (getWidth2() / COLUMNS) + getX(0), (row + 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
+			}
+		}
+		
 		//Display the moves the piece can make (forward and diagonal, unless it's a king)
-		//Pieces can't move into the enemy safe zone unless the spot is empty
-		//Maybe instead of just highlighting the valid moves in green, draw checkmarks to emphasize
+		//TODO - Pieces can't move into the enemy safe zone unless the spot is empty
+		//TODO - Maybe instead of just highlighting the valid moves in green, draw checkmarks to emphasize
 	}
 
 	public void start() {

@@ -10,11 +10,9 @@ import java.awt.Toolkit;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.Random;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import tak.com.Piece;
 
 @SuppressWarnings("serial")
 public class RulesWindow extends JFrame implements Runnable {
