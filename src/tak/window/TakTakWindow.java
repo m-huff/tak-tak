@@ -51,10 +51,10 @@ public class TakTakWindow extends JFrame implements Runnable {
 	Piece[][] board;
 
 	private final TakTakWindow frame = this;
-	
-        public static boolean gameStarted = false;
+        
 	public static int turn;
 	public static boolean myTurn;
+        public boolean isClient;
         
         //Network variables
         public static int initRow;
@@ -68,9 +68,7 @@ public class TakTakWindow extends JFrame implements Runnable {
 	public static int lilWindaColumn;
         public static int mousex;
         public static int mousey;
-        
-        public static boolean isConnecting = false;
-        public boolean isClient;
+
         
         public static ArrayList<OrderedPair> validMoves = new ArrayList<OrderedPair>();
         
@@ -208,8 +206,7 @@ public class TakTakWindow extends JFrame implements Runnable {
 		addKeyListener(new KeyAdapter() {
 
 			public void keyPressed(KeyEvent e) {
-				if (KeyEvent.VK_ESCAPE == e.getKeyCode() && !isConnecting || KeyEvent.VK_ESCAPE == e.getKeyCode()) {
-                                    gameStarted = false;
+				if (KeyEvent.VK_ESCAPE == e.getKeyCode()) {
                                     reset();
                                     new MenuWindow();
                                     frame.dispose();
