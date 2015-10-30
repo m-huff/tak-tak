@@ -341,7 +341,7 @@ public class TakTakWindow extends JFrame implements Runnable {
         else {
             moveLocation = new Piece(movingPiece.getValue(), movingPiece.getForegroundColor(), movingPiece.getBackgroundColor());
             moveLocation.setKing(movingPiece.isKing());
-            //TODO - Update the stack of the new piece
+            moveLocation.addStackToStack(movingPiece.getWholeStack());
             movingPiece = null;
 
             //Pieces are being updated, but not painted
