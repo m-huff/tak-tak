@@ -131,17 +131,16 @@ public class TakTakWindow extends JFrame implements Runnable {
 						selectedColumn = currentColumn;
 					}
 					else if (selectedRow != 999) {
-                                            System.out.println("Got move");
-                                            
-                                            for (int i = 0; i < validMoves.size(); i++) {
-                                                System.out.println(validMoves.get(i).toString());
-                                            }
-                                            System.out.println("====");
-                                            System.out.println("(" + currentRow + ", " + currentColumn + ")");
-                                            if (validMoves.contains(new OrderedPair(currentRow, currentColumn))) {
-                                                System.out.println("Good location");
-                                                movePieceToLocation(new OrderedPair(selectedRow, selectedColumn), new OrderedPair(currentRow, currentColumn));
-                                            }
+						boolean movedPiece = false;
+						for (int i = 0; i < validMoves.size() && !movedPiece; i++) {
+                            if (validMoves.get(i).toString().equals(new OrderedPair(currentRow, currentColumn).toString())) {
+                            	movePieceToLocation(new OrderedPair(selectedRow, selectedColumn), new OrderedPair(currentRow, currentColumn));
+                            	movedPiece = true;
+                            	selectedRow = 999;
+                            	selectedColumn = 999;
+                            	validMoves.clear();
+							}
+                        }
 					}
 				}
                                 if (e.BUTTON3 == e.getButton()) {
@@ -332,18 +331,24 @@ public class TakTakWindow extends JFrame implements Runnable {
 		}
 	}
         
-        public void movePieceToLocation(OrderedPair piece, OrderedPair location) {
-            Piece movingPiece = board[piece.getX()][piece.getY()];
-            Piece moveLocation = board[location.getX()][location.getY()];
-            
-            if (moveLocation != null) {
-                
-            }
-            else {
-                moveLocation = movingPiece;
-                movingPiece = null;
-            }
+    public void movePieceToLocation(OrderedPair piece, OrderedPair location) {
+        Piece movingPiece = board[piece.getX()][piece.getY()];
+        Piece moveLocation = board[location.getX()][location.getY()];
+        
+        if (moveLocation != null) {
+            //If a piece is there
         }
+        else {
+            moveLocation = new Piece(movingPiece.getValue(), movingPiece.getForegroundColor(), movingPiece.getBackgroundColor());
+            moveLocation.setKing(movingPiece.isKing());
+            //TODO - Update the stack of the new piece
+            movingPiece = null;
+
+            //Pieces are being updated, but not painted
+            System.out.println(movingPiece);
+            System.out.println(moveLocation);
+        }
+    }
 
 	public void resetBoard() {
 
