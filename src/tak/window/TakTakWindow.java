@@ -53,10 +53,10 @@ public class TakTakWindow extends JFrame implements Runnable {
 	public static int turn;
 	public static boolean myTurn;
         
-        int serverInitRow;
-        int serverInitCol;
-        int serverMovedRow;
-        int serverMovedCol;
+        public static int serverInitRow;
+        public static int serverInitCol;
+        public static int serverMovedRow;
+        public static int serverMovedCol;
 	
 	public static int selectedRow;
 	public static int selectedColumn;
