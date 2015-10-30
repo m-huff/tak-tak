@@ -65,7 +65,14 @@ public class MenuWindow extends JFrame implements Runnable {
 					frame.dispose();
 				}
 				if (e.VK_Z == e.getKeyCode()) {
-					new RulesWindow();
+					final RulesWindow rw = new RulesWindow();
+                                        rw.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				}
+                                if (e.VK_C == e.getKeyCode()) {
+					final ConnectWindow rw = new ConnectWindow(true);
+				}
+                                if (e.VK_V == e.getKeyCode()) {
+					final ConnectWindow rw = new ConnectWindow(false);
 				}
 
 				repaint();
@@ -117,17 +124,17 @@ public class MenuWindow extends JFrame implements Runnable {
 		}
 
 		g.setColor(new Color(0, 0, 0, 150));
-		g.fillRect(0, 0, WINDOW_WIDTH, 140);
+		g.fillRect(0, 0, WINDOW_WIDTH, 180);
 
 		g.setColor(new Color(240, 240, 240));
 		g.setFont(new Font("Arial", Font.BOLD, 42));
 		g.drawString("TAK-TAK", textPosition, 80);
 
 		g.setFont(new Font("Arial", Font.BOLD, 14));
-		g.drawString("Press X to play", textPosition, 105);
-
-		g.setFont(new Font("Arial", Font.BOLD, 14));
-		g.drawString("Press Z to learn the rules", textPosition, 125);
+		g.drawString("Press X to play against an AI -NOT WORKING-", textPosition, 125);
+		g.drawString("Press Z to learn the rules", textPosition, 105);
+                g.drawString("Press C to start a multiplayer game as the client", textPosition, 145);
+                g.drawString("Press V to start a multiplayer game as the server", textPosition, 165);
 
 		gOld.drawImage(image, 0, 0, null);
 	}

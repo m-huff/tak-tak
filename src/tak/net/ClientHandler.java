@@ -12,6 +12,7 @@ import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import tak.window.TakTakWindow;
 
 public class ClientHandler
 {
@@ -56,13 +57,13 @@ public class ClientHandler
 		connected = false;
 		//tak.window.TakTakWindow.closeGame();
 	}
-    public static void sendPieceMove(int initrow, int initcol, int movedrow, int movedcol)
+    public static void sendPieceMove(TakTakWindow ttw, int initrow, int initcol, int movedrow, int movedcol)
     {
 		if (connected)
 		{
 //add or modify.                    
 			serverOut.println(initrow + ":" + initcol + ":" + movedrow + ":" + movedcol);
-			tak.window.TakTakWindow.myTurn = false;
+			ttw.myTurn = false;
 		}        
     }
 
@@ -102,11 +103,11 @@ public class ClientHandler
                                                         int movedrowpost = Integer.parseInt(inputLine.split(":")[2]);
 							int movedcolpost = Integer.parseInt(inputLine.split(":")[3]);
                                                         
-                                                        tak.window.TakTakWindow.serverInitRow=initrowpost;
-                                                        tak.window.TakTakWindow.serverInitCol=initcolpost;
-                                                        tak.window.TakTakWindow.serverMovedRow=movedrowpost;
-                                                        tak.window.TakTakWindow.serverMovedCol=movedcolpost;
-                                                        tak.window.TakTakWindow.myTurn = true;
+                                                        TakTakWindow.initRow = initrowpost;
+                                                        TakTakWindow.initCol = initcolpost;
+                                                        TakTakWindow.movedRow = movedrowpost;
+                                                        TakTakWindow.movedCol = movedcolpost;
+                                                        TakTakWindow.updateTurn();
 						}
 						catch (NumberFormatException e)
 						{

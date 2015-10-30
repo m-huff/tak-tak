@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.*;
+import tak.window.TakTakWindow;
 
 public class ServerHandler
 {
@@ -49,14 +50,14 @@ public class ServerHandler
         connected = false;
        // tak.window.TakTakWindow.closeGame();
     }
-    public static void sendPieceMove(int val)
+    public static void sendPieceMove(TakTakWindow ttw, int initrow, int initcol, int movedrow, int movedcol)
     {
 		if (connected)
 		{
 //add or modify.                    
-			serverOut.println(val + ":" + -1);
-			tak.window.TakTakWindow.myTurn = false;
-		}            
+			serverOut.println(initrow + ":" + initcol + ":" + movedrow + ":" + movedcol);
+			ttw.myTurn = false;
+		}        
     }
 
 
@@ -95,11 +96,11 @@ public class ServerHandler
                             int movedrowpost = Integer.parseInt(inputLine.split(":")[2]);
                             int movedcolpost = Integer.parseInt(inputLine.split(":")[3]);
 
-                            tak.window.TakTakWindow.serverInitRow=initrowpost;
-                            tak.window.TakTakWindow.serverInitCol=initcolpost;
-                            tak.window.TakTakWindow.serverMovedRow=movedrowpost;
-                            tak.window.TakTakWindow.serverMovedCol=movedcolpost;
-                            tak.window.TakTakWindow.myTurn = true;
+                            TakTakWindow.initRow = initrowpost;
+                            TakTakWindow.initCol = initcolpost;
+                            TakTakWindow.movedRow = movedrowpost;
+                            TakTakWindow.movedCol = movedcolpost;
+                            TakTakWindow.updateTurn();
                         }
                         catch (NumberFormatException e)
                         {

@@ -19,6 +19,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 import tak.com.Piece;
+import tak.net.ClientHandler;
+import tak.net.ServerHandler;
 import tak.util.OrderedPair;
 
 public class TakTakWindow extends JFrame implements Runnable {
@@ -50,13 +52,15 @@ public class TakTakWindow extends JFrame implements Runnable {
 
 	private final TakTakWindow frame = this;
 	
+        public static boolean gameStarted = false;
 	public static int turn;
 	public static boolean myTurn;
         
-        public static int serverInitRow;
-        public static int serverInitCol;
-        public static int serverMovedRow;
-        public static int serverMovedCol;
+        //Network variables
+        public static int initRow;
+        public static int initCol;
+        public static int movedRow;
+        public static int movedCol;
 	
 	public static int selectedRow;
 	public static int selectedColumn;
@@ -64,6 +68,9 @@ public class TakTakWindow extends JFrame implements Runnable {
 	public static int lilWindaColumn;
         public static int mousex;
         public static int mousey;
+        
+        public static boolean isConnecting = false;
+        public boolean isClient;
         
         public static ArrayList<OrderedPair> validMoves = new ArrayList<OrderedPair>();
         
@@ -96,52 +103,61 @@ public class TakTakWindow extends JFrame implements Runnable {
                       }
                 });
 		addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent e) {
-				if (MouseEvent.BUTTON1 == e.getButton()) {
+                    public void mousePressed(MouseEvent e) {
+                        if (MouseEvent.BUTTON1 == e.getButton() && myTurn) {
 
-					int xpos = e.getX() - getX(0);
-					int ypos = e.getY() - getY(0);
-					if (xpos < 0 || ypos < 0 || xpos > getWidth2() || ypos > getHeight2())
-						return;
-					
-					//Calculate the width and height of each board square.
-					int ydelta = getHeight2()/ROWS;
-					int xdelta = getWidth2() / COLUMNS;
-					int currentColumn = xpos / xdelta;
-					int currentRow = ypos / ydelta;
+                                int xpos = e.getX() - getX(0);
+                                int ypos = e.getY() - getY(0);
+                                if (xpos < 0 || ypos < 0 || xpos > getWidth2() || ypos > getHeight2())
+                                        return;
 
-					if (currentRow > ROWS - 1) {
-						currentRow = ROWS - 1;
-					}
+                                //Calculate the width and height of each board square.
+                                int ydelta = getHeight2()/ROWS;
+                                int xdelta = getWidth2() / COLUMNS;
+                                int currentColumn = xpos / xdelta;
+                                int currentRow = ypos / ydelta;
 
-					if (currentColumn > COLUMNS - 1) {
-						currentColumn = COLUMNS - 1;
-					}
-                                        
-                                        if (currentRow < 0) {
-						currentRow = 0;
-					}
+                                if (currentRow > ROWS - 1) {
+                                        currentRow = ROWS - 1;
+                                }
 
-					if (currentColumn < 0) {
-						currentColumn = 0;
-					}
-					
-					if (selectedRow == 999 && board[currentRow][currentColumn] != null) {
-						selectedRow = currentRow;
-						selectedColumn = currentColumn;
-					}
-					else if (selectedRow != 999) {
-						boolean movedPiece = false;
-						for (int i = 0; i < validMoves.size() && !movedPiece; i++) {
-                            if (validMoves.get(i).toString().equals(new OrderedPair(currentRow, currentColumn).toString())) {
-                            	movePieceToLocation(new OrderedPair(selectedRow, selectedColumn), new OrderedPair(currentRow, currentColumn));
-                            	movedPiece = true;
-                            	selectedRow = 999;
-                            	selectedColumn = 999;
-                            	validMoves.clear();
-							}
+                                if (currentColumn > COLUMNS - 1) {
+                                        currentColumn = COLUMNS - 1;
+                                }
+
+                                if (currentRow < 0) {
+                                        currentRow = 0;
+                                }
+
+                                if (currentColumn < 0) {
+                                        currentColumn = 0;
+                                }
+
+                                if (selectedRow == 999 && board[currentRow][currentColumn] != null) {
+                                        selectedRow = currentRow;
+                                        selectedColumn = currentColumn;
+                                }
+                                else if (selectedRow != 999) {
+                                        boolean movedPiece = false;
+                                        for (int i = 0; i < validMoves.size() && !movedPiece; i++) {
+                    if (validMoves.get(i).toString().equals(new OrderedPair(currentRow, currentColumn).toString())) {
+                        movePieceToLocation(new OrderedPair(selectedRow, selectedColumn), new OrderedPair(currentRow, currentColumn));
+                        movedPiece = true;
+                        selectedRow = 999;
+                        selectedColumn = 999;
+                        validMoves.clear();
+                        initRow = selectedRow;
+                        initCol = selectedColumn;
+                        movedRow = currentRow;
+                        movedCol = currentColumn;
+                        if (isClient) {
+                            ClientHandler.sendPieceMove(frame, initRow, initCol, movedRow, movedCol);
+                        } else {
+                            ServerHandler.sendPieceMove(frame, initRow, initCol, movedRow, movedCol);
                         }
-					}
+                    }
+                }
+	}
 				}
                                 if (e.BUTTON3 == e.getButton()) {
                                         
@@ -192,9 +208,11 @@ public class TakTakWindow extends JFrame implements Runnable {
 		addKeyListener(new KeyAdapter() {
 
 			public void keyPressed(KeyEvent e) {
-				if (KeyEvent.VK_ESCAPE == e.getKeyCode()) {
-					new MenuWindow();
-					frame.dispose();
+				if (KeyEvent.VK_ESCAPE == e.getKeyCode() && !isConnecting || KeyEvent.VK_ESCAPE == e.getKeyCode()) {
+                                    gameStarted = false;
+                                    reset();
+                                    new MenuWindow();
+                                    frame.dispose();
 				}
                                 if (KeyEvent.VK_BACK_SPACE == e.getKeyCode()) {
                                     selectedRow = 999;
@@ -593,6 +611,10 @@ public class TakTakWindow extends JFrame implements Runnable {
                 }
             }
             return false;
+        }
+        
+        public static void updateTurn() {
+            myTurn = !myTurn;
         }
 
 	public void stop() {
