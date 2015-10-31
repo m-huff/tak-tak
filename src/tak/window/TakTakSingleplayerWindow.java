@@ -51,7 +51,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 	//Board of real game is 6x7
 	static final int COLUMNS = 6;
 	static final int ROWS = 7;
-	Piece[][] board;
+	static Piece[][] board;
 
 	private final TakTakSingleplayerWindow frame = this;
 
@@ -378,7 +378,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 		}
 	}
 
-	public void movePieceToLocation(OrderedPair piece, OrderedPair location) {
+	public static void movePieceToLocation(OrderedPair piece, OrderedPair location) {
 
 		if (board[location.getX()][location.getY()] != null) {
 			// Stacking isn't working right, doesn't add stacks correctly because

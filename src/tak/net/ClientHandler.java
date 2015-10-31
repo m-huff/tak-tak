@@ -57,13 +57,12 @@ public class ClientHandler
 		connected = false;
 		//tak.window.TakTakWindow.closeGame();
 	}
-    public static void sendPieceMove(TakTakMultiplayerWindow ttw, int initrow, int initcol, int movedrow, int movedcol)
+    public static void sendPieceMove(int initrow, int initcol, int movedrow, int movedcol, int myScore)
     {
 		if (connected)
 		{
 //add or modify.                    
-			serverOut.println(initrow + ":" + initcol + ":" + movedrow + ":" + movedcol);
-			ttw.myTurn = false;
+			serverOut.println(initrow + ":" + initcol + ":" + movedrow + ":" + movedcol + ":" + myScore);
 		}        
     }
 
@@ -100,14 +99,17 @@ public class ClientHandler
 							// row:col:initrow:initcol
 							int initrowpost = Integer.parseInt(inputLine.split(":")[0]);
 							int initcolpost = Integer.parseInt(inputLine.split(":")[1]);
-                                                        int movedrowpost = Integer.parseInt(inputLine.split(":")[2]);
+                            int movedrowpost = Integer.parseInt(inputLine.split(":")[2]);
 							int movedcolpost = Integer.parseInt(inputLine.split(":")[3]);
+							int myScore = Integer.parseInt(inputLine.split(":")[4]);
                                                         
-                                                        TakTakMultiplayerWindow.initRow = initrowpost;
-                                                        TakTakMultiplayerWindow.initCol = initcolpost;
-                                                        TakTakMultiplayerWindow.movedRow = movedrowpost;
-                                                        TakTakMultiplayerWindow.movedCol = movedcolpost;
-                                                        TakTakMultiplayerWindow.updateTurn();
+	                        TakTakMultiplayerWindow.initRow = initrowpost;
+	                        TakTakMultiplayerWindow.initCol = initcolpost;
+	                        TakTakMultiplayerWindow.movedRow = movedrowpost;
+	                        TakTakMultiplayerWindow.movedCol = movedcolpost;
+	                        TakTakMultiplayerWindow.opponentScore = myScore;
+	                        TakTakMultiplayerWindow.updateTurn();
+	                        TakTakMultiplayerWindow.initMovePiece();
 						}
 						catch (NumberFormatException e)
 						{

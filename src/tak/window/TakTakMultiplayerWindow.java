@@ -45,6 +45,7 @@ public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
 	public static int movedCol;
 	
 	public static int myScore;
+	public static int opponentScore;
 	public static Color myColor;
 
 	public TakTakMultiplayerWindow() {
@@ -103,23 +104,13 @@ public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
 					} else if (selectedRow != 999) {
 						boolean movedPiece = false;
 						for (int i = 0; i < validMoves.size() && !movedPiece; i++) {
-							if (validMoves.get(i).toString()
-									.equals(new OrderedPair(currentRow, currentColumn).toString())) {
-								movePieceToLocation(new OrderedPair(selectedRow, selectedColumn),
-										new OrderedPair(currentRow, currentColumn));
+							if (validMoves.get(i).toString().equals(new OrderedPair(currentRow, currentColumn).toString())) {
 								movedPiece = true;
-								selectedRow = 999;
-								selectedColumn = 999;
 								validMoves.clear();
 								initRow = selectedRow;
 								initCol = selectedColumn;
 								movedRow = currentRow;
 								movedCol = currentColumn;
-								if (isClient) {
-									ClientHandler.sendPieceMove(frame, initRow, initCol, movedRow, movedCol);
-								} else {
-									ServerHandler.sendPieceMove(frame, initRow, initCol, movedRow, movedCol);
-								}
 							}
 						}
 					}
@@ -199,6 +190,16 @@ public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
+				if (isClient)
+                {
+                    ClientHandler.sendDisconnect();
+                    ClientHandler.disconnect();
+                }
+                else
+                {
+                    ServerHandler.sendDisconnect();
+                    ServerHandler.disconnect();
+                }
 				new MenuWindow();
 			}
 		});
@@ -270,6 +271,13 @@ public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
 		g.setColor(Color.white);
 		g.setFont(new Font("Arial Bold", Font.PLAIN, 14));
 		g.drawString(currentHint, 15, 725);
+		
+		g.drawString("Your Score: " + myScore, 40, 50);
+		g.drawString("Opponent Score: " + opponentScore, 430, 50);
+		g.setFont(new Font("Arial Bold", Font.BOLD, 18));
+		g.drawString((myTurn ? "YOUR" : "OPPONENT'S") + " Turn", myTurn ? 245 : 210, 55);
+		g.setFont(new Font("Arial Bold", Font.BOLD, 14));
+		g.drawString("Turn #" + (turn + 1), 270, 40);
 
 		gOld.drawImage(image, 0, 0, null);
 	}
@@ -279,9 +287,20 @@ public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
 		super.reset();
 		myTurn = isClient;
 	}
+	
+	public static void initMovePiece() {
+		if (isClient) {
+			ClientHandler.sendPieceMove(initRow, initCol, movedRow, movedCol, myScore);
+		} else {
+			ServerHandler.sendPieceMove(initRow, initCol, movedRow, movedCol, myScore);
+		}
+		movePieceToLocation(new OrderedPair(initRow, initCol), new OrderedPair(movedRow, movedCol));
+		
+		selectedRow = 999;
+		selectedColumn = 999;
+	}
 
-	@Override
-	public void movePieceToLocation(OrderedPair piece, OrderedPair location) {
+	public static void movePieceToLocation(OrderedPair piece, OrderedPair location) {
 
 		if (board[location.getX()][location.getY()] != null) {
 			// Stacking isn't working right, doesn't add stacks correctly because
@@ -295,18 +314,16 @@ public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
 		}
 
 		//Pieces are in opponent's safe zone
-		//TODO - add client stuff here
-//		if (location.getX() >= 5 && board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.black ||
-//			location.getX() < 2 && board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.white) {
-//			if (board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.black) {
-//				aiScore += board[location.getX()][location.getY()].getValue();
-//			} else {
-//				myScore += board[location.getX()][location.getY()].getValue();
-//			}
-//			board[location.getX()][location.getY()] = null;
-//			
-//			//TODO - display some text that says "+ #of points" that fades out after a couple seconds
-//		}
+		//"my" pieces are black if I'm a client
+		if (location.getX() >= 5 && isClient) {
+			myScore += board[location.getX()][location.getY()].getValue();
+		}
+		//"my" pieces are white if I'm a server
+		if (location.getX() < 2 && !isClient) {
+			myScore += board[location.getX()][location.getY()].getValue();
+		}
+		
+		board[location.getX()][location.getY()] = null;
 	}
 
 	public static void updateTurn() {
