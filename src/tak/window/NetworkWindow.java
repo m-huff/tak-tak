@@ -54,7 +54,7 @@ public class NetworkWindow extends JFrame implements Runnable {
 	public static String ipAddress = new String();
 	public static boolean gameStarted = false;
 	public static boolean isConnecting = false;
-	
+
 	public static ArrayList<Piece> pieces = new ArrayList<Piece>();
 
 	public NetworkWindow(boolean isClient) {
@@ -117,56 +117,42 @@ public class NetworkWindow extends JFrame implements Runnable {
 						reset();
 					}
 				} else if (e.getKeyCode() == KeyEvent.VK_S) {
-					if (isPotentialGameClient) {
-						if (!isConnecting) {
-							try {
+					if (!isConnecting) {
+						try {
 
-								isConnecting = true;
-								System.out.println("is connecting true");
-								ServerHandler.recieveConnect(5657);
-								System.out.println("after recieveConnect");
-								if (ServerHandler.connected) {
-									final TakTakMultiplayerWindow ttw = new TakTakMultiplayerWindow();
-									ttw.isClient = isPotentialGameClient;
-									ttw.myTurn = isPotentialGameClient;
-									ttw.myColor = Color.black;
-									//TODO - finish setting and adding these things to TTW
-									gameStarted = true;
-									isConnecting = false;
-								}
-							} catch (IOException ex) {
-								System.out.println("Cannot host server: " + ex.getMessage());
-								isConnecting = false;
-							}
-						}
-					} else {
-						if (!isConnecting) {
-
-							try {
-
-								isConnecting = true;
+							isConnecting = true;
+							if (isPotentialGameClient) {
 								ClientHandler.connect(ipAddress, 5657);
 								if (ClientHandler.connected) {
 									final TakTakMultiplayerWindow ttw = new TakTakMultiplayerWindow();
 									ttw.isClient = isPotentialGameClient;
 									ttw.myTurn = isPotentialGameClient;
 									ttw.myColor = Color.white;
-									//TODO - finish setting and adding these things to TTW
-									gameStarted = true;
-									isConnecting = false;
 								}
-							} catch (IOException ex) {
-								System.out.println("Cannot join server: " + ex.getMessage());
-								isConnecting = false;
+							} else {
+								ServerHandler.recieveConnect(5657);
+								if (ServerHandler.connected) {
+									final TakTakMultiplayerWindow ttw = new TakTakMultiplayerWindow();
+									ttw.isClient = isPotentialGameClient;
+									ttw.myTurn = isPotentialGameClient;
+									ttw.myColor = Color.black;
+								}
 							}
-						}       
+							gameStarted = true;
+							isConnecting = false;
+							//I'm at least 50% sure this doesn't screw anything up
+							frame.dispose();
+						} catch (IOException ex) {
+							System.out.println("Cannot host server: " + ex.getMessage());
+							isConnecting = false;
+						}
 					}
 				}
 
 				repaint();
 			}
 		});
-		
+
 		//Send the user back to the menu screen to make sure the entire system gets exited
 		//Without this the sound will continue to run until it finishes	
 		addWindowListener(new WindowAdapter() {
@@ -202,7 +188,7 @@ public class NetworkWindow extends JFrame implements Runnable {
 			gOld.drawImage(image, 0, 0, null);
 			return;
 		}
-		
+
 		int index = 0;
 		for (int x = 0; x < WINDOW_WIDTH; x += 80) {
 			for (int y = 0; y < WINDOW_HEIGHT; y += 80) {
@@ -253,7 +239,7 @@ public class NetworkWindow extends JFrame implements Runnable {
 
 	public void reset() {
 		ipAddress = "";
-		
+
 		for (int i = 0; i < 20; i++) {
 			Color[] colors = {Color.orange, Color.blue, Color.green };
 			Piece p = new Piece((rand.nextInt(4) * 10) + 10, colors[rand.nextInt(colors.length)],

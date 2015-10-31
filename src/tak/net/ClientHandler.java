@@ -24,13 +24,16 @@ public class ClientHandler
 	private static Socket server = null;
 	private static PrintWriter serverOut = null;
 	private static BufferedReader serverIn = null;
+	
+	//Time it allows to connect, in seconds
+	private static final int TIMEOUT = 15;
 
 	public static void connect(String ip, int port) throws UnknownHostException, IOException
 	{
 		hostIP = ip;
 		hostPort = port;
 		server = new Socket();
-		server.connect(new InetSocketAddress(ip, port), 6000);
+		server.connect(new InetSocketAddress(ip, port), TIMEOUT * 1000);
 		serverOut = new PrintWriter(server.getOutputStream(), true);
 		serverIn = new BufferedReader(new InputStreamReader(server.getInputStream()));
 		connected = true;
