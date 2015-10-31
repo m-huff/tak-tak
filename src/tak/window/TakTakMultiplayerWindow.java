@@ -25,18 +25,7 @@ import tak.net.ClientHandler;
 import tak.net.ServerHandler;
 import tak.util.OrderedPair;
 
-public class TakTakMultiplayerWindow extends JFrame implements Runnable {
-
-	static final int WINDOW_WIDTH = 590;
-	static final int WINDOW_HEIGHT = 740;
-	final int XBORDER = 15;
-	final int YBORDER = 40;
-	final int YTITLE = 25;
-	boolean animateFirstTime = true;
-	int xsize = -1;
-	int ysize = -1;
-	Image image;
-	Graphics2D g;
+public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
 
 	private static final int SCREEN_WIDTH = Toolkit.getDefaultToolkit().getScreenSize().width;
 	private static final int SCREEN_HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().height;
@@ -44,55 +33,19 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 	private static final int CENTER_X = (SCREEN_WIDTH / 2) - (WINDOW_WIDTH / 2);
 	private static final int CENTER_Y = (SCREEN_HEIGHT / 2) - (WINDOW_HEIGHT / 2);
 
-	public static Random rand = new Random();
-	static ImageIcon icon = new ImageIcon(TakTakMultiplayerWindow.class.getResource("/tak/assets/icon.png"));
-
-	//Board of real game is 6x7
-	static final int COLUMNS = 6;
-	static final int ROWS = 7;
-	Piece[][] board;
-
 	private final TakTakMultiplayerWindow frame = this;
-
-	public static int turn;
-	public static boolean myTurn;
-	public boolean isClient;
+	
+	//The client player will always go first and play as black.
 
 	//Network variables
+	public static boolean isClient;
 	public static int initRow;
 	public static int initCol;
 	public static int movedRow;
 	public static int movedCol;
-
-	public static int selectedRow;
-	public static int selectedColumn;
-	public static int lilWindaRow;
-	public static int lilWindaColumn;
-	public static int mousex;
-	public static int mousey;
 	
 	public static int myScore;
 	public static Color myColor;
-
-	public static ArrayList<OrderedPair> validMoves = new ArrayList<OrderedPair>();
-
-	public static int tipTime;
-	public static String HINT_PREFIX = "Tip: ";
-	public static String currentHint;
-	public static String[] HINTS = {"Stack your pieces to move across the board faster!",
-			"The king piece moves twice as fast, but won't stack anything on top of it!",
-			"The king piece can also move backwards!",
-			"Press the ESC key to quit the game and return to the main menu!",
-			"Right-click a piece to see the stack size and total value!",
-			"Press BACKSPACE after you've selected a piece to cancel the selection.",
-			"Once you've selected a piece, all valid spaces to move turn green.",
-			"Press the ESC key from any screen to return to the main menu.",
-			"Right-clicking a piece will reveal all of the information about it!",
-			"You can stack your pieces in your own safe zone to get pieces across faster!",
-			"Your king piece can't be stacked on top of!",
-			"The king can't be stacked on top of, so it will block a stack from growing.",
-			"Even if a stack has a value of over 100 points, the king will limit it to 100.",
-			"When you right-click a piece, you can see a cool 3D image of the entire stack!" };
 
 	public TakTakMultiplayerWindow() {
 
@@ -244,13 +197,8 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 		init();
 		start();
 	}
-
-	Thread relaxer;
-
-	public void init() {
-		requestFocus();
-	}
-
+	
+	@Override
 	public void paint(Graphics gOld) {
 		if (image == null || xsize != getSize().width || ysize != getSize().height) {
 			xsize = getSize().width;
@@ -316,56 +264,14 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 
 		gOld.drawImage(image, 0, 0, null);
 	}
-
-	public void run() {
-		while (true) {
-			animate();
-			repaint();
-			double seconds = 0.04;
-			int miliseconds = (int) (1000.0 * seconds);
-			try {
-				Thread.sleep(miliseconds);
-			} catch (InterruptedException e) {
-			}
-		}
-	}
-
+	
+	@Override
 	public void reset() {
-		board = new Piece[ROWS][COLUMNS];
-		resetBoard();
-
-		tipTime = 0;
-		currentHint = HINT_PREFIX + HINTS[rand.nextInt(HINTS.length)];
-
-		turn = 0;
-		myTurn = true;
-
-		selectedRow = 999;
-		selectedColumn = 999;
-
-		validMoves.clear();
-		
-		myScore = 0;
+		super.reset();
+		myTurn = isClient;
 	}
 
-	public void animate() {
-		if (animateFirstTime) {
-			animateFirstTime = false;
-			if (xsize != getSize().width || ysize != getSize().height) {
-				xsize = getSize().width;
-				ysize = getSize().height;
-			}
-			reset();
-		}
-
-		if (tipTime < 200) {
-			tipTime++;
-		} else {
-			tipTime = 0;
-			currentHint = HINT_PREFIX + HINTS[rand.nextInt(HINTS.length)];
-		}
-	}
-
+	@Override
 	public void movePieceToLocation(OrderedPair piece, OrderedPair location) {
 
 		if (board[location.getX()][location.getY()] != null) {
@@ -394,329 +300,10 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 //		}
 	}
 
-
-	public void resetBoard() {
-
-		int value = 10;
-
-		for (int blue = 0; blue < 4; blue++) {
-			int row = rand.nextInt(2) + 5;
-			int column = rand.nextInt(COLUMNS);
-
-			while (board[row][column] != null) {
-				row = rand.nextInt(2) + 5;
-				column = rand.nextInt(COLUMNS);
-			}
-
-			board[row][column] = new Piece(value, Color.blue, Color.white);
-			value += 10;
-		}
-
-		value = 10;
-
-		for (int orange = 0; orange < 4; orange++) {
-			int row = rand.nextInt(2) + 5;
-			int column = rand.nextInt(COLUMNS);
-
-			while (board[row][column] != null) {
-				row = rand.nextInt(2) + 5;
-				column = rand.nextInt(COLUMNS);
-			}
-
-			board[row][column] = new Piece(value, Color.orange, Color.white);
-			value += 10;
-		}
-
-		value = 10;
-
-		for (int green = 0; green < 4; green++) {
-			int row = rand.nextInt(2) + 5;
-			int column = rand.nextInt(COLUMNS);
-
-			while (board[row][column] != null) {
-				row = rand.nextInt(2) + 5;
-				column = rand.nextInt(COLUMNS);
-			}
-
-			board[row][column] = new Piece(value, Color.green, Color.white);
-			value += 10;
-		}
-
-		value = 10;
-
-		for (int blue = 0; blue < 4; blue++) {
-			int row = rand.nextInt(2);
-			int column = rand.nextInt(COLUMNS);
-
-			while (board[row][column] != null) {
-				row = rand.nextInt(2);
-				column = rand.nextInt(COLUMNS);
-			}
-
-			board[row][column] = new Piece(value, Color.blue, Color.black);
-			value += 10;
-		}
-
-		value = 10;
-
-		for (int orange = 0; orange < 4; orange++) {
-			int row = rand.nextInt(2);
-			int column = rand.nextInt(COLUMNS);
-
-			while (board[row][column] != null) {
-				row = rand.nextInt(2);
-				column = rand.nextInt(COLUMNS);
-			}
-
-			board[row][column] = new Piece(value, Color.orange, Color.black);
-			value += 10;
-		}
-
-		value = 10;
-
-		for (int green = 0; green < 4; green++) {
-			int row = rand.nextInt(2);
-			int column = rand.nextInt(COLUMNS);
-
-			while (board[row][column] != null) {
-				row = rand.nextInt(2);
-				column = rand.nextInt(COLUMNS);
-			}
-
-			board[row][column] = new Piece(value, Color.green, Color.black);
-			value += 10;
-		}
-
-		//Puts the kings on the board
-
-		int row = rand.nextInt(2);
-		int column = rand.nextInt(COLUMNS);
-		Piece blackKing = new Piece(value, Color.black, Color.black);
-		blackKing.setKing(true);
-		board[row][column] = blackKing;
-
-		row = rand.nextInt(2) + 5;
-		column = rand.nextInt(COLUMNS);
-		Piece whiteKing = new Piece(value, Color.white, Color.white);
-		whiteKing.setKing(true);
-		board[row][column] = whiteKing;
-	}
-
-	public void displayAllValidMoves(Graphics2D g, int row, int column) {
-
-		// Show all spaces that the piece can move to, represented by green rectangles
-		// The piece can move to a space if it is one space above/below it, or diagonal,
-		// depending on the color of the piece. The move is allowed if there is another
-		// piece at the location to move to, IF the piece at the desired location has the
-		// same color or value as the piece you're moving. Kings can move onto any piece,
-		// no matter what the value or color. If a piece/stack is a king, then a move to
-		// that space is not possible.
-
-		g.setColor(new Color(10, 10, 10, 150));
-		g.fillRect(column * (getWidth2() / COLUMNS) + getX(0), row * (getHeight2() / ROWS) + getY(0), 94, 94);
-
-		Piece p = board[row][column];
-		int pieceDirection = (p.getBackgroundColor() == Color.black ? 0 : 1);
-
-		g.setColor(new Color(64, 128, 64, 150));
-
-		if (p.getTopPiece().isKing()) {
-			if (canPieceMoveToLocation(p.getTopPiece(), row + 1, column)) {
-				g.fillRect(column * (getWidth2() / COLUMNS) + getX(0), (row + 1) * (getHeight2() / ROWS) + getY(0), 94,
-						94);
-				validMoves.add(new OrderedPair(row + 1, column));
-			}
-			if (canPieceMoveToLocation(p.getTopPiece(), row + 2, column)) {
-				g.fillRect(column * (getWidth2() / COLUMNS) + getX(0), (row + 2) * (getHeight2() / ROWS) + getY(0), 94,
-						94);
-				validMoves.add(new OrderedPair(row + 2, column));
-			}
-			if (canPieceMoveToLocation(p.getTopPiece(), row + 1, column + 1)) {
-				g.fillRect((column + 1) * (getWidth2() / COLUMNS) + getX(0),
-						(row + 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
-				validMoves.add(new OrderedPair(row + 1, column + 1));
-			}
-			if (canPieceMoveToLocation(p.getTopPiece(), row + 2, column + 2)) {
-				g.fillRect((column + 2) * (getWidth2() / COLUMNS) + getX(0),
-						(row + 2) * (getHeight2() / ROWS) + getY(0), 94, 94);
-				validMoves.add(new OrderedPair(row + 2, column + 2));
-			}
-			if (canPieceMoveToLocation(p.getTopPiece(), row + 1, column - 1)) {
-				g.fillRect((column - 1) * (getWidth2() / COLUMNS) + getX(0),
-						(row + 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
-				validMoves.add(new OrderedPair(row + 1, column - 1));
-			}
-			if (canPieceMoveToLocation(p.getTopPiece(), row + 2, column - 2)) {
-				g.fillRect((column - 2) * (getWidth2() / COLUMNS) + getX(0),
-						(row + 2) * (getHeight2() / ROWS) + getY(0), 94, 94);
-				validMoves.add(new OrderedPair(row + 2, column - 2));
-			}
-			if (canPieceMoveToLocation(p.getTopPiece(), row - 1, column)) {
-				g.fillRect(column * (getWidth2() / COLUMNS) + getX(0), (row - 1) * (getHeight2() / ROWS) + getY(0), 94,
-						94);
-				validMoves.add(new OrderedPair(row - 1, column));
-			}
-			if (canPieceMoveToLocation(p.getTopPiece(), row - 2, column)) {
-				g.fillRect(column * (getWidth2() / COLUMNS) + getX(0), (row - 2) * (getHeight2() / ROWS) + getY(0), 94,
-						94);
-				validMoves.add(new OrderedPair(row - 2, column));
-			}
-			if (canPieceMoveToLocation(p.getTopPiece(), row - 1, column + 1)) {
-				g.fillRect((column + 1) * (getWidth2() / COLUMNS) + getX(0),
-						(row - 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
-				validMoves.add(new OrderedPair(row - 1, column + 1));
-			}
-			if (canPieceMoveToLocation(p.getTopPiece(), row - 2, column + 2)) {
-				g.fillRect((column + 2) * (getWidth2() / COLUMNS) + getX(0),
-						(row - 2) * (getHeight2() / ROWS) + getY(0), 94, 94);
-				validMoves.add(new OrderedPair(row - 2, column + 2));
-			}
-			if (canPieceMoveToLocation(p.getTopPiece(), row - 1, column - 1)) {
-				g.fillRect((column - 1) * (getWidth2() / COLUMNS) + getX(0),
-						(row - 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
-				validMoves.add(new OrderedPair(row - 1, column - 1));
-			}
-			if (canPieceMoveToLocation(p.getTopPiece(), row - 2, column - 2)) {
-				g.fillRect((column - 2) * (getWidth2() / COLUMNS) + getX(0),
-						(row - 2) * (getHeight2() / ROWS) + getY(0), 94, 94);
-				validMoves.add(new OrderedPair(row - 2, column - 2));
-			}
-		}
-
-		if (!p.getTopPiece().isKing() && pieceDirection == 1) {
-			if (canPieceMoveToLocation(p.getTopPiece(), row - 1, column)) {
-				g.fillRect(column * (getWidth2() / COLUMNS) + getX(0), (row - 1) * (getHeight2() / ROWS) + getY(0), 94,
-						94);
-				validMoves.add(new OrderedPair(row - 1, column));
-			}
-			if (canPieceMoveToLocation(p.getTopPiece(), row - 1, column + 1)) {
-				g.fillRect((column + 1) * (getWidth2() / COLUMNS) + getX(0),
-						(row - 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
-				validMoves.add(new OrderedPair(row - 1, column + 1));
-			}
-			if (canPieceMoveToLocation(p.getTopPiece(), row - 1, column - 1)) {
-				g.fillRect((column - 1) * (getWidth2() / COLUMNS) + getX(0),
-						(row - 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
-				validMoves.add(new OrderedPair(row - 1, column - 1));
-			}
-		}
-
-		if (!p.getTopPiece().isKing() && pieceDirection == 0) {
-			if (canPieceMoveToLocation(p.getTopPiece(), row + 1, column)) {
-				g.fillRect(column * (getWidth2() / COLUMNS) + getX(0), (row + 1) * (getHeight2() / ROWS) + getY(0), 94,
-						94);
-				validMoves.add(new OrderedPair(row + 1, column));
-			}
-			if (canPieceMoveToLocation(p.getTopPiece(), row + 1, column + 1)) {
-				g.fillRect((column + 1) * (getWidth2() / COLUMNS) + getX(0),
-						(row + 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
-				validMoves.add(new OrderedPair(row + 1, column + 1));
-			}
-			if (canPieceMoveToLocation(p.getTopPiece(), row + 1, column - 1)) {
-				g.fillRect((column - 1) * (getWidth2() / COLUMNS) + getX(0),
-						(row + 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
-				validMoves.add(new OrderedPair(row + 1, column - 1));
-			}
-		}
-	}
-	
-	public void scorePiece(OrderedPair op) {
-		if (board[op.getX()][op.getY()] != null) {
-			myScore += board[op.getX()][op.getY()].getValue();
-			board[op.getX()][op.getY()] = null;
-		}
-		else {
-			System.out.println("Piece to score wasn't there");
-		}
-	}
-
-	public void start() {
-		if (relaxer == null) {
-			relaxer = new Thread(this);
-			relaxer.start();
-		}
-	}
-
-	public boolean canPieceMoveToLocation(Piece _piece, int row, int column) {
-		//Check if the desired place is within the bounds of the board, and
-		//if the piece is allowed to move there.
-		
-		//Rules: if there is no piece where you're trying to move, there will
-		//		 never be any reason why you can't move there. If there IS a
-		//       piece there, you can stack on top of that piece/stack if your
-		//       piece has the same number/color as the top piece of the stack,
-		//       unless the top piece of the stack is a king, in which case no
-		//       piece can stack on top of it. Further, you can't stack your
-		//       piece on top of another piece if it is still in it's safe zone.
-		
-		if (row >= 0 && row < ROWS && column >= 0 && column < COLUMNS) {
-			//If there's no piece there
-			if (board[row][column] == null) {
-				return true;
-			}
-			//If there IS a piece there
-			else if (board[row][column] != null && !_piece.getTopPiece().isKing()) {
-				//If the piece is a king
-				if (board[row][column].getTopPiece().isKing()) {
-					return false;
-				}
-				//Can't go into opponent safe zone if a piece is there
-				if (row >= 5 && _piece.getTopPiece().getBackgroundColor() == Color.BLACK) {
-					return false;
-				}
-				if (row < 2 && _piece.getTopPiece().getBackgroundColor() == Color.WHITE) {
-					return false;
-				}
-				//If the piece has a good color or value
-				if (board[row][column].getTopPiece().getValue() == _piece.getTopPiece().getValue()
-						|| board[row][column].getTopPiece().getForegroundColor() == _piece.getTopPiece().getForegroundColor()) {
-					return true;
-				}
-			} else if (board[row][column] != null && _piece.getTopPiece().isKing()) {
-				if (board[row][column].getTopPiece().isKing()) {
-					return false;
-				}
-				if (row >= 5 && _piece.getTopPiece().getBackgroundColor() == Color.BLACK) {
-					return false;
-				}
-				if (row < 2 && _piece.getTopPiece().getBackgroundColor() == Color.WHITE) {
-					return false;
-				}
-				return true;
-			}
-		}
-		return false;
-	}
-
 	public static void updateTurn() {
 		myTurn = !myTurn;
-		turn++;
-	}
-
-	public void stop() {
-		if (relaxer.isAlive()) {
-			relaxer.stop();
-		}
-		relaxer = null;
-	}
-
-	public int getX(int x) {
-		return (x + XBORDER);
-	}
-
-	public int getY(int y) {
-		return (y + YBORDER + YTITLE);
-	}
-
-	public int getYNormal(int y) {
-		return (-y + YBORDER + YTITLE + getHeight2());
-	}
-
-	public int getWidth2() {
-		return (xsize - getX(0) - XBORDER);
-	}
-
-	public int getHeight2() {
-		return (ysize - getY(0) - YBORDER);
+		//Update the turn after both players have gone
+		if (!isClient)
+			turn++;
 	}
 }
