@@ -12,15 +12,18 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Random;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+
+import tak.com.Piece;
 import tak.net.ClientHandler;
 import tak.net.ServerHandler;
 
 @SuppressWarnings("serial")
-public class ConnectWindow extends JFrame implements Runnable {
+public class NetworkWindow extends JFrame implements Runnable {
 
 	static final int XBORDER = 20;
 	static final int YBORDER = 20;
@@ -41,16 +44,18 @@ public class ConnectWindow extends JFrame implements Runnable {
 	private static final int CENTER_Y = (SCREEN_HEIGHT / 2) - (WINDOW_HEIGHT / 2);
 
 	public static Random rand = new Random();
-	public static ImageIcon icon = new ImageIcon(ConnectWindow.class.getResource("/tak/assets/icon.png"));
+	public static ImageIcon icon = new ImageIcon(NetworkWindow.class.getResource("/tak/assets/icon.png"));
 
-	private final ConnectWindow frame = this;
+	private final NetworkWindow frame = this;
 
 	public static boolean isPotentialGameClient;
 	public static String ipAddress = new String();
 	public static boolean gameStarted = false;
 	public static boolean isConnecting = false;
+	
+	public static ArrayList<Piece> pieces = new ArrayList<Piece>();
 
-	public ConnectWindow(boolean isClient) {
+	public NetworkWindow(boolean isClient) {
 
 		isPotentialGameClient = isClient;
 
@@ -182,9 +187,25 @@ public class ConnectWindow extends JFrame implements Runnable {
 			gOld.drawImage(image, 0, 0, null);
 			return;
 		}
+		
+		int index = 0;
+		for (int x = 0; x < WINDOW_WIDTH; x += 80) {
+			for (int y = 0; y < WINDOW_HEIGHT; y += 80) {
 
-		g.setColor(new Color(0, 0, 0, 150));
-		g.fillRect(0, 0, WINDOW_WIDTH, 180);
+				if (index <= pieces.size() - 2 && pieces.get(index) != null) {
+					pieces.get(index).draw(g, x, y);
+					if (index < pieces.size() - 2) {
+						index++;
+					} else {
+						index = 0;
+					}
+				}
+			}
+		}
+
+		g.setColor(new Color(0, 0, 0, 230));
+		g.fillRect(0, 0, WINDOW_WIDTH, 130);
+		g.fillRect(0, 255, WINDOW_WIDTH, 60);
 
 		g.setColor(Color.white);
 		g.setFont(new Font("Arial", Font.BOLD, 14));
@@ -195,7 +216,7 @@ public class ConnectWindow extends JFrame implements Runnable {
 			e.printStackTrace();
 		}
 		g.drawString("Enter an IP address to play against", 30, 90);
-		g.drawString("Press S to attempt to start a game", 30, 280);
+		g.drawString("Press S to attempt to " + (isPotentialGameClient ? "join" : "start") + " a game", 30, 280);
 		g.drawString("Opponent IP: " + ipAddress, 30, 110);
 
 		gOld.drawImage(image, 0, 0, null);
@@ -216,6 +237,15 @@ public class ConnectWindow extends JFrame implements Runnable {
 
 	public void reset() {
 		ipAddress = "";
+		
+		for (int i = 0; i < 20; i++) {
+			Color[] colors = {Color.orange, Color.blue, Color.green };
+			Piece p = new Piece((rand.nextInt(4) * 10) + 10, colors[rand.nextInt(colors.length)],
+					rand.nextBoolean() ? Color.black : Color.white);
+			if (rand.nextInt(10) == 0)
+				p.setKing(true);
+			pieces.add(p);
+		}
 	}
 
 	public void animate() {
