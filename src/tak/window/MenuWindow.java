@@ -107,9 +107,7 @@ public class MenuWindow extends JFrame implements Runnable {
 			gOld.drawImage(image, 0, 0, null);
 			return;
 		}
-
-		//Gotta make the text stand out more, a background maybe
-
+		
 		int index = 0;
 		for (int x = 0; x < WINDOW_WIDTH; x += 80) {
 			for (int y = 0; y < WINDOW_HEIGHT; y += 80) {

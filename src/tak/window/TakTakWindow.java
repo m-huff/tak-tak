@@ -356,17 +356,21 @@ public class TakTakWindow extends JFrame implements Runnable {
 		Piece moveLocation = board[location.getX()][location.getY()];
 
 		if (moveLocation != null) {
-			//If a piece is there
-		} else {
-			moveLocation = new Piece(movingPiece.getValue(), movingPiece.getForegroundColor(),
+			Piece p = new Piece(movingPiece.getValue(), movingPiece.getForegroundColor(),
 					movingPiece.getBackgroundColor());
-			moveLocation.setKing(movingPiece.isKing());
-			moveLocation.addStackToStack(movingPiece.getWholeStack());
-			movingPiece = null;
-
-			//Pieces are being updated, but not painted
-			System.out.println(movingPiece);
-			System.out.println(moveLocation);
+			p.setKing(movingPiece.isKing());
+			//Stacking isn't working totally right, it adds too many pieces
+			p.addStackToStack(moveLocation.getWholeStack());
+			p.addStackToStack(movingPiece.getWholeStack());
+			board[piece.getX()][piece.getY()] = null;
+			board[location.getX()][location.getY()] = p;
+		} else {
+			Piece p = new Piece(movingPiece.getValue(), movingPiece.getForegroundColor(),
+					movingPiece.getBackgroundColor());
+			p.setKing(movingPiece.isKing());
+			p.addStackToStack(movingPiece.getWholeStack());
+			board[piece.getX()][piece.getY()] = null;
+			board[location.getX()][location.getY()] = p;
 		}
 	}
 
