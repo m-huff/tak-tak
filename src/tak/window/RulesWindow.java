@@ -83,7 +83,7 @@ public class RulesWindow extends JFrame implements Runnable {
 	public RulesWindow() {
 
 		setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setVisible(true);
 		setIconImage(icon.getImage());
 		setTitle("Tak-Tak");

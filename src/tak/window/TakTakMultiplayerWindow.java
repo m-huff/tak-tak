@@ -97,7 +97,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 	public TakTakMultiplayerWindow() {
 
 		setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setVisible(true);
 		setResizable(false);
 		setTitle("Tak-Tak");

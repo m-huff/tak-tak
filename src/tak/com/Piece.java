@@ -142,7 +142,7 @@ public class Piece {
 	//TODO - make the window tell you whether or not you control the piece
 	public void drawLilWinda(Graphics2D g, int mousex, int mousey) {
 
-		g.setColor(new Color(50,50,50, 150));
+		g.setColor(new Color(0, 0, 0, 230));
 		g.fillRect(mousex, mousey, 105, stack.size() > 5 ? 150 + (stack.size() - 5) * 32 : 150);
 		g.setColor(new Color(50, 50, 50));
         g.setColor(Color.WHITE);
