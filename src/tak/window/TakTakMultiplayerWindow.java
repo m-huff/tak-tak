@@ -171,7 +171,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 						}
 					}
 				}
-				if (e.BUTTON3 == e.getButton()) {
+				if (MouseEvent.BUTTON3 == e.getButton()) {
 
 					int xpos = e.getX() - getX(0);
 					int ypos = e.getY() - getY(0);
@@ -669,7 +669,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 				}
 				//If the piece has a good color or value
 				if (board[row][column].getTopPiece().getValue() == _piece.getTopPiece().getValue()
-						|| board[row][column].getForegroundColor() == _piece.getTopPiece().getForegroundColor()) {
+						|| board[row][column].getTopPiece().getForegroundColor() == _piece.getTopPiece().getForegroundColor()) {
 					return true;
 				}
 			} else if (board[row][column] != null && _piece.getTopPiece().isKing()) {
@@ -690,6 +690,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 
 	public static void updateTurn() {
 		myTurn = !myTurn;
+		turn++;
 	}
 
 	public void stop() {

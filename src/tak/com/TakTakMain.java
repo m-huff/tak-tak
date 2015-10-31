@@ -5,7 +5,8 @@ import tak.window.MenuWindow;
 
 public class TakTakMain {
 	
-	//From http://opsound.org/artist/macroform/ - music is public domain
+	//Music - http://opsound.org/artist/macroform/ - public domain
+	//SFX - http://www.wavsource.com/sfx/sfx.htm - public domain
 	static Sound music = new Sound("swoosh.wav");
 
     public static void main(String[] args) {

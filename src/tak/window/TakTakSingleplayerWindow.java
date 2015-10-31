@@ -24,6 +24,7 @@ import tak.com.Piece;
 import tak.net.ClientHandler;
 import tak.net.ServerHandler;
 import tak.util.OrderedPair;
+import tak.util.Sound;
 
 public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 
@@ -65,7 +66,12 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 	public static int mousey;
 	
 	public static int myScore;
+	
 	public static int aiScore;
+	public static int aiMoveDelay;
+	
+	static Sound move;
+	static Sound cha_ching;
 
 	public static ArrayList<OrderedPair> validMoves = new ArrayList<OrderedPair>();
 
@@ -151,11 +157,15 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 								selectedRow = 999;
 								selectedColumn = 999;
 								validMoves.clear();
+								//turn++;
+								//Have turn only update after both players have gone
+								//AI taking a turn adds one to turn counter
+								myTurn = !myTurn;
 							}
 						}
 					}
 				}
-				if (e.BUTTON3 == e.getButton()) {
+				if (MouseEvent.BUTTON3 == e.getButton()) {
 
 					int xpos = e.getX() - getX(0);
 					int ypos = e.getY() - getY(0);
@@ -302,6 +312,8 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 		g.drawString("AI Score: " + aiScore, 460, 50);
 		g.setFont(new Font("Arial Bold", Font.BOLD, 18));
 		g.drawString((myTurn ? "YOUR" : "OPPONENT'S") + " Turn", myTurn ? 245 : 210, 55);
+		g.setFont(new Font("Arial Bold", Font.BOLD, 14));
+		g.drawString("Turn #" + (turn + 1), 270, 40);
 
 		gOld.drawImage(image, 0, 0, null);
 	}
@@ -354,6 +366,16 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 			tipTime = 0;
 			currentHint = HINT_PREFIX + HINTS[rand.nextInt(HINTS.length)];
 		}
+		
+		if (!myTurn && aiMoveDelay >= 50) {
+			System.out.println("AI makes a move");
+			//TODO - makeAIMove();
+			myTurn = !myTurn;
+			turn++;
+			aiMoveDelay = 0;
+		} else if (!myTurn && aiMoveDelay < 50) {
+			aiMoveDelay++;
+		}
 	}
 
 	public void movePieceToLocation(OrderedPair piece, OrderedPair location) {
@@ -368,6 +390,8 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 			board[location.getX()][location.getY()] = board[piece.getX()][piece.getY()];
 			board[piece.getX()][piece.getY()] = null;
 		}
+		//TODO - this isn't loud enough to be heard over the music
+		move = new Sound("swoosh.wav");
 
 		//Pieces are in opponent's safe zone
 		if (location.getX() >= 5 && board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.black ||
@@ -378,7 +402,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 				myScore += board[location.getX()][location.getY()].getValue();
 			}
 			board[location.getX()][location.getY()] = null;
-			
+			move = new Sound("chaching.wav");
 			//TODO - display some text that says "+ #of points" that fades out after a couple seconds
 		}
 	}
@@ -607,16 +631,6 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 			}
 		}
 	}
-	
-//	public void scorePiece(OrderedPair op) {
-//		if (board[op.getX()][op.getY()] != null) {
-//			myScore += board[op.getX()][op.getY()].getValue();
-//			board[op.getX()][op.getY()] = null;
-//		}
-//		else {
-//			System.out.println("Piece to score wasn't there");
-//		}
-//	}
 
 	public void start() {
 		if (relaxer == null) {
@@ -657,7 +671,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 				}
 				//If the piece has a good color or value
 				if (board[row][column].getTopPiece().getValue() == _piece.getTopPiece().getValue()
-						|| board[row][column].getForegroundColor() == _piece.getTopPiece().getForegroundColor()) {
+						|| board[row][column].getTopPiece().getForegroundColor() == _piece.getTopPiece().getForegroundColor()) {
 					return true;
 				}
 			} else if (board[row][column] != null && _piece.getTopPiece().isKing()) {

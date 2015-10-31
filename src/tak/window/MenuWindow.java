@@ -42,7 +42,6 @@ public class MenuWindow extends JFrame implements Runnable {
 
 	private final MenuWindow frame = this;
 
-	//Does not reset itself when the user escapes to the main menu after playing
 	public static int textPosition = WINDOW_WIDTH;
 
 	public static ArrayList<Piece> pieces = new ArrayList<Piece>();
@@ -162,6 +161,7 @@ public class MenuWindow extends JFrame implements Runnable {
 				p.setKing(true);
 			pieces.add(p);
 		}
+		textPosition = WINDOW_WIDTH;
 	}
 
 	public void animate() {
