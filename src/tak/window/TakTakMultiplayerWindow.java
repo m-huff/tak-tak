@@ -172,7 +172,16 @@ public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
 
 			public void keyPressed(KeyEvent e) {
 				if (KeyEvent.VK_ESCAPE == e.getKeyCode()) {
-					reset();
+					if (isClient)
+                    {
+                        ClientHandler.sendDisconnect();
+                        ClientHandler.disconnect();
+                    }
+                    else
+                    {
+                        ServerHandler.sendDisconnect();
+                        ServerHandler.disconnect();
+                    }
 					new MenuWindow();
 					frame.dispose();
 				}
