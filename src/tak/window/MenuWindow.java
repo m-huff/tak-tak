@@ -125,17 +125,17 @@ public class MenuWindow extends JFrame implements Runnable {
 		}
 
 		g.setColor(new Color(0, 0, 0, 230));
-		g.fillRect(0, 0, WINDOW_WIDTH, 210);
+		g.fillRect(0, 0, WINDOW_WIDTH, textPosition + 75);
 
 		g.setColor(new Color(240, 240, 240));
 		g.setFont(new Font("Arial", Font.BOLD, 42));
-		g.drawString("TAK-TAK", textPosition, 80);
+		g.drawString("TAK-TAK", textPosition - 105, 80);
 
 		g.setFont(new Font("Arial", Font.BOLD, 14));
-		g.drawString("Press X to play against an AI", textPosition, 155);
-		g.drawString("Press Z to learn the rules", textPosition, 135);
-		g.drawString("Press C to start a multiplayer game as the client", textPosition, 175);
-		g.drawString("Press V to start a multiplayer game as the server", textPosition, 195);
+		g.drawString("Press X to play against an AI", 30, textPosition + 20);
+		g.drawString("Press Z to learn the rules", 30, textPosition);
+		g.drawString("Press C to join a multiplayer game as the client", 30, textPosition + 40);
+		g.drawString("Press V to start a multiplayer game as the server", 30, textPosition + 60);
 
 		gOld.drawImage(image, 0, 0, null);
 	}
@@ -181,10 +181,8 @@ public class MenuWindow extends JFrame implements Runnable {
 				textPosition -= 20;
 			else if (textPosition < 400 && textPosition >= 250)
 				textPosition -= 16;
-			else if (textPosition < 250 && textPosition >= 100)
+			else if (textPosition < 250 && textPosition >= 135)
 				textPosition -= 10;
-			else if (textPosition < 100)
-				textPosition -= 6;
 		}
 	}
 

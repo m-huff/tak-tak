@@ -44,9 +44,7 @@ public class RulesWindow extends JFrame implements Runnable {
 	public static ImageIcon icon = new ImageIcon(RulesWindow.class.getResource("/tak/assets/icon.png"));
 
 	private final RulesWindow frame = this;
-	
-	//Can't implement this until the game is fully working
-	//GIFs probably
+
 	public static ArrayList<Image> images = new ArrayList<Image>();
 	public static String[] imageText = {"Tak-Tak pieces can move forward, straight and diagonally.",
 										"You can move your own pieces on top of each other, stacking them.",
@@ -71,14 +69,16 @@ public class RulesWindow extends JFrame implements Runnable {
 										"",
 										"",
 										"contains the king. If the king is stacked, the entire value of the",
+										"You can then control them for yourself, and score them.",
+										"others.",
 										"",
-										"others. You can then control them for yourself, and score them.",
-										"",
-										" across the board faster, and steal points from the opponent."};
+										"across the board faster, and steal points from the opponent."};
 
 	
 	public static ArrayList<Piece> pieces = new ArrayList<Piece>();
 	public static int currentSlide;
+	
+	public static boolean hasChangedSlides;
 
 	public RulesWindow() {
 
@@ -103,6 +103,7 @@ public class RulesWindow extends JFrame implements Runnable {
 						currentSlide++;
 					else
 						currentSlide = 0;
+					hasChangedSlides = true;
 				}
 				
 				if (e.VK_LEFT == e.getKeyCode()) {
@@ -110,6 +111,7 @@ public class RulesWindow extends JFrame implements Runnable {
 						currentSlide--;
 					else
 						currentSlide = images.size() - 1;
+					hasChangedSlides = true;
 				}
 
 				repaint();
@@ -180,19 +182,20 @@ public class RulesWindow extends JFrame implements Runnable {
 		g.drawString(imageText[currentSlide], 95, 500);
 		g.drawString(imageText2[currentSlide], 95, 520);
 		if (currentSlide == 8) {
-			//The only one that needs a third line
 			g.drawString("stack becomes 100.", 95, 540);
 		}
-		g.drawImage(images.get(currentSlide), 112, 190, null);
+		if (!images.isEmpty())
+			g.drawImage(images.get(currentSlide), 112, 190, null);
 		
 		g.setFont(new Font("Arial", Font.BOLD, 18));
 		
-		if (currentSlide == 0) {
-			
-			g.setFont(new Font("Arial", Font.BOLD, 14));
-			g.drawString("Use the LEFT and RIGHT arrow keys to navigate.", 115, 590);
+		if (currentSlide == 0 && !hasChangedSlides) {
+			g.setFont(new Font("Arial", Font.BOLD, 12));
+			g.setColor(Color.gray);
+			g.drawString("USE THE LEFT AND RIGHT ARROW KEYS TO NAVIGATE THE RULES", 102, 590);
 		}
 
+		g.setColor(new Color(240, 240, 240));
 		g.setFont(new Font("Arial", Font.BOLD, 18));
 		g.drawString((currentSlide + 1) + " of " + images.size(), 260, 610);
 
@@ -214,6 +217,7 @@ public class RulesWindow extends JFrame implements Runnable {
 
 	public void reset() {
 		currentSlide = 0;
+		hasChangedSlides = false;
 		
 		for (int i = 0; i < 50; i++) {
 			Color[] colors = {Color.orange, Color.blue, Color.green };
