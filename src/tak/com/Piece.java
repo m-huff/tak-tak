@@ -52,7 +52,7 @@ public class Piece {
 
 	public void setValue(int _value) {
 		value = _value;
-		if (isKing()) {
+		if (getTopPiece().isKing()) {
 			if (value > 100)
 				value = 100;
 			if (value < 0)
@@ -62,7 +62,7 @@ public class Piece {
 	
 	public void addValue(int _value) {
 		value += _value;
-		if (isKing()) {
+		if (getTopPiece().isKing()) {
 			if (value > 100)
 				value = 100;
 			if (value < 0)
@@ -130,7 +130,8 @@ public class Piece {
 		
 		if (stack.size() > 1) {
 			g.setFont(new Font("Arial Bold", Font.PLAIN, 12));
-			g.setColor(new Color(255 - backColor.getRed(), 255 - backColor.getGreen(), 255 - backColor.getBlue()));
+			g.setColor(new Color(255 - getTopPiece().backColor.getRed(),
+			255 - getTopPiece().backColor.getGreen(), 255 - getTopPiece().backColor.getBlue()));
 			g.drawString(String.valueOf(stack.size()), x + 68, y + 23);
 		}
 		
@@ -138,36 +139,34 @@ public class Piece {
 		//Unless there is no stack (1 piece), then don't draw the number
 	}
 
+	//TODO - make the window tell you whether or not you control the piece
 	public void drawLilWinda(Graphics2D g, int mousex, int mousey) {
 
 		g.setColor(new Color(50,50,50, 150));
-		g.fillRect(mousex, mousey, 100, 150);
+		g.fillRect(mousex, mousey, 105, stack.size() > 5 ? 150 + (stack.size() - 5) * 32 : 150);
 		g.setColor(new Color(50, 50, 50));
-		int xcords[] = {mousex, mousex + 100, mousex + 100, mousex };
-		int ycords[] = {mousey, mousey, mousey + 150, mousey + 150 };
-		g.drawPolyline(xcords, ycords, 4);
-                g.setColor(Color.WHITE);
+        g.setColor(Color.WHITE);
 		g.setFont(new Font("Arial Bold", Font.BOLD, 11));
 		g.drawString("Total value is "+ value, mousex + 8, mousey+14);
                 g.setFont(new Font("Arial Bold", Font.BOLD, 11));
                 if(stack.size() == 1)
-		g.drawString(stack.size() + " piece in stack", mousex + 8, mousey+145);
+		g.drawString(stack.size() + " piece in stack", mousex + 8, stack.size() > 5 ? mousey + 145 + (stack.size() - 5) * 32 : mousey + 145);
                 else
-                g.drawString(stack.size() + " pieces in stack", mousex + 8, mousey+145);
+                g.drawString(stack.size() + " pieces in stack", mousex + 8, stack.size() > 5 ? mousey + 145 + (stack.size() - 5) * 32 : mousey + 145);
                 
                 int counter = 0;
                 for(Piece temp : stack)
                 { 
                    g.setColor(temp.backColor);
-                   g.drawImage((temp.backColor == Color.black ? black.getImage() : white.getImage()), mousex+ 30, (mousey+106)-(counter*30), 45, 25, null);
-		   g.drawImage((temp.backColor == Color.black ? black.getImage() : white.getImage()), mousex+ 30, (mousey+100)-(counter*30), 45, 25, null);
+                   g.drawImage((temp.backColor == Color.black ? black.getImage() : white.getImage()), mousex+ 30, stack.size() > 5 ? (((mousey + 106) + (stack.size() - 5) * 32)) - (counter * 20) : (mousey+106)-(counter*20), 45, 25, null);
+		   g.drawImage((temp.backColor == Color.black ? black.getImage() : white.getImage()), mousex+ 30, stack.size() > 5 ? (((mousey + 100) + (stack.size() - 5) * 32)) - (counter * 20) : (mousey+100)-(counter*20), 45, 25, null);
                    
                    if (!temp.isKing) {
 			g.drawImage((temp.frontColor == Color.orange ? orange.getImage()
-					: temp.frontColor == Color.blue ? blue.getImage() : green.getImage()), mousex+ 30, (mousey+100)-(counter*30), 45, 25, null);
+					: temp.frontColor == Color.blue ? blue.getImage() : green.getImage()), mousex+ 30, stack.size() > 5 ? (((mousey + 100) + (stack.size() - 5) * 32)) - (counter * 20) : (mousey+100)-(counter*20), 45, 25, null);
 		   }
                    else {
-			g.drawImage(crown.getImage(), mousex+ 30, (mousey+100)-(counter*30), 45, 25, null);
+			g.drawImage(crown.getImage(), mousex+ 30, stack.size() > 5 ? (((mousey + 100) + (stack.size() - 5) * 32)) - (counter * 20) : (mousey+100)-(counter*20), 45, 25, null);
 		   }
                    counter++;
                 }

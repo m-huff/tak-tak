@@ -355,23 +355,33 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 	}
 
 	public void movePieceToLocation(OrderedPair piece, OrderedPair location) {
-		Piece movingPiece = board[piece.getX()][piece.getY()];
-		Piece moveLocation = board[location.getX()][location.getY()];
 
-		Piece p = new Piece(movingPiece.getValue(), movingPiece.getForegroundColor(), movingPiece.getBackgroundColor());
-		p.setKing(movingPiece.isKing());
-
-		// Stacking isn't working right, doesn't add stacks correctly because
-		// the contructor in Piece adds itself to the stack...
-		if (moveLocation != null) {
-			p.addStackToStack(movingPiece.getWholeStack());
+		if (board[location.getX()][location.getY()] != null) {
+			// Stacking isn't working right, doesn't add stacks correctly because
+			// the contructor in Piece adds itself to the stack...
+			board[location.getX()][location.getY()].addStackToStack(board[piece.getX()][piece.getY()].getWholeStack());
 			board[piece.getX()][piece.getY()] = null;
-			board[location.getX()][location.getY()] = p;
 		} else {
+			//This works just fine
+			board[location.getX()][location.getY()] = board[piece.getX()][piece.getY()];
 			board[piece.getX()][piece.getY()] = null;
-			board[location.getX()][location.getY()] = p;
 		}
+
+		//Pieces are in opponent's safe zone
+		//TODO - add client stuff here
+//		if (location.getX() >= 5 && board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.black ||
+//			location.getX() < 2 && board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.white) {
+//			if (board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.black) {
+//				aiScore += board[location.getX()][location.getY()].getValue();
+//			} else {
+//				myScore += board[location.getX()][location.getY()].getValue();
+//			}
+//			board[location.getX()][location.getY()] = null;
+//			
+//			//TODO - display some text that says "+ #of points" that fades out after a couple seconds
+//		}
 	}
+
 
 	public void resetBoard() {
 
@@ -498,99 +508,99 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 
 		g.setColor(new Color(64, 128, 64, 150));
 
-		if (p.isKing()) {
-			if (canPieceMoveToLocation(p, row + 1, column)) {
+		if (p.getTopPiece().isKing()) {
+			if (canPieceMoveToLocation(p.getTopPiece(), row + 1, column)) {
 				g.fillRect(column * (getWidth2() / COLUMNS) + getX(0), (row + 1) * (getHeight2() / ROWS) + getY(0), 94,
 						94);
 				validMoves.add(new OrderedPair(row + 1, column));
 			}
-			if (canPieceMoveToLocation(p, row + 2, column)) {
+			if (canPieceMoveToLocation(p.getTopPiece(), row + 2, column)) {
 				g.fillRect(column * (getWidth2() / COLUMNS) + getX(0), (row + 2) * (getHeight2() / ROWS) + getY(0), 94,
 						94);
 				validMoves.add(new OrderedPair(row + 2, column));
 			}
-			if (canPieceMoveToLocation(p, row + 1, column + 1)) {
+			if (canPieceMoveToLocation(p.getTopPiece(), row + 1, column + 1)) {
 				g.fillRect((column + 1) * (getWidth2() / COLUMNS) + getX(0),
 						(row + 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
 				validMoves.add(new OrderedPair(row + 1, column + 1));
 			}
-			if (canPieceMoveToLocation(p, row + 2, column + 2)) {
+			if (canPieceMoveToLocation(p.getTopPiece(), row + 2, column + 2)) {
 				g.fillRect((column + 2) * (getWidth2() / COLUMNS) + getX(0),
 						(row + 2) * (getHeight2() / ROWS) + getY(0), 94, 94);
 				validMoves.add(new OrderedPair(row + 2, column + 2));
 			}
-			if (canPieceMoveToLocation(p, row + 1, column - 1)) {
+			if (canPieceMoveToLocation(p.getTopPiece(), row + 1, column - 1)) {
 				g.fillRect((column - 1) * (getWidth2() / COLUMNS) + getX(0),
 						(row + 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
 				validMoves.add(new OrderedPair(row + 1, column - 1));
 			}
-			if (canPieceMoveToLocation(p, row + 2, column - 2)) {
+			if (canPieceMoveToLocation(p.getTopPiece(), row + 2, column - 2)) {
 				g.fillRect((column - 2) * (getWidth2() / COLUMNS) + getX(0),
 						(row + 2) * (getHeight2() / ROWS) + getY(0), 94, 94);
 				validMoves.add(new OrderedPair(row + 2, column - 2));
 			}
-			if (canPieceMoveToLocation(p, row - 1, column)) {
+			if (canPieceMoveToLocation(p.getTopPiece(), row - 1, column)) {
 				g.fillRect(column * (getWidth2() / COLUMNS) + getX(0), (row - 1) * (getHeight2() / ROWS) + getY(0), 94,
 						94);
 				validMoves.add(new OrderedPair(row - 1, column));
 			}
-			if (canPieceMoveToLocation(p, row - 2, column)) {
+			if (canPieceMoveToLocation(p.getTopPiece(), row - 2, column)) {
 				g.fillRect(column * (getWidth2() / COLUMNS) + getX(0), (row - 2) * (getHeight2() / ROWS) + getY(0), 94,
 						94);
 				validMoves.add(new OrderedPair(row - 2, column));
 			}
-			if (canPieceMoveToLocation(p, row - 1, column + 1)) {
+			if (canPieceMoveToLocation(p.getTopPiece(), row - 1, column + 1)) {
 				g.fillRect((column + 1) * (getWidth2() / COLUMNS) + getX(0),
 						(row - 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
 				validMoves.add(new OrderedPair(row - 1, column + 1));
 			}
-			if (canPieceMoveToLocation(p, row - 2, column + 2)) {
+			if (canPieceMoveToLocation(p.getTopPiece(), row - 2, column + 2)) {
 				g.fillRect((column + 2) * (getWidth2() / COLUMNS) + getX(0),
 						(row - 2) * (getHeight2() / ROWS) + getY(0), 94, 94);
 				validMoves.add(new OrderedPair(row - 2, column + 2));
 			}
-			if (canPieceMoveToLocation(p, row - 1, column - 1)) {
+			if (canPieceMoveToLocation(p.getTopPiece(), row - 1, column - 1)) {
 				g.fillRect((column - 1) * (getWidth2() / COLUMNS) + getX(0),
 						(row - 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
 				validMoves.add(new OrderedPair(row - 1, column - 1));
 			}
-			if (canPieceMoveToLocation(p, row - 2, column - 2)) {
+			if (canPieceMoveToLocation(p.getTopPiece(), row - 2, column - 2)) {
 				g.fillRect((column - 2) * (getWidth2() / COLUMNS) + getX(0),
 						(row - 2) * (getHeight2() / ROWS) + getY(0), 94, 94);
 				validMoves.add(new OrderedPair(row - 2, column - 2));
 			}
 		}
 
-		if (!p.isKing() && pieceDirection == 1) {
-			if (canPieceMoveToLocation(p, row - 1, column)) {
+		if (!p.getTopPiece().isKing() && pieceDirection == 1) {
+			if (canPieceMoveToLocation(p.getTopPiece(), row - 1, column)) {
 				g.fillRect(column * (getWidth2() / COLUMNS) + getX(0), (row - 1) * (getHeight2() / ROWS) + getY(0), 94,
 						94);
 				validMoves.add(new OrderedPair(row - 1, column));
 			}
-			if (canPieceMoveToLocation(p, row - 1, column + 1)) {
+			if (canPieceMoveToLocation(p.getTopPiece(), row - 1, column + 1)) {
 				g.fillRect((column + 1) * (getWidth2() / COLUMNS) + getX(0),
 						(row - 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
 				validMoves.add(new OrderedPair(row - 1, column + 1));
 			}
-			if (canPieceMoveToLocation(p, row - 1, column - 1)) {
+			if (canPieceMoveToLocation(p.getTopPiece(), row - 1, column - 1)) {
 				g.fillRect((column - 1) * (getWidth2() / COLUMNS) + getX(0),
 						(row - 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
 				validMoves.add(new OrderedPair(row - 1, column - 1));
 			}
 		}
 
-		if (!p.isKing() && pieceDirection == 0) {
-			if (canPieceMoveToLocation(p, row + 1, column)) {
+		if (!p.getTopPiece().isKing() && pieceDirection == 0) {
+			if (canPieceMoveToLocation(p.getTopPiece(), row + 1, column)) {
 				g.fillRect(column * (getWidth2() / COLUMNS) + getX(0), (row + 1) * (getHeight2() / ROWS) + getY(0), 94,
 						94);
 				validMoves.add(new OrderedPair(row + 1, column));
 			}
-			if (canPieceMoveToLocation(p, row + 1, column + 1)) {
+			if (canPieceMoveToLocation(p.getTopPiece(), row + 1, column + 1)) {
 				g.fillRect((column + 1) * (getWidth2() / COLUMNS) + getX(0),
 						(row + 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
 				validMoves.add(new OrderedPair(row + 1, column + 1));
 			}
-			if (canPieceMoveToLocation(p, row + 1, column - 1)) {
+			if (canPieceMoveToLocation(p.getTopPiece(), row + 1, column - 1)) {
 				g.fillRect((column - 1) * (getWidth2() / COLUMNS) + getX(0),
 						(row + 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
 				validMoves.add(new OrderedPair(row + 1, column - 1));
@@ -616,29 +626,51 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 	}
 
 	public boolean canPieceMoveToLocation(Piece _piece, int row, int column) {
-		//Check if the desired place is within the bounds of the board
+		//Check if the desired place is within the bounds of the board, and
+		//if the piece is allowed to move there.
+		
+		//Rules: if there is no piece where you're trying to move, there will
+		//		 never be any reason why you can't move there. If there IS a
+		//       piece there, you can stack on top of that piece/stack if your
+		//       piece has the same number/color as the top piece of the stack,
+		//       unless the top piece of the stack is a king, in which case no
+		//       piece can stack on top of it. Further, you can't stack your
+		//       piece on top of another piece if it is still in it's safe zone.
+		
 		if (row >= 0 && row < ROWS && column >= 0 && column < COLUMNS) {
 			//If there's no piece there
 			if (board[row][column] == null) {
 				return true;
 			}
 			//If there IS a piece there
-			else if (board[row][column] != null && !_piece.isKing()) {
+			else if (board[row][column] != null && !_piece.getTopPiece().isKing()) {
 				//If the piece is a king
-				if (board[row][column].isKing()) {
+				if (board[row][column].getTopPiece().isKing()) {
+					return false;
+				}
+				//Can't go into opponent safe zone if a piece is there
+				if (row >= 5 && _piece.getTopPiece().getBackgroundColor() == Color.BLACK) {
+					return false;
+				}
+				if (row < 2 && _piece.getTopPiece().getBackgroundColor() == Color.WHITE) {
 					return false;
 				}
 				//If the piece has a good color or value
-				if (board[row][column].getValue() == _piece.getValue()
-						|| board[row][column].getForegroundColor() == _piece.getForegroundColor()) {
+				if (board[row][column].getTopPiece().getValue() == _piece.getTopPiece().getValue()
+						|| board[row][column].getForegroundColor() == _piece.getTopPiece().getForegroundColor()) {
 					return true;
 				}
-			} else if (board[row][column] != null && _piece.isKing()) {
-				if (board[row][column].isKing()) {
+			} else if (board[row][column] != null && _piece.getTopPiece().isKing()) {
+				if (board[row][column].getTopPiece().isKing()) {
 					return false;
-				} else {
-					return true;
 				}
+				if (row >= 5 && _piece.getTopPiece().getBackgroundColor() == Color.BLACK) {
+					return false;
+				}
+				if (row < 2 && _piece.getTopPiece().getBackgroundColor() == Color.WHITE) {
+					return false;
+				}
+				return true;
 			}
 		}
 		return false;
