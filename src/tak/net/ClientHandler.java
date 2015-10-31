@@ -14,8 +14,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import tak.window.TakTakMultiplayerWindow;
 
-public class ClientHandler
-{
+public class ClientHandler {
 	public static boolean connected = false;
 	public static Point postPoints = null;
 	public static Point initPoints = null;
@@ -24,12 +23,11 @@ public class ClientHandler
 	private static Socket server = null;
 	private static PrintWriter serverOut = null;
 	private static BufferedReader serverIn = null;
-	
+
 	//Time it allows to connect, in seconds
 	private static final int TIMEOUT = 15;
 
-	public static void connect(String ip, int port) throws UnknownHostException, IOException
-	{
+	public static void connect(String ip, int port) throws UnknownHostException, IOException {
 		hostIP = ip;
 		hostPort = port;
 		server = new Socket();
@@ -40,16 +38,11 @@ public class ClientHandler
 		recievePieceMove();
 	}
 
-	public static void disconnect()
-	{
-		try
-		{
+	public static void disconnect() {
+		try {
 			if (server != null)
 				server.close();
-		}
-		catch (IOException e)
-		{
-			// TODO Auto-generated catch block
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		hostIP = null;
@@ -58,74 +51,55 @@ public class ClientHandler
 		serverOut = null;
 		serverIn = null;
 		connected = false;
-		//tak.window.TakTakWindow.closeGame();
 	}
-    public static void sendPieceMove(int initrow, int initcol, int movedrow, int movedcol, int myScore)
-    {
-		if (connected)
-		{
-//add or modify.                    
-			serverOut.println(initrow + ":" + initcol + ":" + movedrow + ":" + movedcol + ":" + myScore);
-		}        
-    }
 
-	public static void sendDisconnect()
-	{
+	public static void sendPieceMove(int initrow, int initcol, int movedrow, int movedcol, int myScore) {
 		if (connected)
-		{
+			serverOut.println(initrow + ":" + initcol + ":" + movedrow + ":" + movedcol + ":" + myScore);
+	}
+
+	public static void sendDisconnect() {
+		if (connected) {
 			serverOut.println("esc");
 		}
 	}
 
-
-	private static void recievePieceMove()
-	{
+	private static void recievePieceMove() {
 		new Thread(new Runnable() {
 
 			@Override
-			public void run()
-			{
+			public void run() {
 				String inputLine;
 
-				try
-				{
-					while ((inputLine = serverIn.readLine()) != null)
-					{
-						try
-						{
-							if (inputLine.equals("esc"))
-							{
+				try {
+					while ((inputLine = serverIn.readLine()) != null) {
+						try {
+							if (inputLine.equals("esc")) {
 								disconnect();
 								return;
 							}
-//add or modify.
-							// row:col:initrow:initcol
+							//add or modify.
+							// row:col:initrow:initcol:myScore
 							int initrowpost = Integer.parseInt(inputLine.split(":")[0]);
 							int initcolpost = Integer.parseInt(inputLine.split(":")[1]);
-                            int movedrowpost = Integer.parseInt(inputLine.split(":")[2]);
+							int movedrowpost = Integer.parseInt(inputLine.split(":")[2]);
 							int movedcolpost = Integer.parseInt(inputLine.split(":")[3]);
 							int myScore = Integer.parseInt(inputLine.split(":")[4]);
-                                                        
-	                        TakTakMultiplayerWindow.initRow = initrowpost;
-	                        TakTakMultiplayerWindow.initCol = initcolpost;
-	                        TakTakMultiplayerWindow.movedRow = movedrowpost;
-	                        TakTakMultiplayerWindow.movedCol = movedcolpost;
-	                        TakTakMultiplayerWindow.opponentScore = myScore;
-	                        TakTakMultiplayerWindow.updateTurn();
-	                        TakTakMultiplayerWindow.initMovePiece();
-						}
-						catch (NumberFormatException e)
-						{
+
+							TakTakMultiplayerWindow.initRow = initrowpost;
+							TakTakMultiplayerWindow.initCol = initcolpost;
+							TakTakMultiplayerWindow.movedRow = movedrowpost;
+							TakTakMultiplayerWindow.movedCol = movedcolpost;
+							TakTakMultiplayerWindow.opponentScore = myScore;
+							TakTakMultiplayerWindow.updateTurn();
+							TakTakMultiplayerWindow.initMovePiece();
+						} catch (NumberFormatException | NullPointerException e) {
 							e.printStackTrace();
-						}
-						catch (NullPointerException e)
-						{
-							disconnect();
+							if (e instanceof NullPointerException)
+								disconnect();
 						}
 					}
-				}
-				catch (IOException e)
-				{
+				} catch (IOException e) {
 					disconnect();
 				}
 
@@ -133,8 +107,7 @@ public class ClientHandler
 		}).start();
 	}
 
-	public static boolean isConnected()
-	{
+	public static boolean isConnected() {
 		return connected;
 	}
 }

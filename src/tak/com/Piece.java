@@ -134,12 +134,8 @@ public class Piece {
 			255 - getTopPiece().backColor.getGreen(), 255 - getTopPiece().backColor.getBlue()));
 			g.drawString(String.valueOf(stack.size()), x + 68, y + 23);
 		}
-		
-		//Draw the number of pieces in the stack as a small number in the top right corner of the piece
-		//Unless there is no stack (1 piece), then don't draw the number
 	}
 
-	//TODO - make the window tell you whether or not you control the piece
 	public void drawLilWinda(Graphics2D g, int mousex, int mousey) {
 
 		g.setColor(new Color(0, 0, 0, 230));
