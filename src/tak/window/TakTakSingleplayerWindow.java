@@ -23,7 +23,7 @@ import tak.net.ClientHandler;
 import tak.net.ServerHandler;
 import tak.util.OrderedPair;
 
-public class TakTakWindow extends JFrame implements Runnable {
+public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 
 	static final int WINDOW_WIDTH = 590;
 	static final int WINDOW_HEIGHT = 740;
@@ -43,24 +43,17 @@ public class TakTakWindow extends JFrame implements Runnable {
 	private static final int CENTER_Y = (SCREEN_HEIGHT / 2) - (WINDOW_HEIGHT / 2);
 
 	public static Random rand = new Random();
-	static ImageIcon icon = new ImageIcon(TakTakWindow.class.getResource("/tak/assets/icon.png"));
+	static ImageIcon icon = new ImageIcon(TakTakSingleplayerWindow.class.getResource("/tak/assets/icon.png"));
 
 	//Board of real game is 6x7
 	static final int COLUMNS = 6;
 	static final int ROWS = 7;
 	Piece[][] board;
 
-	private final TakTakWindow frame = this;
+	private final TakTakSingleplayerWindow frame = this;
 
 	public static int turn;
 	public static boolean myTurn;
-	public boolean isClient;
-
-	//Network variables
-	public static int initRow;
-	public static int initCol;
-	public static int movedRow;
-	public static int movedCol;
 
 	public static int selectedRow;
 	public static int selectedColumn;
@@ -68,6 +61,9 @@ public class TakTakWindow extends JFrame implements Runnable {
 	public static int lilWindaColumn;
 	public static int mousex;
 	public static int mousey;
+	
+	public static int myScore;
+	public static int aiScore;
 
 	public static ArrayList<OrderedPair> validMoves = new ArrayList<OrderedPair>();
 
@@ -89,7 +85,7 @@ public class TakTakWindow extends JFrame implements Runnable {
 			"Even if a stack has a value of over 100 points, the king will limit it to 100.",
 			"When you right-click a piece, you can see a cool 3D image of the entire stack!" };
 
-	public TakTakWindow() {
+	public TakTakSingleplayerWindow() {
 
 		setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -138,8 +134,10 @@ public class TakTakWindow extends JFrame implements Runnable {
 					}
 
 					if (selectedRow == 999 && board[currentRow][currentColumn] != null) {
-						selectedRow = currentRow;
-						selectedColumn = currentColumn;
+						if (board[currentRow][currentColumn].getBackgroundColor() == Color.white) {
+							selectedRow = currentRow;
+							selectedColumn = currentColumn;
+						}
 					} else if (selectedRow != 999) {
 						boolean movedPiece = false;
 						for (int i = 0; i < validMoves.size() && !movedPiece; i++) {
@@ -151,15 +149,6 @@ public class TakTakWindow extends JFrame implements Runnable {
 								selectedRow = 999;
 								selectedColumn = 999;
 								validMoves.clear();
-								initRow = selectedRow;
-								initCol = selectedColumn;
-								movedRow = currentRow;
-								movedCol = currentColumn;
-								if (isClient) {
-									ClientHandler.sendPieceMove(frame, initRow, initCol, movedRow, movedCol);
-								} else {
-									ServerHandler.sendPieceMove(frame, initRow, initCol, movedRow, movedCol);
-								}
 							}
 						}
 					}
@@ -327,11 +316,9 @@ public class TakTakWindow extends JFrame implements Runnable {
 		selectedColumn = 999;
 
 		validMoves.clear();
+		
+		myScore = 0;
 	}
-
-	//        public static void closeGame() {
-	//            new MenuWindow();
-	//        }
 
 	public void animate() {
 		if (animateFirstTime) {
@@ -355,19 +342,17 @@ public class TakTakWindow extends JFrame implements Runnable {
 		Piece movingPiece = board[piece.getX()][piece.getY()];
 		Piece moveLocation = board[location.getX()][location.getY()];
 
+		Piece p = new Piece(movingPiece.getValue(), movingPiece.getForegroundColor(), movingPiece.getBackgroundColor());
+		p.setKing(movingPiece.isKing());
+
+		// Stacking isn't working right, doesn't add stacks correctly because
+		// the contructor in Piece adds itself to the stack...
 		if (moveLocation != null) {
-			Piece p = new Piece(movingPiece.getValue(), movingPiece.getForegroundColor(),
-					movingPiece.getBackgroundColor());
-			p.setKing(movingPiece.isKing());
-			//Stacking isn't working totally right, it adds too many pieces
-			p.addStackToStack(moveLocation.getWholeStack());
 			p.addStackToStack(movingPiece.getWholeStack());
 			board[piece.getX()][piece.getY()] = null;
 			board[location.getX()][location.getY()] = p;
 		} else {
-			Piece p = new Piece(movingPiece.getValue(), movingPiece.getForegroundColor(),
-					movingPiece.getBackgroundColor());
-			p.setKing(movingPiece.isKing());
+			//Adds double the pieces because the constructor adds itself
 			p.addStackToStack(movingPiece.getWholeStack());
 			board[piece.getX()][piece.getY()] = null;
 			board[location.getX()][location.getY()] = p;
@@ -596,6 +581,16 @@ public class TakTakWindow extends JFrame implements Runnable {
 						(row + 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
 				validMoves.add(new OrderedPair(row + 1, column - 1));
 			}
+		}
+	}
+	
+	public void scorePiece(OrderedPair op) {
+		if (board[op.getX()][op.getY()] != null) {
+			myScore += board[op.getX()][op.getY()].getValue();
+			board[op.getX()][op.getY()] = null;
+		}
+		else {
+			System.out.println("Piece to score wasn't there");
 		}
 	}
 

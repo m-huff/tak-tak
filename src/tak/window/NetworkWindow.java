@@ -124,9 +124,11 @@ public class NetworkWindow extends JFrame implements Runnable {
 								ServerHandler.recieveConnect(5657);
 								System.out.println("after recieveConnect");
 								if (ServerHandler.connected) {
-									final TakTakWindow ttw = new TakTakWindow();
+									final TakTakMultiplayerWindow ttw = new TakTakMultiplayerWindow();
 									ttw.isClient = isPotentialGameClient;
 									ttw.myTurn = isPotentialGameClient;
+									ttw.myColor = Color.black;
+									//TODO - finish setting and adding these things to TTW
 									gameStarted = true;
 									isConnecting = false;
 								}
@@ -143,9 +145,11 @@ public class NetworkWindow extends JFrame implements Runnable {
 								isConnecting = true;
 								ClientHandler.connect(ipAddress, 5657);
 								if (ClientHandler.connected) {
-									final TakTakWindow ttw = new TakTakWindow();
+									final TakTakMultiplayerWindow ttw = new TakTakMultiplayerWindow();
 									ttw.isClient = isPotentialGameClient;
 									ttw.myTurn = isPotentialGameClient;
+									ttw.myColor = Color.white;
+									//TODO - finish setting and adding these things to TTW
 									gameStarted = true;
 									isConnecting = false;
 								}
@@ -205,7 +209,7 @@ public class NetworkWindow extends JFrame implements Runnable {
 
 		g.setColor(new Color(0, 0, 0, 230));
 		g.fillRect(0, 0, WINDOW_WIDTH, 130);
-		g.fillRect(0, 255, WINDOW_WIDTH, 60);
+		g.fillRect(0, 235, WINDOW_WIDTH, 80);
 
 		g.setColor(Color.white);
 		g.setFont(new Font("Arial", Font.BOLD, 14));
@@ -217,6 +221,7 @@ public class NetworkWindow extends JFrame implements Runnable {
 		}
 		g.drawString("Enter an IP address to play against", 30, 90);
 		g.drawString("Press S to attempt to " + (isPotentialGameClient ? "join" : "start") + " a game", 30, 280);
+		g.drawString("You will play as " + (isPotentialGameClient ? "WHITE" : "BLACK"), 30, 260);
 		g.drawString("Opponent IP: " + ipAddress, 30, 110);
 
 		gOld.drawImage(image, 0, 0, null);

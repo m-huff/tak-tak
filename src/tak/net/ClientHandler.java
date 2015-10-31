@@ -12,7 +12,7 @@ import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import tak.window.TakTakWindow;
+import tak.window.TakTakMultiplayerWindow;
 
 public class ClientHandler
 {
@@ -57,7 +57,7 @@ public class ClientHandler
 		connected = false;
 		//tak.window.TakTakWindow.closeGame();
 	}
-    public static void sendPieceMove(TakTakWindow ttw, int initrow, int initcol, int movedrow, int movedcol)
+    public static void sendPieceMove(TakTakMultiplayerWindow ttw, int initrow, int initcol, int movedrow, int movedcol)
     {
 		if (connected)
 		{
@@ -103,11 +103,11 @@ public class ClientHandler
                                                         int movedrowpost = Integer.parseInt(inputLine.split(":")[2]);
 							int movedcolpost = Integer.parseInt(inputLine.split(":")[3]);
                                                         
-                                                        TakTakWindow.initRow = initrowpost;
-                                                        TakTakWindow.initCol = initcolpost;
-                                                        TakTakWindow.movedRow = movedrowpost;
-                                                        TakTakWindow.movedCol = movedcolpost;
-                                                        TakTakWindow.updateTurn();
+                                                        TakTakMultiplayerWindow.initRow = initrowpost;
+                                                        TakTakMultiplayerWindow.initCol = initcolpost;
+                                                        TakTakMultiplayerWindow.movedRow = movedrowpost;
+                                                        TakTakMultiplayerWindow.movedCol = movedcolpost;
+                                                        TakTakMultiplayerWindow.updateTurn();
 						}
 						catch (NumberFormatException e)
 						{

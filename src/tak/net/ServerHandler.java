@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.*;
-import tak.window.TakTakWindow;
+import tak.window.TakTakMultiplayerWindow;
 
 public class ServerHandler
 {
@@ -50,7 +50,7 @@ public class ServerHandler
         connected = false;
        // tak.window.TakTakWindow.closeGame();
     }
-    public static void sendPieceMove(TakTakWindow ttw, int initrow, int initcol, int movedrow, int movedcol)
+    public static void sendPieceMove(TakTakMultiplayerWindow ttw, int initrow, int initcol, int movedrow, int movedcol)
     {
 		if (connected)
 		{
@@ -96,11 +96,11 @@ public class ServerHandler
                             int movedrowpost = Integer.parseInt(inputLine.split(":")[2]);
                             int movedcolpost = Integer.parseInt(inputLine.split(":")[3]);
 
-                            TakTakWindow.initRow = initrowpost;
-                            TakTakWindow.initCol = initcolpost;
-                            TakTakWindow.movedRow = movedrowpost;
-                            TakTakWindow.movedCol = movedcolpost;
-                            TakTakWindow.updateTurn();
+                            TakTakMultiplayerWindow.initRow = initrowpost;
+                            TakTakMultiplayerWindow.initCol = initcolpost;
+                            TakTakMultiplayerWindow.movedRow = movedrowpost;
+                            TakTakMultiplayerWindow.movedCol = movedcolpost;
+                            TakTakMultiplayerWindow.updateTurn();
                         }
                         catch (NumberFormatException e)
                         {

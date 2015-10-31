@@ -31,7 +31,7 @@ public class Piece {
 	// Kings can move backwards, and two spaces forward. However, the stack they are
 	// in is limited in value to 100 points, and once the king has been placed on the
 	// stack, no other pieces can stack with it - the king will always be on top.
-	// The king's stack instantly becomes worth 100 point, no matter how many points
+	// The king's stack instantly becomes worth 100 points, no matter how many points
 	// it was previously.
 	
 	private boolean isKing;
@@ -52,6 +52,22 @@ public class Piece {
 
 	public void setValue(int _value) {
 		value = _value;
+		if (isKing()) {
+			if (value > 100)
+				value = 100;
+			if (value < 0)
+				value = 0;
+		}
+	}
+	
+	public void addValue(int _value) {
+		value += _value;
+		if (isKing()) {
+			if (value > 100)
+				value = 100;
+			if (value < 0)
+				value = 0;
+		}
 	}
 
 	public int getValue() {
@@ -61,6 +77,7 @@ public class Piece {
 	public void addStackToStack(ArrayList<Piece> _stack) {
 		for (int index = 0; index < _stack.size(); index++) {
 			stack.add(_stack.get(index));
+			addValue(_stack.get(index).getValue());
 		}
 	}
 
@@ -109,6 +126,12 @@ public class Piece {
 			g.drawString(String.valueOf(getTopPiece().value), x + 38, y + 53);
 		} else {
 			g.drawImage(crown.getImage(), x + 10, y + 8, 75, 75, null);
+		}
+		
+		if (stack.size() > 1) {
+			g.setFont(new Font("Arial Bold", Font.PLAIN, 12));
+			g.setColor(new Color(255 - backColor.getRed(), 255 - backColor.getGreen(), 255 - backColor.getBlue()));
+			g.drawString(String.valueOf(stack.size()), x + 68, y + 23);
 		}
 		
 		//Draw the number of pieces in the stack as a small number in the top right corner of the piece

@@ -61,7 +61,7 @@ public class MenuWindow extends JFrame implements Runnable {
 			@SuppressWarnings("static-access")
 			public void keyPressed(KeyEvent e) {
 				if (e.VK_X == e.getKeyCode()) {
-					new TakTakWindow();
+					new TakTakSingleplayerWindow();
 					frame.dispose();
 				}
 				if (e.VK_Z == e.getKeyCode()) {
