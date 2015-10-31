@@ -66,13 +66,15 @@ public class MenuWindow extends JFrame implements Runnable {
 				}
 				if (e.VK_Z == e.getKeyCode()) {
 					final RulesWindow rw = new RulesWindow();
-                                        rw.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					rw.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				}
-                                if (e.VK_C == e.getKeyCode()) {
+				if (e.VK_C == e.getKeyCode()) {
 					final ConnectWindow rw = new ConnectWindow(true);
+					frame.dispose();
 				}
-                                if (e.VK_V == e.getKeyCode()) {
+				if (e.VK_V == e.getKeyCode()) {
 					final ConnectWindow rw = new ConnectWindow(false);
+					frame.dispose();
 				}
 
 				repaint();
@@ -133,8 +135,8 @@ public class MenuWindow extends JFrame implements Runnable {
 		g.setFont(new Font("Arial", Font.BOLD, 14));
 		g.drawString("Press X to play against an AI -NOT WORKING-", textPosition, 125);
 		g.drawString("Press Z to learn the rules", textPosition, 105);
-                g.drawString("Press C to start a multiplayer game as the client", textPosition, 145);
-                g.drawString("Press V to start a multiplayer game as the server", textPosition, 165);
+		g.drawString("Press C to start a multiplayer game as the client", textPosition, 145);
+		g.drawString("Press V to start a multiplayer game as the server", textPosition, 165);
 
 		gOld.drawImage(image, 0, 0, null);
 	}
@@ -156,8 +158,9 @@ public class MenuWindow extends JFrame implements Runnable {
 		for (int i = 0; i < 20; i++) {
 			Color[] colors = {Color.orange, Color.blue, Color.green };
 			Piece p = new Piece((rand.nextInt(4) * 10) + 10, colors[rand.nextInt(colors.length)],
-			rand.nextBoolean() ? Color.black : Color.white);
-                        if (rand.nextInt(10) == 0) p.setKing(true);
+					rand.nextBoolean() ? Color.black : Color.white);
+			if (rand.nextInt(10) == 0)
+				p.setKing(true);
 			pieces.add(p);
 		}
 	}

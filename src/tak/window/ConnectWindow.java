@@ -44,15 +44,15 @@ public class ConnectWindow extends JFrame implements Runnable {
 	public static ImageIcon icon = new ImageIcon(ConnectWindow.class.getResource("/tak/assets/icon.png"));
 
 	private final ConnectWindow frame = this;
-        
-        public static boolean isPotentialGameClient;
-        public static String ipAddress = new String();
-        public static boolean gameStarted = false;
-        public static boolean isConnecting = false;
-        
+
+	public static boolean isPotentialGameClient;
+	public static String ipAddress = new String();
+	public static boolean gameStarted = false;
+	public static boolean isConnecting = false;
+
 	public ConnectWindow(boolean isClient) {
-            
-            isPotentialGameClient = isClient;
+
+		isPotentialGameClient = isClient;
 
 		setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -69,104 +69,89 @@ public class ConnectWindow extends JFrame implements Runnable {
 					new MenuWindow();
 					frame.dispose();
 				}
-                                if (e.getKeyCode() == KeyEvent.VK_0)
-                                {
-                                    ipAddress += "0";
-                                }
-                                else if (e.getKeyCode() == KeyEvent.VK_1)
-                                {
-                                    ipAddress += "1";
-                                }
-                                else if (e.getKeyCode() == KeyEvent.VK_2)
-                                {
-                                    ipAddress += "2";
-                                }
-                                else if (e.getKeyCode() == KeyEvent.VK_3)
-                                {
-                                    ipAddress += "3";
-                                }
-                                else if (e.getKeyCode() == KeyEvent.VK_4)
-                                {
-                                   ipAddress += "4";
-                                }
-                                else if (e.getKeyCode() == KeyEvent.VK_5)
-                                {
-                                    ipAddress += "5";
-                                }
-                                else if (e.getKeyCode() == KeyEvent.VK_6)
-                                {
-                                    ipAddress += "6";
-                                }
-                                else if (e.getKeyCode() == KeyEvent.VK_7)
-                                {
-                                    ipAddress += "7";
-                                }
-                                else if (e.getKeyCode() == KeyEvent.VK_8)
-                                {
-                                    ipAddress += "8";
-                                }
-                                else if (e.getKeyCode() == KeyEvent.VK_9)
-                                {
-                                    ipAddress += "9";
-                                }
-                                else if (e.getKeyCode() == KeyEvent.VK_PERIOD)
-                                {
-                                    ipAddress += ".";
-                                }
-                                else if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE)
-                                {
-                                    if (ipAddress.length() >= 1)
-                                        ipAddress = ipAddress.substring(0, ipAddress.length() - 1);
-                                }
-                                
-                                if (gameStarted || isConnecting)
-                                {
-                                    if (e.getKeyCode() == KeyEvent.VK_ESCAPE && !isConnecting)
-                                    {
-                                    if (gameStarted)
-                                        if (isPotentialGameClient)
-                                        {
-                                            ClientHandler.sendDisconnect();
-                                            ClientHandler.disconnect();
-                                        }
-                                        else
-                                        {   
-                                            ServerHandler.sendDisconnect();
-                                            ServerHandler.disconnect();
-                                        }
-                                        gameStarted = false;
-                                        reset();
-                                    }
-                                }
-                                else if (e.getKeyCode() == KeyEvent.VK_S)
-                                {
-                                    if (!isConnecting)
-                                    {
-                                        try
-                                        {
+				if (e.getKeyCode() == KeyEvent.VK_0) {
+					ipAddress += "0";
+				} else if (e.getKeyCode() == KeyEvent.VK_1) {
+					ipAddress += "1";
+				} else if (e.getKeyCode() == KeyEvent.VK_2) {
+					ipAddress += "2";
+				} else if (e.getKeyCode() == KeyEvent.VK_3) {
+					ipAddress += "3";
+				} else if (e.getKeyCode() == KeyEvent.VK_4) {
+					ipAddress += "4";
+				} else if (e.getKeyCode() == KeyEvent.VK_5) {
+					ipAddress += "5";
+				} else if (e.getKeyCode() == KeyEvent.VK_6) {
+					ipAddress += "6";
+				} else if (e.getKeyCode() == KeyEvent.VK_7) {
+					ipAddress += "7";
+				} else if (e.getKeyCode() == KeyEvent.VK_8) {
+					ipAddress += "8";
+				} else if (e.getKeyCode() == KeyEvent.VK_9) {
+					ipAddress += "9";
+				} else if (e.getKeyCode() == KeyEvent.VK_PERIOD) {
+					ipAddress += ".";
+				} else if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+					if (ipAddress.length() >= 1)
+						ipAddress = ipAddress.substring(0, ipAddress.length() - 1);
+				}
 
-                                            isConnecting = true;
-                                            System.out.println("is connecting true");
-                                            ServerHandler.recieveConnect(5657);
-                                            System.out.println("after recieveConnect");
-                                            if (ServerHandler.connected)
-                                            {
-                                                gameStarted = true;
-                                                isConnecting = false;
-                                                final TakTakWindow ttw = new TakTakWindow();
-                                                ttw.isClient = isPotentialGameClient;
-                                                ttw.myTurn = isPotentialGameClient;
-                                            }
-                                        }
-                                        catch (IOException ex)
-                                        {
-                                            System.out.println("Cannot host server: " + ex.getMessage());
-                                            isConnecting = false;
-                                            //Message: failed to connect
-                                        }                        
-                                    }
-                                }
-                                
+				if (gameStarted || isConnecting) {
+					if (e.getKeyCode() == KeyEvent.VK_ESCAPE && !isConnecting) {
+						if (gameStarted)
+							if (isPotentialGameClient) {
+								ClientHandler.sendDisconnect();
+								ClientHandler.disconnect();
+							} else {
+								ServerHandler.sendDisconnect();
+								ServerHandler.disconnect();
+							}
+						gameStarted = false;
+						reset();
+					}
+				} else if (e.getKeyCode() == KeyEvent.VK_S) {
+					if (isPotentialGameClient) {
+						if (!isConnecting) {
+							try {
+
+								isConnecting = true;
+								System.out.println("is connecting true");
+								ServerHandler.recieveConnect(5657);
+								System.out.println("after recieveConnect");
+								if (ServerHandler.connected) {
+									final TakTakWindow ttw = new TakTakWindow();
+									ttw.isClient = isPotentialGameClient;
+									ttw.myTurn = isPotentialGameClient;
+									gameStarted = true;
+									isConnecting = false;
+								}
+							} catch (IOException ex) {
+								System.out.println("Cannot host server: " + ex.getMessage());
+								isConnecting = false;
+							}
+						}
+					} else {
+						if (!isConnecting) {
+
+							try {
+
+								isConnecting = true;
+								ClientHandler.connect(ipAddress, 5657);
+								if (ClientHandler.connected) {
+									final TakTakWindow ttw = new TakTakWindow();
+									ttw.isClient = isPotentialGameClient;
+									ttw.myTurn = isPotentialGameClient;
+									gameStarted = true;
+									isConnecting = false;
+								}
+							} catch (IOException ex) {
+								System.out.println("Cannot join server: " + ex.getMessage());
+								isConnecting = false;
+							}
+						}       
+					}
+				}
+
 				repaint();
 			}
 		});
@@ -200,18 +185,18 @@ public class ConnectWindow extends JFrame implements Runnable {
 
 		g.setColor(new Color(0, 0, 0, 150));
 		g.fillRect(0, 0, WINDOW_WIDTH, 180);
-                
-                g.setColor(Color.white);
-                g.setFont(new Font("Arial", Font.BOLD, 14));
-                g.drawString((isPotentialGameClient ? "Client" : "Server"), 480, 50);
-                try {
-                g.drawString("Your IP: " + InetAddress.getLocalHost().getHostAddress(), 30, 50);
-                } catch (UnknownHostException e) {
-                    e.printStackTrace();
-                }
+
+		g.setColor(Color.white);
+		g.setFont(new Font("Arial", Font.BOLD, 14));
+		g.drawString((isPotentialGameClient ? "Client" : "Server"), 480, 50);
+		try {
+			g.drawString("Your IP: " + InetAddress.getLocalHost().getHostAddress(), 30, 50);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
 		g.drawString("Enter an IP address to play against", 30, 90);
-                g.drawString("Press S to attempt to start a game", 30, 280);
-                g.drawString("Opponent IP: " + ipAddress, 30, 110);
+		g.drawString("Press S to attempt to start a game", 30, 280);
+		g.drawString("Opponent IP: " + ipAddress, 30, 110);
 
 		gOld.drawImage(image, 0, 0, null);
 	}
@@ -230,7 +215,7 @@ public class ConnectWindow extends JFrame implements Runnable {
 	}
 
 	public void reset() {
-            ipAddress = "";
+		ipAddress = "";
 	}
 
 	public void animate() {
