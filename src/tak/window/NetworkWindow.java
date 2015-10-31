@@ -9,6 +9,8 @@ import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -162,6 +164,15 @@ public class NetworkWindow extends JFrame implements Runnable {
 				}
 
 				repaint();
+			}
+		});
+		
+		//Send the user back to the menu screen to make sure the entire system gets exited
+		//Without this the sound will continue to run until it finishes	
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				new MenuWindow();
 			}
 		});
 

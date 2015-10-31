@@ -12,6 +12,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -229,6 +231,16 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 				repaint();
 			}
 		});
+		
+		//Send the user back to the menu screen to make sure the entire system gets exited
+		//Without this the sound will continue to run until it finishes	
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				new MenuWindow();
+			}
+		});
+		
 		init();
 		start();
 	}

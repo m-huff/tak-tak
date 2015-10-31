@@ -67,6 +67,7 @@ public class MenuWindow extends JFrame implements Runnable {
 				if (e.VK_Z == e.getKeyCode()) {
 					final RulesWindow rw = new RulesWindow();
 					rw.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					frame.dispose();
 				}
 				if (e.VK_C == e.getKeyCode()) {
 					final NetworkWindow rw = new NetworkWindow(true);

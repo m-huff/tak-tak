@@ -9,6 +9,8 @@ import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -92,6 +94,7 @@ public class RulesWindow extends JFrame implements Runnable {
 			@SuppressWarnings("static-access")
 			public void keyPressed(KeyEvent e) {
 				if (e.VK_ESCAPE == e.getKeyCode()) {
+					new MenuWindow();
 					frame.dispose();
 				}
 				
@@ -110,6 +113,15 @@ public class RulesWindow extends JFrame implements Runnable {
 				}
 
 				repaint();
+			}
+		});
+		
+		//Send the user back to the menu screen to make sure the entire system gets exited
+		//Without this the sound will continue to run until it finishes	
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				new MenuWindow();
 			}
 		});
 
