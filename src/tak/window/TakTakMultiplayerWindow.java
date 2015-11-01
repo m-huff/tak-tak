@@ -379,12 +379,14 @@ public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
 		//"my" pieces are black if I'm a client
 		if (location.getX() >= 5 && isClient) {
 			myScore += board[location.getX()][location.getY()].getValue();
+			numBlackPiecesOnBoard--;
 		}
 		//"my" pieces are white if I'm a server
 		if (location.getX() < 2 && !isClient) {
 			myScore += board[location.getX()][location.getY()].getValue();
+			numWhitePiecesOnBoard--;
 		}
-		
+		numPiecesOnBoard--;
 		board[location.getX()][location.getY()] = null;
 	}
 

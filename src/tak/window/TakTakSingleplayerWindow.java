@@ -24,6 +24,7 @@ import tak.com.Piece;
 import tak.net.ClientHandler;
 import tak.net.ServerHandler;
 import tak.util.OrderedPair;
+import tak.util.PlayerAI;
 import tak.util.Sound;
 
 public class TakTakSingleplayerWindow extends JFrame implements Runnable {
@@ -49,10 +50,13 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 	static ImageIcon icon = new ImageIcon(TakTakSingleplayerWindow.class.getResource("/tak/assets/icon.png"));
 
 	//Board of real game is 6x7
-	static final int COLUMNS = 6;
-	static final int ROWS = 7;
+	public static final int COLUMNS = 6;
+	public static final int ROWS = 7;
 	public static Piece[][] board;
+	
 	public static int numPiecesOnBoard;
+	public static int numBlackPiecesOnBoard;
+	public static int numWhitePiecesOnBoard;
 
 	private final TakTakSingleplayerWindow frame = this;
 
@@ -386,6 +390,9 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 		
 		//4 rows of 6
 		numPiecesOnBoard = 24;
+		
+		numWhitePiecesOnBoard = 12;
+		numBlackPiecesOnBoard = 12;
 
 		tipTime = 0;
 		currentHint = HINT_PREFIX + HINTS[rand.nextInt(HINTS.length)];
@@ -423,7 +430,8 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 		
 		if (!myTurn && aiMoveDelay >= 50) {
 			System.out.println("AI makes a move");
-			//TODO - makeAIMove();
+			//TODO - well this is buggy
+			PlayerAI.makeMove();
 			myTurn = !myTurn;
 			turn++;
 			aiMoveDelay = 0;
@@ -452,8 +460,10 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 			location.getX() < 2 && board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.white) {
 			if (board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.black) {
 				aiScore += board[location.getX()][location.getY()].getValue();
+				numBlackPiecesOnBoard--;
 			} else {
 				myScore += board[location.getX()][location.getY()].getValue();
+				numWhitePiecesOnBoard--;
 			}
 			board[location.getX()][location.getY()] = null;
 			move = new Sound("chaching.wav");
@@ -702,7 +712,8 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 			}
 		}
 	}
-
+	
+	
 	public void start() {
 		if (relaxer == null) {
 			relaxer = new Thread(this);
@@ -710,7 +721,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 		}
 	}
 
-	public boolean canPieceMoveToLocation(Piece _piece, int row, int column) {
+	public static boolean canPieceMoveToLocation(Piece _piece, int row, int column) {
 		//Check if the desired place is within the bounds of the board, and
 		//if the piece is allowed to move there.
 		
