@@ -46,11 +46,12 @@ public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
 	public static int movedCol;
 	
 	public static int myScore;
+	public static Color myColor;
 	
 	public static int opponentScore;
 	public static int opponentWins;
 	
-	public static Color myColor;
+	public static int gameDelayTimer;
 
 	public TakTakMultiplayerWindow() {
 
@@ -178,6 +179,8 @@ public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
                         ServerHandler.sendDisconnect();
                         ServerHandler.disconnect();
                     }
+					myWins = 0;
+					opponentWins = 0;
 					new MenuWindow();
 					frame.dispose();
 				}
@@ -205,6 +208,8 @@ public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
                     ServerHandler.sendDisconnect();
                     ServerHandler.disconnect();
                 }
+				myWins = 0;
+				opponentWins = 0;
 				new MenuWindow();
 			}
 		});
@@ -278,6 +283,8 @@ public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
 		g.drawString(currentHint, 15, 725);
 		
 		g.drawString("Your Score: " + myScore, 40, 50);
+		g.drawString("Your Wins: " + myWins, 40, 45);
+		g.drawString("Opponent Wins: " + opponentWins, 460, 45);
 		g.drawString("Opponent Score: " + opponentScore, 430, 50);
 		g.setFont(new Font("Arial Bold", Font.BOLD, 18));
 		g.drawString((myTurn ? "YOUR" : "OPPONENT'S") + " Turn", myTurn ? 245 : 210, 55);
@@ -300,11 +307,16 @@ public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
 					g.drawString("You tied!", 220, 300);
 				
 				g.setFont(new Font("Arial Bold", Font.PLAIN, 22));
-				g.drawString("Press ENTER to play again", 160, 390);
-				g.drawString("Press ESC to return to the main menu", 100, 410);
+				g.drawString("New game begins in " + (gameDelayTimer / 25) + 1 + " seconds", 160, 390);
+				g.drawString("Press ESC to disconnect to the main menu", 90, 410);
 				
 				if (fadeOut < 230)
 					fadeOut += 5;
+				
+				if (gameDelayTimer > 0)
+					gameDelayTimer--;
+				else
+					reset();
 		}
 		
 		if (winner == EnumWinner.None) {
@@ -333,6 +345,8 @@ public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
 		else if (opponentScore == myScore) {
 			winner = EnumWinner.Tie;
 		}
+		
+		gameDelayTimer = 75;
 	}
 	
 	public static void initMovePiece() {

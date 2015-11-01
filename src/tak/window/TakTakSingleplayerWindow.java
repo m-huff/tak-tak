@@ -228,6 +228,8 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 			public void keyPressed(KeyEvent e) {
 				if (KeyEvent.VK_ESCAPE == e.getKeyCode()) {
 					reset();
+					myWins = 0;
+					aiWins = 0;
 					new MenuWindow();
 					frame.dispose();
 				}
@@ -325,8 +327,10 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 		g.setFont(new Font("Arial Bold", Font.PLAIN, 14));
 		g.drawString(currentHint, 15, 725);
 		
-		g.drawString("Player Score: " + myScore, 40, 50);
-		g.drawString("AI Score: " + aiScore, 460, 50);
+		g.drawString("Player Score: " + myScore, 40, 60);
+		g.drawString("Your Wins: " + myWins, 40, 45);
+		g.drawString("AI Score: " + aiScore, 460, 60);
+		g.drawString("AI Wins: " + aiWins, 460, 45);
 		g.setFont(new Font("Arial Bold", Font.BOLD, 18));
 		g.drawString((myTurn ? "YOUR" : "OPPONENT'S") + " Turn", myTurn ? 245 : 210, 55);
 		g.setFont(new Font("Arial Bold", Font.BOLD, 14));
