@@ -92,7 +92,7 @@ public class ClientHandler {
 							TakTakMultiplayerWindow.movedCol = movedcolpost;
 							TakTakMultiplayerWindow.opponentScore = myScore;
 							TakTakMultiplayerWindow.updateTurn();
-							TakTakMultiplayerWindow.initMovePiece();
+							//TakTakMultiplayerWindow.initMovePiece();
 						} catch (NumberFormatException | NullPointerException e) {
 							e.printStackTrace();
 							if (e instanceof NullPointerException)
