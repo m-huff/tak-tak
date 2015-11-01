@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.KeyAdapter;
@@ -14,17 +13,13 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import java.util.Random;
 
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
-import tak.com.Piece;
 import tak.net.ClientHandler;
 import tak.net.ServerHandler;
 import tak.util.OrderedPair;
-import tak.window.TakTakSingleplayerWindow.EnumWinner;
+import tak.util.Sound;
 
 public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
 
@@ -52,6 +47,8 @@ public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
 	public static int opponentWins;
 	
 	public static int gameDelayTimer;
+	
+	static Sound tick;
 
 	public TakTakMultiplayerWindow() {
 
@@ -313,8 +310,12 @@ public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
 				if (fadeOut < 230)
 					fadeOut += 5;
 				
-				if (gameDelayTimer > 0)
+				if (gameDelayTimer > 0) {
 					gameDelayTimer--;
+					if (gameDelayTimer == 74 || gameDelayTimer == 50 || gameDelayTimer == 25) {
+						tick = new Sound("tick.wav");
+					}
+				}
 				else
 					reset();
 		}
