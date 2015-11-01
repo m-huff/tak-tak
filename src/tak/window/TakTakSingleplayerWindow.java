@@ -51,7 +51,8 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 	//Board of real game is 6x7
 	static final int COLUMNS = 6;
 	static final int ROWS = 7;
-	static Piece[][] board;
+	public static Piece[][] board;
+	public static int numPiecesOnBoard;
 
 	private final TakTakSingleplayerWindow frame = this;
 
@@ -66,9 +67,13 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 	public static int mousey;
 	
 	public static int myScore;
+	public static int myWins;
 	
 	public static int aiScore;
 	public static int aiMoveDelay;
+	public static int aiWins;
+	
+	public static int fadeOut;
 	
 	static Sound move;
 	static Sound cha_ching;
@@ -93,6 +98,15 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 			"Even if a stack has a value of over 100 points, the king will limit it to 100.",
 			"When you right-click a piece, you can see a cool 3D image of the entire stack!" };
 
+	public static enum EnumWinner {
+		PlayerOne,
+		PlayerTwo,
+		PlayerAI,
+		Tie,
+		None
+	}
+	public static EnumWinner winner;
+	
 	public TakTakSingleplayerWindow() {
 
 		setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -222,6 +236,9 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 					selectedColumn = 999;
 					validMoves.clear();
 				}
+				if (KeyEvent.VK_ENTER == e.getKeyCode() && winner != EnumWinner.None) {
+					reset();
+				}
 				repaint();
 			}
 		});
@@ -315,6 +332,34 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 		g.setFont(new Font("Arial Bold", Font.BOLD, 14));
 		g.drawString("Turn #" + (turn + 1), 270, 40);
 
+		g.setColor(new Color(0, 0, 0, fadeOut));
+		g.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+		
+		g.setColor(new Color(255, 255, 255, fadeOut));
+		g.setFont(new Font("Arial Bold", Font.PLAIN, 36));
+		if (winner != EnumWinner.None) {
+				if (winner == EnumWinner.PlayerOne)
+					g.drawString("You win!", 220, 300);
+				if (winner == EnumWinner.PlayerAI)
+					g.drawString("The AI won...", 190, 300);
+				if (winner == EnumWinner.PlayerTwo)
+					g.drawString("The opponent won...", 130, 300);
+				if (winner == EnumWinner.Tie)
+					g.drawString("You tied!", 220, 300);
+				
+				g.setFont(new Font("Arial Bold", Font.PLAIN, 22));
+				g.drawString("Press ENTER to play again", 160, 390);
+				g.drawString("Press ESC to return to the main menu", 100, 410);
+				
+				if (fadeOut < 230)
+					fadeOut += 5;
+		}
+		
+		if (winner == EnumWinner.None) {
+			if (fadeOut > 0)
+				fadeOut -= 5;
+		}
+
 		gOld.drawImage(image, 0, 0, null);
 	}
 
@@ -334,6 +379,9 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 	public void reset() {
 		board = new Piece[ROWS][COLUMNS];
 		resetBoard();
+		
+		//4 rows of 6
+		numPiecesOnBoard = 24;
 
 		tipTime = 0;
 		currentHint = HINT_PREFIX + HINTS[rand.nextInt(HINTS.length)];
@@ -347,7 +395,9 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 		validMoves.clear();
 		
 		myScore = 0;
+		aiScore = 0;
 		
+		winner = EnumWinner.None;
 	}
 
 	public void animate() {
@@ -403,6 +453,9 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 			}
 			board[location.getX()][location.getY()] = null;
 			move = new Sound("chaching.wav");
+			numPiecesOnBoard--;
+			if (numPiecesOnBoard == 0) 
+				chooseWinner();
 			//TODO - display some text that says "+ #of points" that fades out after a couple seconds
 		}
 	}
@@ -512,6 +565,20 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 		Piece whiteKing = new Piece(value, Color.white, Color.white);
 		whiteKing.setKing(true);
 		board[row][column] = whiteKing;
+	}
+	
+	public static void chooseWinner() {
+		if (myScore > aiScore) {
+			winner = EnumWinner.PlayerOne;
+			myWins++;
+		}
+		else if (aiScore > myScore) {
+			winner = EnumWinner.PlayerAI;
+			aiWins++;
+		}
+		else if (aiScore == myScore) {
+			winner = EnumWinner.Tie;
+		}
 	}
 
 	public void displayAllValidMoves(Graphics2D g, int row, int column) {

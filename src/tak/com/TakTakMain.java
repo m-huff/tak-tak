@@ -14,10 +14,11 @@ public class TakTakMain {
 	// - make the piece move sound louder/different sound
 	// - add text that displays for a second when someone scores
 	// - maybe add drag and drop for pieces?
-	// - add what happens when the game ends
+	// - add what happens when the game ends in multi-player
 	// - add more sounds?
 	// - add wins counter
-	// - automatically reset after a game ends
+	// - automatically reset after a game ends in multi-player
+	// - test stacks stacking, I don't think that works entirely
 	
 	static Sound music = new Sound("swoosh.wav");
 

@@ -24,6 +24,7 @@ import tak.com.Piece;
 import tak.net.ClientHandler;
 import tak.net.ServerHandler;
 import tak.util.OrderedPair;
+import tak.window.TakTakSingleplayerWindow.EnumWinner;
 
 public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
 
@@ -45,7 +46,10 @@ public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
 	public static int movedCol;
 	
 	public static int myScore;
+	
 	public static int opponentScore;
+	public static int opponentWins;
+	
 	public static Color myColor;
 
 	public TakTakMultiplayerWindow() {
@@ -111,6 +115,7 @@ public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
 								initCol = selectedColumn;
 								movedRow = currentRow;
 								movedCol = currentColumn;
+								initMovePiece();
 							}
 						}
 					}
@@ -278,6 +283,34 @@ public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
 		g.drawString((myTurn ? "YOUR" : "OPPONENT'S") + " Turn", myTurn ? 245 : 210, 55);
 		g.setFont(new Font("Arial Bold", Font.BOLD, 14));
 		g.drawString("Turn #" + (turn + 1), 270, 40);
+		
+		g.setColor(new Color(0, 0, 0, fadeOut));
+		g.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+		
+		g.setColor(new Color(255, 255, 255, fadeOut));
+		g.setFont(new Font("Arial Bold", Font.PLAIN, 36));
+		if (winner != EnumWinner.None) {
+				if (winner == EnumWinner.PlayerOne)
+					g.drawString("You win!", 220, 300);
+				if (winner == EnumWinner.PlayerAI)
+					g.drawString("The AI won...", 190, 300);
+				if (winner == EnumWinner.PlayerTwo)
+					g.drawString("The opponent won...", 130, 300);
+				if (winner == EnumWinner.Tie)
+					g.drawString("You tied!", 220, 300);
+				
+				g.setFont(new Font("Arial Bold", Font.PLAIN, 22));
+				g.drawString("Press ENTER to play again", 160, 390);
+				g.drawString("Press ESC to return to the main menu", 100, 410);
+				
+				if (fadeOut < 230)
+					fadeOut += 5;
+		}
+		
+		if (winner == EnumWinner.None) {
+			if (fadeOut > 0)
+				fadeOut -= 5;
+		}
 
 		gOld.drawImage(image, 0, 0, null);
 	}
@@ -286,6 +319,20 @@ public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
 	public void reset() {
 		super.reset();
 		myTurn = isClient;
+	}
+
+	public static void chooseWinner() {
+		if (myScore > opponentScore) {
+			winner = EnumWinner.PlayerOne;
+			myWins++;
+		}
+		else if (opponentScore > myScore) {
+			winner = EnumWinner.PlayerTwo;
+			opponentWins++;
+		}
+		else if (opponentScore == myScore) {
+			winner = EnumWinner.Tie;
+		}
 	}
 	
 	public static void initMovePiece() {
