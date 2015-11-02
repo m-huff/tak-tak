@@ -139,30 +139,30 @@ public class Piece {
 	public void drawLilWinda(Graphics2D g, int mousex, int mousey) {
 
 		g.setColor(new Color(0, 0, 0, 230));
-		g.fillRect(mousex, mousey, 105, stack.size() > 5 ? 150 + (stack.size() - 5) * 32 : 150);
+		g.fillRect(mousex, mousey, 105, 70 + (stack.size()) * 8);
 		g.setColor(new Color(50, 50, 50));
-        g.setColor(Color.WHITE);
+                g.setColor(Color.WHITE);
 		g.setFont(new Font("Arial Bold", Font.BOLD, 11));
 		g.drawString("Total value is "+ value, mousex + 8, mousey+14);
                 g.setFont(new Font("Arial Bold", Font.BOLD, 11));
                 if(stack.size() == 1)
-		g.drawString(stack.size() + " piece in stack", mousex + 8, stack.size() > 5 ? mousey + 145 + (stack.size() - 5) * 32 : mousey + 145);
+		g.drawString(stack.size() + " piece in stack", mousex + 8, mousey +  65 + (stack.size()) * 8);
                 else
-                g.drawString(stack.size() + " pieces in stack", mousex + 8, stack.size() > 5 ? mousey + 145 + (stack.size() - 5) * 32 : mousey + 145);
+                g.drawString(stack.size() + " pieces in stack", mousex + 8, mousey +  65 + (stack.size()) * 8);
                 
                 int counter = 0;
                 for(Piece temp : stack)
                 { 
                    g.setColor(temp.backColor);
-                   g.drawImage((temp.backColor == Color.black ? black.getImage() : white.getImage()), mousex+ 30, stack.size() > 5 ? (((mousey + 106) + (stack.size() - 5) * 32)) - (counter * 20) : (mousey+106)-(counter*20), 45, 25, null);
-		   g.drawImage((temp.backColor == Color.black ? black.getImage() : white.getImage()), mousex+ 30, stack.size() > 5 ? (((mousey + 100) + (stack.size() - 5) * 32)) - (counter * 20) : (mousey+100)-(counter*20), 45, 25, null);
+                   g.drawImage((temp.backColor == Color.black ? black.getImage() : white.getImage()), mousex+ 30,  mousey +  28 + (stack.size()) * 8-(counter*8), 45, 25, null);
+		   g.drawImage((temp.backColor == Color.black ? black.getImage() : white.getImage()), mousex+ 30,  mousey +  20 + (stack.size()) * 8-(counter*8), 45, 25, null);
                    
                    if (!temp.isKing) {
 			g.drawImage((temp.frontColor == Color.orange ? orange.getImage()
-					: temp.frontColor == Color.blue ? blue.getImage() : green.getImage()), mousex+ 30, stack.size() > 5 ? (((mousey + 100) + (stack.size() - 5) * 32)) - (counter * 20) : (mousey+100)-(counter*20), 45, 25, null);
+                        : temp.frontColor == Color.blue ? blue.getImage() : green.getImage()), mousex+ 30, mousey +  20 + (stack.size()) * 8-(counter*8), 45, 25, null);
 		   }
                    else {
-			g.drawImage(crown.getImage(), mousex+ 30, stack.size() > 5 ? (((mousey + 100) + (stack.size() - 5) * 32)) - (counter * 20) : (mousey+100)-(counter*20), 45, 25, null);
+			g.drawImage(crown.getImage(), mousex+ 30,  mousey +  20 + (stack.size()) * 8-(counter*8), 45, 25, null);
 		   }
                    counter++;
                 }
