@@ -99,7 +99,7 @@ public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
 					}
 
 					if (selectedRow == 999 && board[currentRow][currentColumn] != null) {
-						if (board[currentRow][currentColumn].getBackgroundColor() == myColor) {
+						if (board[currentRow][currentColumn].getTopPiece().getBackgroundColor() == myColor) {
 							selectedRow = currentRow;
 							selectedColumn = currentColumn;
 						}
@@ -379,15 +379,40 @@ public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
 		//"my" pieces are black if I'm a client
 		if (location.getX() >= 5 && isClient) {
 			myScore += board[location.getX()][location.getY()].getValue();
-			numBlackPiecesOnBoard--;
 		}
 		//"my" pieces are white if I'm a server
 		if (location.getX() < 2 && !isClient) {
 			myScore += board[location.getX()][location.getY()].getValue();
-			numWhitePiecesOnBoard--;
 		}
-		numPiecesOnBoard--;
+		int whitePieces = 0, blackPieces = 0;
+		for (int i = 0; i < board[location.getX()][location.getY()].getWholeStack().size(); i++) {
+			if (board[location.getX()][location.getY()].getWholeStack().get(i).getBackgroundColor() == Color.WHITE)
+				whitePieces++;
+			else
+				blackPieces++;
+		}
+		
+		numWhitePiecesOnBoard -= whitePieces;
+		numBlackPiecesOnBoard -= blackPieces;
+		numPiecesOnBoard -= board[location.getX()][location.getY()].getWholeStack().size();
 		board[location.getX()][location.getY()] = null;
+		move = new Sound("chaching.wav");
+		if (numWhitePiecesOnBoard == 0 || numBlackPiecesOnBoard == 0) {
+			//Score all remaining pieces
+			for (int zRow = 0; zRow < ROWS; zRow++) {
+				for (int zColumn = 0; zColumn < COLUMNS; zColumn++) {
+					if (board[zRow][zColumn] != null) {
+						if (board[zRow][zColumn].getTopPiece().getBackgroundColor() != myColor) {
+							opponentScore += board[zRow][zColumn].getValue();
+						} else {
+							myScore += board[zRow][zColumn].getValue();
+						}
+						board[zRow][zColumn] = null;
+					}
+				}
+			}
+			chooseWinner();
+		}
 	}
 
 	public static void updateTurn() {

@@ -11,7 +11,6 @@ public class PlayerAI {
 	public static ArrayList<OrderedPair> getAllValidMoves(int row, int column) {
 
 		Piece p = TakTakSingleplayerWindow.board[row][column];
-		int pieceDirection = (p.getBackgroundColor() == Color.black ? 0 : 1);
 
 		ArrayList<OrderedPair> moves = new ArrayList<OrderedPair>();
 
@@ -52,21 +51,21 @@ public class PlayerAI {
 			if (TakTakSingleplayerWindow.canPieceMoveToLocation(p.getTopPiece(), row - 2, column - 2)) {
 				moves.add(new OrderedPair(row - 2, column - 2));
 			}
+			if (TakTakSingleplayerWindow.canPieceMoveToLocation(p.getTopPiece(), row, column - 1)) {
+				moves.add(new OrderedPair(row, column - 1));
+			}
+			if (TakTakSingleplayerWindow.canPieceMoveToLocation(p.getTopPiece(), row, column - 2)) {
+				moves.add(new OrderedPair(row, column - 2));
+			}
+			if (TakTakSingleplayerWindow.canPieceMoveToLocation(p.getTopPiece(), row, column + 1)) {
+				moves.add(new OrderedPair(row, column + 1));
+			}
+			if (TakTakSingleplayerWindow.canPieceMoveToLocation(p.getTopPiece(), row, column + 2)) {
+				moves.add(new OrderedPair(row, column + 2));
+			}
 		}
 
-		if (!p.getTopPiece().isKing() && pieceDirection == 1) {
-			if (TakTakSingleplayerWindow.canPieceMoveToLocation(p.getTopPiece(), row - 1, column)) {
-				moves.add(new OrderedPair(row - 1, column));
-			}
-			if (TakTakSingleplayerWindow.canPieceMoveToLocation(p.getTopPiece(), row - 1, column + 1)) {
-				moves.add(new OrderedPair(row - 1, column + 1));
-			}
-			if (TakTakSingleplayerWindow.canPieceMoveToLocation(p.getTopPiece(), row - 1, column - 1)) {
-				moves.add(new OrderedPair(row - 1, column - 1));
-			}
-		}
-
-		if (!p.getTopPiece().isKing() && pieceDirection == 0) {
+		if (!p.getTopPiece().isKing()) {
 			if (TakTakSingleplayerWindow.canPieceMoveToLocation(p.getTopPiece(), row + 1, column)) {
 				moves.add(new OrderedPair(row + 1, column));
 			}
@@ -124,9 +123,11 @@ public class PlayerAI {
 	}
 	
 	public static void makeMove() {
-		if (TakTakSingleplayerWindow.numBlackPiecesOnBoard == 0)
+		if (TakTakSingleplayerWindow.numBlackPiecesOnBoard <= 0) {
+			TakTakSingleplayerWindow.chooseWinner();
 			return;
-		
+		}
+			
 		OrderedPair op = getPieceToMove();
 		ArrayList<OrderedPair> moves = getAllValidMoves(op.getX(), op.getY());
 		
