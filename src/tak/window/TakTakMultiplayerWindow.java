@@ -19,6 +19,7 @@ import javax.swing.JFrame;
 import tak.net.ClientHandler;
 import tak.net.ServerHandler;
 import tak.util.OrderedPair;
+import tak.util.ScoreFader;
 import tak.util.Sound;
 
 public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
@@ -391,6 +392,15 @@ public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
 			else
 				blackPieces++;
 		}
+                
+                Color c;
+                if (location.getX() >= 5 && board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == myColor)
+                    c = new Color(64, 180, 64);
+                else
+                    c = new Color(128, 64, 64);
+                
+                ScoreFader sf = new ScoreFader(board[location.getX()][location.getY()].getValue(),getX(0) + location.getY() * getWidth2() / COLUMNS,
+							getY(0) + location.getX() * getHeight2() / ROWS, c);
 		
 		numWhitePiecesOnBoard -= whitePieces;
 		numBlackPiecesOnBoard -= blackPieces;
@@ -420,5 +430,24 @@ public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
 		//Update the turn after both players have gone
 		if (!isClient)
 			turn++;
+	}
+        
+        @Override
+        public void animate() {
+		if (animateFirstTime) {
+			animateFirstTime = false;
+			if (xsize != getSize().width || ysize != getSize().height) {
+				xsize = getSize().width;
+				ysize = getSize().height;
+			}
+			reset();
+		}
+
+		if (tipTime < 200) {
+			tipTime++;
+		} else {
+			tipTime = 0;
+			currentHint = HINT_PREFIX + HINTS[rand.nextInt(HINTS.length)];
+		}
 	}
 }

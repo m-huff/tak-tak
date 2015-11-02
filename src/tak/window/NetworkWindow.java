@@ -127,7 +127,7 @@ public class NetworkWindow extends JFrame implements Runnable {
 									final TakTakMultiplayerWindow ttw = new TakTakMultiplayerWindow();
 									ttw.isClient = isPotentialGameClient;
 									ttw.myTurn = isPotentialGameClient;
-									ttw.myColor = Color.white;
+									ttw.myColor = Color.black;
 								}
 							} else {
 								ServerHandler.recieveConnect(5657);
@@ -135,7 +135,7 @@ public class NetworkWindow extends JFrame implements Runnable {
 									final TakTakMultiplayerWindow ttw = new TakTakMultiplayerWindow();
 									ttw.isClient = isPotentialGameClient;
 									ttw.myTurn = isPotentialGameClient;
-									ttw.myColor = Color.black;
+									ttw.myColor = Color.white;
 								}
 							}
 							gameStarted = true;

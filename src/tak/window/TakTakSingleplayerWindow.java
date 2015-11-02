@@ -21,24 +21,23 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 import tak.com.Piece;
-import tak.net.ClientHandler;
-import tak.net.ServerHandler;
 import tak.util.OrderedPair;
 import tak.util.PlayerAI;
+import tak.util.ScoreFader;
 import tak.util.Sound;
 
 public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 
 	static final int WINDOW_WIDTH = 590;
 	static final int WINDOW_HEIGHT = 740;
-	final int XBORDER = 15;
-	final int YBORDER = 40;
-	final int YTITLE = 25;
-	boolean animateFirstTime = true;
-	int xsize = -1;
-	int ysize = -1;
+	static final int XBORDER = 15;
+	static final int YBORDER = 40;
+	static final int YTITLE = 25;
+	static boolean animateFirstTime = true;
+	static int xsize = -1;
+	static int ysize = -1;
 	Image image;
-	Graphics2D g;
+	static Graphics2D g;
 
 	private static final int SCREEN_WIDTH = Toolkit.getDefaultToolkit().getScreenSize().width;
 	private static final int SCREEN_HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().height;
@@ -83,6 +82,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 	static Sound cha_ching;
 
 	public static ArrayList<OrderedPair> validMoves = new ArrayList<OrderedPair>();
+        public static ArrayList<ScoreFader> faders = new ArrayList<ScoreFader>();
 
 	public static int tipTime;
 	public static String HINT_PREFIX = "Tip: ";
@@ -367,6 +367,10 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 			if (fadeOut > 0)
 				fadeOut -= 5;
 		}
+                
+                for (int i = 0; i < faders.size(); i++) {
+                    faders.get(i).draw(g);
+                }
 
 		gOld.drawImage(image, 0, 0, null);
 	}
@@ -462,7 +466,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 		}
 		//TODO - this isn't loud enough to be heard over the music
 		move = new Sound("swoosh.wav");
-
+                
 		//Pieces are in opponent's safe zone
 		if (location.getX() >= 5 && board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.black ||
 			location.getX() < 2 && board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.white) {
@@ -479,7 +483,17 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 				else
 					blackPieces++;
 			}
-			
+                        
+                        Color c;
+                        if (location.getX() >= 5 && board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.black)
+                            c = new Color(128, 64, 64);
+                        else
+                            c = new Color(64, 180, 64);
+                        
+                        //Works
+                        ScoreFader sf = new ScoreFader(board[location.getX()][location.getY()].getValue(),getX(0) + location.getY() * getWidth2() / COLUMNS,
+							getY(0) + location.getX() * getHeight2() / ROWS, c);
+
 			numWhitePiecesOnBoard -= whitePieces;
 			numBlackPiecesOnBoard -= blackPieces;
 			numPiecesOnBoard -= board[location.getX()][location.getY()].getWholeStack().size();
@@ -834,23 +848,23 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 		relaxer = null;
 	}
 
-	public int getX(int x) {
+	public static int getX(int x) {
 		return (x + XBORDER);
 	}
 
-	public int getY(int y) {
+	public static int getY(int y) {
 		return (y + YBORDER + YTITLE);
 	}
 
-	public int getYNormal(int y) {
+	public static int getYNormal(int y) {
 		return (-y + YBORDER + YTITLE + getHeight2());
 	}
 
-	public int getWidth2() {
+	public static int getWidth2() {
 		return (xsize - getX(0) - XBORDER);
 	}
 
-	public int getHeight2() {
+	public static int getHeight2() {
 		return (ysize - getY(0) - YBORDER);
 	}
 }
