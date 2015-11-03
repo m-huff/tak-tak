@@ -155,17 +155,12 @@ public class RulesWindow extends JFrame implements Runnable {
 			return;
 		}
 		
-		for (int x = 0; x < WINDOW_WIDTH; x += background.getIconWidth()) {
-			for (int y = 0; y < WINDOW_HEIGHT; y += background.getIconHeight()) {
-				g.drawImage(background.getImage(), x, y, null);
-			}
-		}
-		
 		int index = 0;
 		for (int x = 0; x < WINDOW_WIDTH; x += 80) {
 			for (int y = 0; y < WINDOW_HEIGHT; y += 80) {
 
 				if (index <= pieces.size() - 2 && pieces.get(index) != null) {
+					if (y < 160 || y >= 160 && x < 80 || y >= 160 && x > 400)
 					pieces.get(index).draw(g, x, y);
 					if (index < pieces.size() - 2) {
 						index++;
@@ -175,9 +170,7 @@ public class RulesWindow extends JFrame implements Runnable {
 				}
 			}
 		}
-
-		g.setColor(Color.black);
-		g.fillRect(85, 165, WINDOW_WIDTH - 170, WINDOW_HEIGHT - 165);
+		
 		g.setColor(new Color(0, 0, 0, 230));
 		g.fillRect(0, 0, WINDOW_WIDTH, 100);
 
