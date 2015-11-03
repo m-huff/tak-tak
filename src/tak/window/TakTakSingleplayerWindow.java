@@ -848,9 +848,8 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
         
         public void setBoard(Piece[][] newBoard) {
             //Setting the entire newBoard to the entire old board doesn't work
-            //Lets
-            for (int x = 0; x < COLUMNS; x++) {
-                for (int y = 0; y < ROWS; y++) {
+            for (int x = 0; x < ROWS; x++) {
+                for (int y = 0; y < COLUMNS; y++) {
                     board[x][y] = newBoard[x][y];
                 }
             }

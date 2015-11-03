@@ -122,7 +122,7 @@ public class NetworkWindow extends JFrame implements Runnable {
 					if (!isConnecting) {
 						try {
                                                     
-                                                        Piece[][] theBoard = new Piece[7][6];
+                                                        Piece[][] theBoard = new Piece[TakTakSingleplayerWindow.ROWS][TakTakSingleplayerWindow.COLUMNS];
                                                         resetBoard(theBoard);
 
 							isConnecting = true;
