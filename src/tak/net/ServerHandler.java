@@ -46,10 +46,10 @@ public class ServerHandler {
 		connected = false;
 	}
 
-	public static void sendPieceMove(int initrow, int initcol, int movedrow, int movedcol, int myScore) {
+	public static void sendPieceMove(int initrow, int initcol, int movedrow, int movedcol, int myScore, TakTakMultiplayerWindow w) {
 		if (connected) {
-			//add or modify.                    
 			serverOut.println(initrow + ":" + initcol + ":" + movedrow + ":" + movedcol + ":" + myScore);
+                        w.updateTurn();
 		}
 	}
 

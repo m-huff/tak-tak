@@ -361,18 +361,16 @@ public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
 		gameDelayTimer = 75;
 	}
 	
-	public static void initMovePiece() {
+	public void initMovePiece() {
 		if (isClient) {
-			ClientHandler.sendPieceMove(initRow, initCol, movedRow, movedCol, myScore);
+			ClientHandler.sendPieceMove(initRow, initCol, movedRow, movedCol, myScore, this);
                         System.out.println("Client just moved a piece");
 		} else {
-			ServerHandler.sendPieceMove(initRow, initCol, movedRow, movedCol, myScore);
+			ServerHandler.sendPieceMove(initRow, initCol, movedRow, movedCol, myScore, this);
                         System.out.println("Server just moved a piece");
 		}
 		movePieceToLocation(new OrderedPair(initRow, initCol), new OrderedPair(movedRow, movedCol));
                 System.out.println("Just moved the piece");
-		
-                myTurn = !myTurn;
                 
 		selectedRow = 999;
 		selectedColumn = 999;
