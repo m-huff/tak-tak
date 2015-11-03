@@ -12,7 +12,7 @@ public class PlayerAI {
 
 		Piece p = TakTakSingleplayerWindow.board[row][column];
 
-		ArrayList<OrderedPair> moves = new ArrayList<OrderedPair>();
+		ArrayList<OrderedPair> moves = new ArrayList<>();
 
 		if (p.getTopPiece().isKing()) {
 			if (TakTakSingleplayerWindow.canPieceMoveToLocation(p.getTopPiece(), row + 1, column)) {
@@ -80,46 +80,55 @@ public class PlayerAI {
 		return moves;
 	}
 
-	public static OrderedPair getPieceToMove() {
-		OrderedPair biggestStack = null;
+	public static ArrayList<OrderedPair> getPieceToMove() {
+		OrderedPair blacktomove = null;
+                OrderedPair placetomoveto = null;
+                
 
 		for (int zRow = 0; zRow < TakTakSingleplayerWindow.ROWS; zRow++) {
 			for (int zColumn = 0; zColumn < TakTakSingleplayerWindow.COLUMNS; zColumn++) {
 				if (TakTakSingleplayerWindow.board[zRow][zColumn] != null
-						&& TakTakSingleplayerWindow.board[zRow][zColumn].getTopPiece().getBackgroundColor() == Color.black) {
+			            && TakTakSingleplayerWindow.board[zRow][zColumn].getTopPiece().getBackgroundColor() == Color.black) 
+                                {
 					ArrayList<OrderedPair> moves = getAllValidMoves(zRow, zColumn);
-
-					if (!moves.isEmpty()) {
-						for (OrderedPair temp : moves) {
+					if (!moves.isEmpty()) 
+                                        {
+						for (OrderedPair temp : moves)
+                                                {
 							if (TakTakSingleplayerWindow.board[temp.getX()][temp.getY()] != null
-									&& TakTakSingleplayerWindow.board[temp.getX()][temp.getY()].getWholeStack()
-											.size() > moves.size()) {
-								biggestStack = new OrderedPair(temp.getX(), temp.getY());
+						            && TakTakSingleplayerWindow.board[temp.getX()][temp.getY()].getTopPiece().getBackgroundColor() == Color.WHITE) 
+                                                        {
+                                                                blacktomove = new OrderedPair(zRow, zColumn);
+								placetomoveto = new OrderedPair(temp.getX(), temp.getY());
+                                                                ArrayList<OrderedPair> retpack = new ArrayList<>();
+                                                                retpack.add(blacktomove);
+                                                                retpack.add(placetomoveto);
+                                                                return (retpack);
 							}
 						}
 					}
 				}
 			}
 		}
-
-		if (biggestStack == null) {
-			int column = TakTakSingleplayerWindow.rand.nextInt(TakTakSingleplayerWindow.COLUMNS);
-			int row = TakTakSingleplayerWindow.rand.nextInt(TakTakSingleplayerWindow.ROWS);
-
-			while (TakTakSingleplayerWindow.board[row][column] == null
-					|| TakTakSingleplayerWindow.board[row][column] != null && getAllValidMoves(row, column).size() == 0
-							&& TakTakSingleplayerWindow.board[row][column].getTopPiece()
-									.getBackgroundColor() != Color.black) {
-				column = TakTakSingleplayerWindow.rand.nextInt(TakTakSingleplayerWindow.COLUMNS);
-				row = TakTakSingleplayerWindow.rand.nextInt(TakTakSingleplayerWindow.ROWS);
-			}
-			biggestStack = new OrderedPair(row, column);
-		}
-
-		if (TakTakSingleplayerWindow.board[biggestStack.getX()][biggestStack.getY()].getTopPiece().getBackgroundColor() == Color.white) {
-			biggestStack = getPieceToMove();
-		}
-		return biggestStack;
+return(null);
+//		{
+//			int column = TakTakSingleplayerWindow.rand.nextInt(TakTakSingleplayerWindow.COLUMNS);
+//			int row = TakTakSingleplayerWindow.rand.nextInt(TakTakSingleplayerWindow.ROWS);
+//
+//			while (TakTakSingleplayerWindow.board[row][column] == null
+//					|| TakTakSingleplayerWindow.board[row][column] != null && getAllValidMoves(row, column).isEmpty()
+//							&& TakTakSingleplayerWindow.board[row][column].getTopPiece()
+//									.getBackgroundColor() != Color.black) {
+//				column = TakTakSingleplayerWindow.rand.nextInt(TakTakSingleplayerWindow.COLUMNS);
+//				row = TakTakSingleplayerWindow.rand.nextInt(TakTakSingleplayerWindow.ROWS);
+//			}
+//			biggestStack = new OrderedPair(row, column);
+//		}
+//
+//		if (TakTakSingleplayerWindow.board[biggestStack.getX()][biggestStack.getY()].getTopPiece().getBackgroundColor() == Color.white) {
+//			biggestStack = getPieceToMove();
+//		}
+//		return biggestStack;
 	}
 	
 	public static void makeMove() {
@@ -128,18 +137,10 @@ public class PlayerAI {
 			return;
 		}
 			
-		OrderedPair op = getPieceToMove();
-		ArrayList<OrderedPair> moves = getAllValidMoves(op.getX(), op.getY());
+		OrderedPair moved = getPieceToMove().get(0);
+                OrderedPair movee = getPieceToMove().get(1);
 		
-		if (moves != null && !moves.isEmpty())
-			TakTakSingleplayerWindow.movePieceToLocation(op, moves.get(TakTakSingleplayerWindow.rand.nextInt(moves.size())));
-		else {
-			while(moves.isEmpty() || moves == null) {
-				op = getPieceToMove();
-				moves = getAllValidMoves(op.getX(), op.getY());
-			}
-			TakTakSingleplayerWindow.movePieceToLocation(op, moves.get(TakTakSingleplayerWindow.rand.nextInt(moves.size())));
-		}
+		TakTakSingleplayerWindow.movePieceToLocation(moved, movee);
 	}
 
 }
