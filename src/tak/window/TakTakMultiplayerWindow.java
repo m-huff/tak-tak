@@ -331,6 +331,10 @@ public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
 			if (fadeOut > 0)
 				fadeOut -= 5;
 		}
+		
+		//Draw a little indicator for which you are, client or server
+		g.setFont(new Font("Arial Bold", Font.PLAIN, 4));
+		g.drawString(isClient ? "C" : "S", WINDOW_WIDTH - getX(0) - 5, WINDOW_HEIGHT);
 
 		gOld.drawImage(image, 0, 0, null);
 	}

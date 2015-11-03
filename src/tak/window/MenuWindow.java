@@ -51,6 +51,7 @@ public class MenuWindow extends JFrame implements Runnable {
 
 		setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setResizable(false);
 		setVisible(true);
 		setIconImage(icon.getImage());
 		setTitle("Tak-Tak");

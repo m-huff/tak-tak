@@ -65,6 +65,7 @@ public class NetworkWindow extends JFrame implements Runnable {
 		setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setVisible(true);
+		setResizable(false);
 		setIconImage(icon.getImage());
 		setTitle("Tak-Tak");
 		setLocation(CENTER_X, CENTER_Y);
