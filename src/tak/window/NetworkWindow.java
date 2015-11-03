@@ -121,12 +121,16 @@ public class NetworkWindow extends JFrame implements Runnable {
 				} else if (e.getKeyCode() == KeyEvent.VK_S) {
 					if (!isConnecting) {
 						try {
+                                                    
+                                                        Piece[][] theBoard = new Piece[7][6];
+                                                        resetBoard(theBoard);
 
 							isConnecting = true;
 							if (isPotentialGameClient) {
 								ClientHandler.connect(ipAddress, 5657);
 								if (ClientHandler.connected) {
 									final TakTakMultiplayerWindow ttw = new TakTakMultiplayerWindow();
+                                                                        ttw.setBoard(theBoard);
 									ttw.isClient = isPotentialGameClient;
 									ttw.myTurn = isPotentialGameClient;
 									ttw.myColor = Color.black;
@@ -135,6 +139,7 @@ public class NetworkWindow extends JFrame implements Runnable {
 								ServerHandler.recieveConnect(5657);
 								if (ServerHandler.connected) {
 									final TakTakMultiplayerWindow ttw = new TakTakMultiplayerWindow();
+                                                                        ttw.setBoard(theBoard);
 									ttw.isClient = isPotentialGameClient;
 									ttw.myTurn = isPotentialGameClient;
 									ttw.myColor = Color.white;
@@ -167,6 +172,113 @@ public class NetworkWindow extends JFrame implements Runnable {
 		init();
 		start();
 	}
+        
+        public void resetBoard(Piece[][] board) {
+
+        int value = 10;
+
+        for (int blue = 0; blue < 4; blue++) {
+                int row = rand.nextInt(2) + 5;
+                int column = rand.nextInt(6);
+
+                while (board[row][column] != null) {
+                        row = rand.nextInt(2) + 5;
+                        column = rand.nextInt(6);
+                }
+
+                board[row][column] = new Piece(value, Color.blue, Color.white);
+                value += 10;
+        }
+
+        value = 10;
+
+        for (int orange = 0; orange < 4; orange++) {
+                int row = rand.nextInt(2) + 5;
+                int column = rand.nextInt(6);
+
+                while (board[row][column] != null) {
+                        row = rand.nextInt(2) + 5;
+                        column = rand.nextInt(6);
+                }
+
+                board[row][column] = new Piece(value, Color.orange, Color.white);
+                value += 10;
+        }
+
+        value = 10;
+
+        for (int green = 0; green < 4; green++) {
+                int row = rand.nextInt(2) + 5;
+                int column = rand.nextInt(6);
+
+                while (board[row][column] != null) {
+                        row = rand.nextInt(2) + 5;
+                        column = rand.nextInt(6);
+                }
+
+                board[row][column] = new Piece(value, Color.green, Color.white);
+                value += 10;
+        }
+
+        value = 10;
+
+        for (int blue = 0; blue < 4; blue++) {
+                int row = rand.nextInt(2);
+                int column = rand.nextInt(6);
+
+                while (board[row][column] != null) {
+                        row = rand.nextInt(2);
+                        column = rand.nextInt(6);
+                }
+
+                board[row][column] = new Piece(value, Color.blue, Color.black);
+                value += 10;
+        }
+
+        value = 10;
+
+        for (int orange = 0; orange < 4; orange++) {
+                int row = rand.nextInt(2);
+                int column = rand.nextInt(6);
+
+                while (board[row][column] != null) {
+                        row = rand.nextInt(2);
+                        column = rand.nextInt(6);
+                }
+
+                board[row][column] = new Piece(value, Color.orange, Color.black);
+                value += 10;
+        }
+
+        value = 10;
+
+        for (int green = 0; green < 4; green++) {
+                int row = rand.nextInt(2);
+                int column = rand.nextInt(6);
+
+                while (board[row][column] != null) {
+                        row = rand.nextInt(2);
+                        column = rand.nextInt(6);
+                }
+
+                board[row][column] = new Piece(value, Color.green, Color.black);
+                value += 10;
+        }
+
+        //Puts the kings on the board
+
+        int row = rand.nextInt(2);
+        int column = rand.nextInt(6);
+        Piece blackKing = new Piece(0, Color.black, Color.black);
+        blackKing.setKing(true);
+        board[row][column] = blackKing;
+
+        row = rand.nextInt(2) + 5;
+        column = rand.nextInt(6);
+        Piece whiteKing = new Piece(0, Color.white, Color.white);
+        whiteKing.setKing(true);
+        board[row][column] = whiteKing;
+}
 
 	Thread relaxer;
 
@@ -254,7 +366,7 @@ public class NetworkWindow extends JFrame implements Runnable {
 					rand.nextBoolean() ? Color.black : Color.white);
 			if (rand.nextInt(10) == 0)
 				p.setKing(true);
-			pieces.add(p);
+			pieces.add(p); 
 		}
 	}
 
