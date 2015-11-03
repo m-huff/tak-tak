@@ -28,8 +28,8 @@ import tak.util.Sound;
 
 public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 
-	static final int WINDOW_WIDTH = 590;
-	static final int WINDOW_HEIGHT = 740;
+	static public final int WINDOW_WIDTH = 590;
+	static public final int WINDOW_HEIGHT = 740;
 	static final int XBORDER = 15;
 	static final int YBORDER = 40;
 	static final int YTITLE = 25;
