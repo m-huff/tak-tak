@@ -20,13 +20,13 @@ public class Piece {
 	private Color backColor;
 	private Color frontColor;
 
-	static ImageIcon white = new ImageIcon(Piece.class.getResource("/tak/assets/white.png"));
-	static ImageIcon black = new ImageIcon(Piece.class.getResource("/tak/assets/black.png"));
+	private ImageIcon white = new ImageIcon(Piece.class.getResource("/tak/assets/white.png"));
+	private ImageIcon black = new ImageIcon(Piece.class.getResource("/tak/assets/black.png"));
 
-	static ImageIcon blue = new ImageIcon(Piece.class.getResource("/tak/assets/blue.png"));
-	static ImageIcon green = new ImageIcon(Piece.class.getResource("/tak/assets/green.png"));
-	static ImageIcon orange = new ImageIcon(Piece.class.getResource("/tak/assets/orange.png"));
-	static ImageIcon crown = new ImageIcon(Piece.class.getResource("/tak/assets/crown.png"));
+	private ImageIcon blue = new ImageIcon(Piece.class.getResource("/tak/assets/blue.png"));
+	private ImageIcon green = new ImageIcon(Piece.class.getResource("/tak/assets/green.png"));
+	private ImageIcon orange = new ImageIcon(Piece.class.getResource("/tak/assets/orange.png"));
+	private ImageIcon crown = new ImageIcon(Piece.class.getResource("/tak/assets/crown.png"));
 
 	// Kings can move backwards, and two spaces forward. However, the stack they are
 	// in is limited in value to 100 points, and once the king has been placed on the
@@ -52,22 +52,18 @@ public class Piece {
 
 	public void setValue(int _value) {
 		value = _value;
-		if (getTopPiece().isKing()) {
-			if (value > 100)
-				value = 100;
-			if (value < 0)
-				value = 0;
-		}
+		if (value > 100)
+			value = 100;
+		else if (value < 0)
+			value = 0;
 	}
 	
 	public void addValue(int _value) {
 		value += _value;
-		if (getTopPiece().isKing()) {
-			if (value > 100)
-				value = 100;
-			if (value < 0)
-				value = 0;
-		}
+		if (value > 100)
+			value = 100;
+		else if (value < 0)
+			value = 0;
 	}
 
 	public int getValue() {

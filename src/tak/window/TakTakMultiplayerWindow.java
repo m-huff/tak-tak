@@ -233,6 +233,12 @@ public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
 			gOld.drawImage(image, 0, 0, null);
 			return;
 		}
+		
+		for (int x = 0; x < WINDOW_WIDTH; x += background.getIconWidth()) {
+			for (int y = 0; y < WINDOW_HEIGHT; y += background.getIconHeight()) {
+				g.drawImage(background.getImage(), x, y, null);
+			}
+		}
 
 		int x[] = {getX(0), getX(getWidth2()), getX(getWidth2()), getX(0), getX(0) };
 		int y[] = {getY(0), getY(0), getY(getHeight2()), getY(getHeight2()), getY(0) };
@@ -273,7 +279,7 @@ public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
 		if (selectedRow != 999) {
 			displayAllValidMoves(g, selectedRow, selectedColumn);
 		}
-		if (lilWindaRow != 999) {
+		if (lilWindaRow != 999 && board[lilWindaRow][lilWindaColumn] != null) {
 			board[lilWindaRow][lilWindaColumn].drawLilWinda(g, mousex, mousey);
 		}
 		g.setColor(Color.white);
@@ -366,12 +372,9 @@ public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
 	public static void movePieceToLocation(OrderedPair piece, OrderedPair location) {
 
 		if (board[location.getX()][location.getY()] != null) {
-			// Stacking isn't working right, doesn't add stacks correctly because
-			// the contructor in Piece adds itself to the stack...
 			board[location.getX()][location.getY()].addStackToStack(board[piece.getX()][piece.getY()].getWholeStack());
 			board[piece.getX()][piece.getY()] = null;
 		} else {
-			//This works just fine
 			board[location.getX()][location.getY()] = board[piece.getX()][piece.getY()];
 			board[piece.getX()][piece.getY()] = null;
 		}
@@ -408,19 +411,25 @@ public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
 		board[location.getX()][location.getY()] = null;
 		move = new Sound("chaching.wav");
 		if (numWhitePiecesOnBoard == 0 || numBlackPiecesOnBoard == 0) {
+			//If one side doesn't have any pieces left
 			//Score all remaining pieces
 			for (int zRow = 0; zRow < ROWS; zRow++) {
 				for (int zColumn = 0; zColumn < COLUMNS; zColumn++) {
 					if (board[zRow][zColumn] != null) {
 						if (board[zRow][zColumn].getTopPiece().getBackgroundColor() != myColor) {
 							opponentScore += board[zRow][zColumn].getValue();
+							ScoreFader sf2 = new ScoreFader(board[zRow][zColumn].getValue(),getX(0) + zColumn * getWidth2() / COLUMNS,
+									getY(0) + zRow * getHeight2() / ROWS, new Color(128, 64, 64));
 						} else {
 							myScore += board[zRow][zColumn].getValue();
+							ScoreFader sf2 = new ScoreFader(board[zRow][zColumn].getValue(),getX(0) + zColumn * getWidth2() / COLUMNS,
+									getY(0) + zRow * getHeight2() / ROWS, new Color(64, 180, 64));
 						}
 						board[zRow][zColumn] = null;
 					}
 				}
 			}
+			//End the game
 			chooseWinner();
 		}
 	}

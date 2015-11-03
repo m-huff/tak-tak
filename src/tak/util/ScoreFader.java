@@ -22,8 +22,6 @@ public class ScoreFader {
         y = _y;
         color = _color;
         
-        //System.out.println(x + " " + y);
-        
         fade = 255;
         isActive = true;
         
@@ -58,7 +56,8 @@ public class ScoreFader {
         g.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(), fade));
         g.setFont(new Font("Arial Bold", Font.PLAIN, 30));
         
-        g.drawString("+" + points, x + 25, y + 55);
+        String s = "+" + points;
+        g.drawString(s, x + (s.length() <= 3 ? 25 : 15), y + 55);
         
         if (fade >= 5)
             fade -= 5;

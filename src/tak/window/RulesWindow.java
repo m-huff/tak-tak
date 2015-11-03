@@ -42,6 +42,7 @@ public class RulesWindow extends JFrame implements Runnable {
 
 	public static Random rand = new Random();
 	public static ImageIcon icon = new ImageIcon(RulesWindow.class.getResource("/tak/assets/icon.png"));
+	static ImageIcon background = new ImageIcon(RulesWindow.class.getResource("/tak/assets/wood.png"));
 
 	private final RulesWindow frame = this;
 
@@ -152,6 +153,12 @@ public class RulesWindow extends JFrame implements Runnable {
 		if (animateFirstTime) {
 			gOld.drawImage(image, 0, 0, null);
 			return;
+		}
+		
+		for (int x = 0; x < WINDOW_WIDTH; x += background.getIconWidth()) {
+			for (int y = 0; y < WINDOW_HEIGHT; y += background.getIconHeight()) {
+				g.drawImage(background.getImage(), x, y, null);
+			}
 		}
 		
 		int index = 0;

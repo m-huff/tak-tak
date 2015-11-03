@@ -47,6 +47,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 
 	public static Random rand = new Random();
 	static ImageIcon icon = new ImageIcon(TakTakSingleplayerWindow.class.getResource("/tak/assets/icon.png"));
+	static ImageIcon background = new ImageIcon(TakTakSingleplayerWindow.class.getResource("/tak/assets/wood.png"));
 
 	//Board of real game is 6x7
 	public static final int COLUMNS = 6;
@@ -62,10 +63,10 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 	public static int turn;
 	public static boolean myTurn;
 
-	public static int selectedRow;
-	public static int selectedColumn;
-	public static int lilWindaRow;
-	public static int lilWindaColumn;
+	public static int selectedRow = 999;
+	public static int selectedColumn = 999;
+	public static int lilWindaRow = 999;
+	public static int lilWindaColumn = 999;
 	public static int mousex;
 	public static int mousey;
 	
@@ -86,7 +87,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 
 	public static int tipTime;
 	public static String HINT_PREFIX = "Tip: ";
-	public static String currentHint;
+	public static String currentHint = "";
 	public static String[] HINTS = {"Stack your pieces to move across the board faster!",
 			"The king piece moves twice as fast, but won't stack anything on top of it!",
 			"The king piece can also move backwards!",
@@ -284,6 +285,12 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 			gOld.drawImage(image, 0, 0, null);
 			return;
 		}
+		
+		for (int x = 0; x < WINDOW_WIDTH; x += background.getIconWidth()) {
+			for (int y = 0; y < WINDOW_HEIGHT; y += background.getIconHeight()) {
+				g.drawImage(background.getImage(), x, y, null);
+			}
+		}
 
 		int x[] = {getX(0), getX(getWidth2()), getX(getWidth2()), getX(0), getX(0) };
 		int y[] = {getY(0), getY(0), getY(getHeight2()), getY(getHeight2()), getY(0) };
@@ -324,7 +331,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 		if (selectedRow != 999) {
 			displayAllValidMoves(g, selectedRow, selectedColumn);
 		}
-		if (lilWindaRow != 999) {
+		if (lilWindaRow != 999 && board[lilWindaRow][lilWindaColumn] != null) {
 			board[lilWindaRow][lilWindaColumn].drawLilWinda(g, mousex, mousey);
 		}
 		g.setColor(Color.white);
@@ -434,7 +441,6 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 		
 		if (numBlackPiecesOnBoard > 0) {
 			if (!myTurn && aiMoveDelay >= 50) {
-				//System.out.println("AI makes a move");
 				//TODO - well this is buggy
 				PlayerAI.makeMove();
 				myTurn = !myTurn;
@@ -464,8 +470,6 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 			board[location.getX()][location.getY()] = board[piece.getX()][piece.getY()];
 			board[piece.getX()][piece.getY()] = null;
 		}
-		//TODO - this isn't loud enough to be heard over the music
-		move = new Sound("swoosh.wav");
                 
 		//Pieces are in opponent's safe zone
 		if (location.getX() >= 5 && board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.black ||
@@ -484,15 +488,15 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 					blackPieces++;
 			}
                         
-                        Color c;
-                        if (location.getX() >= 5 && board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.black)
-                            c = new Color(128, 64, 64);
-                        else
-                            c = new Color(64, 180, 64);
-                        
-                        //Works
-                        ScoreFader sf = new ScoreFader(board[location.getX()][location.getY()].getValue(),getX(0) + location.getY() * getWidth2() / COLUMNS,
-							getY(0) + location.getX() * getHeight2() / ROWS, c);
+            Color c;
+            if (location.getX() >= 5 && board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.black)
+                c = new Color(128, 64, 64);
+            else
+                c = new Color(64, 180, 64);
+            
+            //Works
+            ScoreFader sf = new ScoreFader(board[location.getX()][location.getY()].getValue(),getX(0) + location.getY() * getWidth2() / COLUMNS,
+				getY(0) + location.getX() * getHeight2() / ROWS, c);
 
 			numWhitePiecesOnBoard -= whitePieces;
 			numBlackPiecesOnBoard -= blackPieces;
@@ -500,22 +504,27 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 			board[location.getX()][location.getY()] = null;
 			move = new Sound("chaching.wav");
 			if (numWhitePiecesOnBoard == 0 || numBlackPiecesOnBoard == 0) {
+				//If one side doesn't have any more pieces
 				//Score all remaining pieces
 				for (int zRow = 0; zRow < ROWS; zRow++) {
 					for (int zColumn = 0; zColumn < COLUMNS; zColumn++) {
 						if (board[zRow][zColumn] != null) {
 							if (board[zRow][zColumn].getTopPiece().getBackgroundColor() == Color.black) {
 								aiScore += board[zRow][zColumn].getValue();
+								ScoreFader sf2 = new ScoreFader(board[zRow][zColumn].getValue(),getX(0) + zColumn * getWidth2() / COLUMNS,
+										getY(0) + zRow * getHeight2() / ROWS, new Color(128, 64, 64));
 							} else {
 								myScore += board[zRow][zColumn].getValue();
+								ScoreFader sf2 = new ScoreFader(board[zRow][zColumn].getValue(),getX(0) + zColumn * getWidth2() / COLUMNS,
+										getY(0) + zRow * getHeight2() / ROWS, new Color(64, 180, 64));
 							}
 							board[zRow][zColumn] = null;
 						}
 					}
 				}
+				//End the game
 				chooseWinner();
 			}
-			//TODO - display some text that says "+ #of points" that fades out after a couple seconds
 		}
 	}
 
@@ -615,13 +624,13 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 
 		int row = rand.nextInt(2);
 		int column = rand.nextInt(COLUMNS);
-		Piece blackKing = new Piece(value, Color.black, Color.black);
+		Piece blackKing = new Piece(0, Color.black, Color.black);
 		blackKing.setKing(true);
 		board[row][column] = blackKing;
 
 		row = rand.nextInt(2) + 5;
 		column = rand.nextInt(COLUMNS);
-		Piece whiteKing = new Piece(value, Color.white, Color.white);
+		Piece whiteKing = new Piece(0, Color.white, Color.white);
 		whiteKing.setKing(true);
 		board[row][column] = whiteKing;
 	}

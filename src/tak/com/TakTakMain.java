@@ -9,14 +9,10 @@ public class TakTakMain {
 	//SFX - http://www.wavsource.com/sfx/sfx.htm - public domain
 	
 	//TODO
-	// - Make LilWinda tell you if you control the stack
-	// - add AI
-	// - make the piece move sound louder/different sound
-	// - add text that displays for a second when someone scores
+	// - better AI
 	// - maybe add drag and drop for pieces?
 	// - add more sounds?
-	// - add wins counter
-	// - test stacks stacking, I don't think that works entirely
+	// - fix multiplayer
 	
 	static Sound music = new Sound("swoosh.wav");
 
