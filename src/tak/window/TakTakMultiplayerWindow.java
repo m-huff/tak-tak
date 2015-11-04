@@ -116,6 +116,7 @@ public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
 								movedRow = currentRow;
 								movedCol = currentColumn;
 								//initMovePiece();
+                                                                System.out.println("Client just moved a piece");
                                                                 if (isClient) {
                                                                         ClientHandler.sendPieceMove(initRow, initCol, movedRow, movedCol, myScore);
                                                                         System.out.println("Client just moved a piece");

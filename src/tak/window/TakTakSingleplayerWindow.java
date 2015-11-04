@@ -131,7 +131,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 		});
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
-				if (MouseEvent.BUTTON1 == e.getButton() && myTurn) {
+				if (MouseEvent.BUTTON1 == e.getButton() && myTurn && frame instanceof TakTakSingleplayerWindow) {
 
 					int xpos = e.getX() - getX(0);
 					int ypos = e.getY() - getY(0);
@@ -180,6 +180,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 								//Have turn only update after both players have gone
 								//AI taking a turn adds one to turn counter
 								myTurn = !myTurn;
+                                                                System.out.println("yeet");
 							}
 						}
 					}

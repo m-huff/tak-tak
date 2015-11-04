@@ -84,9 +84,7 @@ public class ServerHandler {
 							TakTakMultiplayerWindow.movedRow = movedrowpost;
 							TakTakMultiplayerWindow.movedCol = movedcolpost;
 							TakTakMultiplayerWindow.opponentScore = myScore;
-							//Update turn when receiving a move
-							TakTakMultiplayerWindow.updateTurn();
-							//TakTakMultiplayerWindow.initMovePiece();
+							TakTakMultiplayerWindow.myTurn = !TakTakMultiplayerWindow.myTurn;
 							System.out.println("ayy server");
 						} catch (NumberFormatException | NullPointerException e) {
 							e.printStackTrace();

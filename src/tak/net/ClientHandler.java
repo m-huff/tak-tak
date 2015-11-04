@@ -93,10 +93,8 @@ public class ClientHandler {
 							TakTakMultiplayerWindow.movedRow = movedrowpost;
 							TakTakMultiplayerWindow.movedCol = movedcolpost;
 							TakTakMultiplayerWindow.opponentScore = myScore;
-							//Update the turn when you receive a move
-							TakTakMultiplayerWindow.updateTurn();
-							//TakTakMultiplayerWindow.initMovePiece();
-							System.out.println("ayy client");
+							TakTakMultiplayerWindow.myTurn = !TakTakMultiplayerWindow.myTurn;	
+						System.out.println("ayy client");
 						} catch (NumberFormatException | NullPointerException e) {
 							e.printStackTrace();
 							if (e instanceof NullPointerException)
