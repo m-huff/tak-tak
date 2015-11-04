@@ -443,6 +443,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 			if (!myTurn && aiMoveDelay >= 50) {
 				//TODO - well this is buggy
 				//Why the hell is this still going in multiplayer
+                                System.out.println("AI fuggin activated");
 				PlayerAI.makeMove();
 				myTurn = !myTurn;
 				turn++;

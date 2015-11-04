@@ -382,7 +382,7 @@ public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
 		
 		Piece p = new Piece(0, Color.green, Color.black);
 		p.setKing(true);
-		board[0][4] = p;
+		board[1][4] = p;
 		
 		board[5][0] = new Piece(10, Color.orange, Color.black);
 		board[5][4] = new Piece(20, Color.orange, Color.black);
@@ -400,7 +400,7 @@ public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
 		
 		Piece p2 = new Piece(0, Color.green, Color.black);
 		p.setKing(true);
-		board[5][4] = p;
+		board[6][4] = p;
 	}
 	
 	public void initMovePiece() {
