@@ -25,7 +25,7 @@ public class ClientHandler {
 	private static BufferedReader serverIn = null;
 
 	//Time it allows to connect, in seconds
-	private static final int TIMEOUT = 15;
+	private static final int TIMEOUT = 20;
 
 	public static void connect(String ip, int port) throws UnknownHostException, IOException {
 		hostIP = ip;
@@ -56,8 +56,10 @@ public class ClientHandler {
 	public static void sendPieceMove(int initrow, int initcol, int movedrow, int movedcol, int myScore, TakTakMultiplayerWindow w) {
 		if (connected) {
 		    serverOut.println(initrow + ":" + initcol + ":" + movedrow + ":" + movedcol + ":" + myScore);
-                    w.updateTurn();
-                }
+		    //Update the turn when you send a move
+		    //This method may not be being called
+            w.updateTurn();
+        }
 	}
 
 	public static void sendDisconnect() {
@@ -93,8 +95,10 @@ public class ClientHandler {
 							TakTakMultiplayerWindow.movedRow = movedrowpost;
 							TakTakMultiplayerWindow.movedCol = movedcolpost;
 							TakTakMultiplayerWindow.opponentScore = myScore;
+							//Update the turn when you receive a move
 							TakTakMultiplayerWindow.updateTurn();
 							//TakTakMultiplayerWindow.initMovePiece();
+							System.out.println("ayy client");
 						} catch (NumberFormatException | NullPointerException e) {
 							e.printStackTrace();
 							if (e instanceof NullPointerException)

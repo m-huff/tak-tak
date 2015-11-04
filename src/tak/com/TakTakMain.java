@@ -13,6 +13,7 @@ public class TakTakMain {
 	// - maybe add drag and drop for pieces?
 	// - add more sounds?
 	// - fix multiplayer
+	// - uhh... better music probably
 	
 	static Sound music = new Sound("swoosh.wav");
 

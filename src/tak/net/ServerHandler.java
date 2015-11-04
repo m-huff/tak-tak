@@ -21,7 +21,7 @@ public class ServerHandler {
 	private static BufferedReader serverIn = null;
 	
 	//Time it allows to connect, in seconds
-	private static final int TIMEOUT = 15;
+	private static final int TIMEOUT = 20;
 
 	public static void recieveConnect(int port) throws UnknownHostException, IOException, SocketTimeoutException {
 		ServerSocket server = new ServerSocket(port);
@@ -49,7 +49,9 @@ public class ServerHandler {
 	public static void sendPieceMove(int initrow, int initcol, int movedrow, int movedcol, int myScore, TakTakMultiplayerWindow w) {
 		if (connected) {
 			serverOut.println(initrow + ":" + initcol + ":" + movedrow + ":" + movedcol + ":" + myScore);
-                        w.updateTurn();
+			//Update turn when sending move
+			//This may not be being called
+            w.updateTurn();
 		}
 	}
 
@@ -84,8 +86,10 @@ public class ServerHandler {
 							TakTakMultiplayerWindow.movedRow = movedrowpost;
 							TakTakMultiplayerWindow.movedCol = movedcolpost;
 							TakTakMultiplayerWindow.opponentScore = myScore;
+							//Update turn when receiving a move
 							TakTakMultiplayerWindow.updateTurn();
 							//TakTakMultiplayerWindow.initMovePiece();
+							System.out.println("ayy server");
 						} catch (NumberFormatException | NullPointerException e) {
 							e.printStackTrace();
 							if (e instanceof NullPointerException)

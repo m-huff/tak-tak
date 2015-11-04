@@ -442,6 +442,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 		if (numBlackPiecesOnBoard > 0) {
 			if (!myTurn && aiMoveDelay >= 50) {
 				//TODO - well this is buggy
+				//Why the hell is this still going in multiplayer
 				PlayerAI.makeMove();
 				myTurn = !myTurn;
 				turn++;
@@ -451,10 +452,6 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 			}
 		} else {
 			turn++;
-		}
-		
-		if (numWhitePiecesOnBoard == 0 && myTurn) {
-			myTurn = !myTurn;
 		}
 	}
 
@@ -845,16 +842,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 		}
 		return false;
 	}
-        
-        public void setBoard(Piece[][] newBoard) {
-            //Setting the entire newBoard to the entire old board doesn't work
-            for (int x = 0; x < ROWS; x++) {
-                for (int y = 0; y < COLUMNS; y++) {
-                    board[x][y] = newBoard[x][y];
-                }
-            }
-        }
-
+	
 	public static void updateTurn() {
 		myTurn = !myTurn;
 	}

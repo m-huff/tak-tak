@@ -72,100 +72,7 @@ public class NetworkWindow extends JFrame implements Runnable {
 		setIconImage(icon.getImage());
 		setTitle("Tak-Tak");
 		setLocation(CENTER_X, CENTER_Y);
-
-//		addKeyListener(new KeyAdapter() {
-//
-//			@SuppressWarnings("static-access")
-//			public void keyPressed(KeyEvent e) {
-//				if (e.VK_ESCAPE == e.getKeyCode()) {
-//					new MenuWindow();
-//					frame.dispose();
-//				}
-//				if (e.getKeyCode() == KeyEvent.VK_0) {
-//					ipAddress += "0";
-//				} else if (e.getKeyCode() == KeyEvent.VK_1) {
-//					ipAddress += "1";
-//				} else if (e.getKeyCode() == KeyEvent.VK_2) {
-//					ipAddress += "2";
-//				} else if (e.getKeyCode() == KeyEvent.VK_3) {
-//					ipAddress += "3";
-//				} else if (e.getKeyCode() == KeyEvent.VK_4) {
-//					ipAddress += "4";
-//				} else if (e.getKeyCode() == KeyEvent.VK_5) {
-//					ipAddress += "5";
-//				} else if (e.getKeyCode() == KeyEvent.VK_6) {
-//					ipAddress += "6";
-//				} else if (e.getKeyCode() == KeyEvent.VK_7) {
-//					ipAddress += "7";
-//				} else if (e.getKeyCode() == KeyEvent.VK_8) {
-//					ipAddress += "8";
-//				} else if (e.getKeyCode() == KeyEvent.VK_9) {
-//					ipAddress += "9";
-//				} else if (e.getKeyCode() == KeyEvent.VK_PERIOD) {
-//					ipAddress += ".";
-//				} else if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
-//					if (ipAddress.length() >= 1)
-//						ipAddress = ipAddress.substring(0, ipAddress.length() - 1);
-//				}
-//
-//				if (gameStarted || isConnecting) {
-//					if (e.getKeyCode() == KeyEvent.VK_ESCAPE && !isConnecting) {
-//						if (gameStarted)
-//							if (isPotentialGameClient) {
-//								ClientHandler.sendDisconnect();
-//								ClientHandler.disconnect();
-//							} else {
-//								ServerHandler.sendDisconnect();
-//								ServerHandler.disconnect();
-//							}
-//						gameStarted = false;
-//						reset();
-//					}
-//				} else if (e.getKeyCode() == KeyEvent.VK_S) {
-//					if (!isConnecting) {
-//						try {
-//                                                    
-//                                                        Piece[][] theBoard = new Piece[TakTakSingleplayerWindow.ROWS][TakTakSingleplayerWindow.COLUMNS];
-//                                                        resetBoard(theBoard);
-//
-//							isConnecting = true;
-//							if (isPotentialGameClient) {
-//								ClientHandler.connect(ipAddress, 5657);
-//								if (ClientHandler.connected) {
-//                                                                        System.out.println("Client is connected");
-//                                                                        final TakTakMultiplayerWindow ttw = new TakTakMultiplayerWindow();
-//                                                                        ttw.setBoard(theBoard);
-//                                                                        ttw.isClient = isPotentialGameClient;
-//                                                                        ttw.myTurn = isPotentialGameClient;
-//                                                                        ttw.myColor = isPotentialGameClient ? Color.black : Color.white;
-//								}
-//							} else {
-//								ServerHandler.recieveConnect(5657);
-//								if (ServerHandler.connected) {
-//                                                                        System.out.println("Server is connected");
-//                                                                        final TakTakMultiplayerWindow ttw = new TakTakMultiplayerWindow();
-//                                                                        ttw.setBoard(theBoard);
-//                                                                        ttw.isClient = isPotentialGameClient;
-//                                                                        ttw.myTurn = isPotentialGameClient;
-//                                                                        ttw.myColor = isPotentialGameClient ? Color.black : Color.white;
-//								}
-//							}
-//                                                        
-//							gameStarted = true;
-//							isConnecting = false;
-//							//I'm at least 50% sure this doesn't screw anything up
-//							//frame.dispose();
-//						} catch (IOException ex) {
-//							System.out.println("Cannot host server: " + ex.getMessage());
-//							isConnecting = false;
-//						}
-//					}
-//				}
-//
-//				repaint();
-//			}
-//		});
-                
+  
         addKeyListener(new KeyAdapter()
               {
 
@@ -190,7 +97,6 @@ public class NetworkWindow extends JFrame implements Runnable {
                                       TakTakMultiplayerWindow ttw = new TakTakMultiplayerWindow();
                                       ttw.isClient = false;
                                       ttw.myTurn = false;
-                                      ttw.setBoard(board);
                                       
                                       theGame = ttw;
                                       
@@ -223,7 +129,6 @@ public class NetworkWindow extends JFrame implements Runnable {
                                           TakTakMultiplayerWindow ttw = new TakTakMultiplayerWindow();
                                           ttw.isClient = true;
                                           ttw.myTurn = true;
-                                          ttw.setBoard(board);
                                           
                                           theGame = ttw;
                                           

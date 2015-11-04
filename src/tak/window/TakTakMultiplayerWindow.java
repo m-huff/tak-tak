@@ -16,6 +16,7 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 
+import tak.com.Piece;
 import tak.net.ClientHandler;
 import tak.net.ServerHandler;
 import tak.util.OrderedPair;
@@ -179,7 +180,6 @@ public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
                     }
 					myWins = 0;
 					opponentWins = 0;
-					new MenuWindow();
 					frame.dispose();
 				}
 				if (KeyEvent.VK_BACK_SPACE == e.getKeyCode()) {
@@ -361,6 +361,48 @@ public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
 		gameDelayTimer = 75;
 	}
 	
+	//Multiplayer boards just can't be random, the amount of data that would
+	//have to be sent is way too much and the fact that we'd have to have another
+	//board generated and stored away isn't good.
+	@Override
+	public void resetBoard() {
+		board[0][0] = new Piece(10, Color.orange, Color.black);
+		board[0][4] = new Piece(20, Color.orange, Color.black);
+		board[1][2] = new Piece(30, Color.orange, Color.black);
+		board[1][5] = new Piece(40, Color.orange, Color.black);
+		
+		board[1][3] = new Piece(10, Color.blue, Color.black);
+		board[1][0] = new Piece(20, Color.blue, Color.black);
+		board[0][1] = new Piece(30, Color.blue, Color.black);
+		board[0][5] = new Piece(40, Color.blue, Color.black);
+		
+		board[0][2] = new Piece(10, Color.green, Color.black);
+		board[1][1] = new Piece(20, Color.green, Color.black);
+		board[0][3] = new Piece(30, Color.green, Color.black);
+		
+		Piece p = new Piece(0, Color.green, Color.black);
+		p.setKing(true);
+		board[0][4] = p;
+		
+		board[5][0] = new Piece(10, Color.orange, Color.black);
+		board[5][4] = new Piece(20, Color.orange, Color.black);
+		board[6][2] = new Piece(30, Color.orange, Color.black);
+		board[6][5] = new Piece(40, Color.orange, Color.black);
+		
+		board[6][3] = new Piece(10, Color.blue, Color.black);
+		board[6][0] = new Piece(20, Color.blue, Color.black);
+		board[5][1] = new Piece(30, Color.blue, Color.black);
+		board[5][5] = new Piece(40, Color.blue, Color.black);
+		
+		board[5][2] = new Piece(10, Color.green, Color.black);
+		board[6][1] = new Piece(20, Color.green, Color.black);
+		board[5][3] = new Piece(30, Color.green, Color.black);
+		
+		Piece p2 = new Piece(0, Color.green, Color.black);
+		p.setKing(true);
+		board[5][4] = p;
+	}
+	
 	public void initMovePiece() {
 		if (isClient) {
 			ClientHandler.sendPieceMove(initRow, initCol, movedRow, movedCol, myScore, this);
@@ -443,6 +485,7 @@ public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
 
 	public static void updateTurn() {
 		myTurn = !myTurn;
+		System.out.println("updateTurn was called from either ClientHandler or ServerHandler");
 		//Update the turn after both players have gone
 		if (!isClient)
 			turn++;
