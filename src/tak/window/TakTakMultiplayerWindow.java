@@ -51,6 +51,7 @@ public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
 	public static int gameDelayTimer;
 	
 	static Sound tick;
+        static boolean singleplayer = false;
 
 	public TakTakMultiplayerWindow() {
 
@@ -71,7 +72,9 @@ public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
 		});
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
+                            System.out.println("multiplayer mouse pressed");
 				if (MouseEvent.BUTTON1 == e.getButton() && myTurn) {
+                                    System.out.println("it was button1");
 
 					int xpos = e.getX() - getX(0);
 					int ypos = e.getY() - getY(0);
@@ -104,8 +107,10 @@ public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
 						if (board[currentRow][currentColumn].getTopPiece().getBackgroundColor() == myColor) {
 							selectedRow = currentRow;
 							selectedColumn = currentColumn;
+                                                        System.out.println("selected a piece");
 						}
 					} else if (selectedRow != 999) {
+                                                System.out.println("we gon move a piece");
 						boolean movedPiece = false;
 						for (int i = 0; i < validMoves.size() && !movedPiece; i++) {
 							if (validMoves.get(i).toString().equals(new OrderedPair(currentRow, currentColumn).toString())) {
@@ -129,9 +134,9 @@ public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
 
                                                                 selectedRow = 999;
                                                                 selectedColumn = 999;
-                                                                System.out.println("initMovePiece");
 							}
 						}
+                                                System.out.println("after the loop");
 					}
 				}
 				if (MouseEvent.BUTTON3 == e.getButton()) {

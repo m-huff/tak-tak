@@ -59,6 +59,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 	public static int numWhitePiecesOnBoard;
 
 	private final TakTakSingleplayerWindow frame = this;
+        static boolean singleplayer = true;
 
 	public static int turn;
 	public static boolean myTurn;
@@ -131,7 +132,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 		});
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
-				if (MouseEvent.BUTTON1 == e.getButton() && myTurn && frame instanceof TakTakSingleplayerWindow) {
+				if (MouseEvent.BUTTON1 == e.getButton() && myTurn && singleplayer) {
 
 					int xpos = e.getX() - getX(0);
 					int ypos = e.getY() - getY(0);
