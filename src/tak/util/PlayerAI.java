@@ -94,7 +94,17 @@ public class PlayerAI {
                                         {
 						for (OrderedPair temp : moves)
                                                 {
-							if (TakTakSingleplayerWindow.board[temp.getX()][temp.getY()] != null
+                                                        if(TakTakSingleplayerWindow.board[zRow][zColumn].getTopPiece().isKing() && TakTakSingleplayerWindow.board[zRow][zColumn].getTopPiece().getValue() >= 100
+                                                           && temp.getY() > zRow)
+                                                        {
+                                                            blacktomove = new OrderedPair(zRow, zColumn);
+								placetomoveto = new OrderedPair(temp.getX(), temp.getY());
+                                                                ArrayList<OrderedPair> retpack = new ArrayList<>();
+                                                                retpack.add(blacktomove);
+                                                                retpack.add(placetomoveto);
+                                                                return (retpack);
+                                                        }
+                                                        else if (TakTakSingleplayerWindow.board[temp.getX()][temp.getY()] != null
 						            && TakTakSingleplayerWindow.board[temp.getX()][temp.getY()].getTopPiece().getBackgroundColor() == Color.WHITE) 
                                                         {
                                                                 blacktomove = new OrderedPair(zRow, zColumn);
@@ -111,20 +121,22 @@ public class PlayerAI {
 		}
 
                 {
-			int column = TakTakSingleplayerWindow.rand.nextInt(TakTakSingleplayerWindow.COLUMNS);
-			int row = TakTakSingleplayerWindow.rand.nextInt(TakTakSingleplayerWindow.ROWS);
+			int column = (int)(Math.random()*TakTakSingleplayerWindow.COLUMNS);
+			int row = (int)(Math.random()*TakTakSingleplayerWindow.ROWS);
                         ArrayList<OrderedPair> moves;
                         
 			while (TakTakSingleplayerWindow.board[row][column] == null
 			       || TakTakSingleplayerWindow.board[row][column] != null && getAllValidMoves(row, column).isEmpty()
 			       || TakTakSingleplayerWindow.board[row][column] != null && TakTakSingleplayerWindow.board[row][column].getTopPiece().getBackgroundColor() != Color.black)
                         {
-				column = TakTakSingleplayerWindow.rand.nextInt(TakTakSingleplayerWindow.COLUMNS);
-				row = TakTakSingleplayerWindow.rand.nextInt(TakTakSingleplayerWindow.ROWS);
+                           // System.out.println(row + ", " + column);
+				column = (int)(Math.random()*TakTakSingleplayerWindow.COLUMNS);
+				row = (int)(Math.random()*TakTakSingleplayerWindow.ROWS);
 			}
                         moves = getAllValidMoves(row, column);
+                        System.out.println(moves);
                         blacktomove = new OrderedPair(row,column);
-                        placetomoveto = moves.get(TakTakSingleplayerWindow.rand.nextInt(moves.size()));
+                        placetomoveto = moves.get((int)(Math.random()*moves.size()));
                         ArrayList<OrderedPair> retpack = new ArrayList<>();
                         retpack.add(blacktomove);
                         retpack.add(placetomoveto);
@@ -137,9 +149,9 @@ public class PlayerAI {
 			TakTakSingleplayerWindow.chooseWinner();
 			return;
 		}
-			
-		OrderedPair moved = findMovements().get(0);
-                OrderedPair movee = findMovements().get(1);
+		ArrayList<OrderedPair> movings = new ArrayList<>(findMovements());	
+		OrderedPair moved = movings.get(0);
+                OrderedPair movee = movings.get(1);
 		
 		TakTakSingleplayerWindow.movePieceToLocation(moved, movee);
 	}
