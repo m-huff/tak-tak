@@ -12,6 +12,7 @@ import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import tak.util.OrderedPair;
 import tak.window.TakTakMultiplayerWindow;
 
 public class ClientHandler {
@@ -57,6 +58,7 @@ public class ClientHandler {
 		if (connected) {
 		    serverOut.println(initrow + ":" + initcol + ":" + movedrow + ":" + movedcol + ":" + myScore);
 		    TakTakMultiplayerWindow.myTurn = !TakTakMultiplayerWindow.myTurn;
+                    TakTakMultiplayerWindow.movePieceToLocation(new OrderedPair(initrow, initcol), new OrderedPair(movedrow, movedcol));
                 }
 	}
 
@@ -94,7 +96,7 @@ public class ClientHandler {
 							TakTakMultiplayerWindow.movedCol = movedcolpost;
 							TakTakMultiplayerWindow.opponentScore = myScore;
 							TakTakMultiplayerWindow.myTurn = !TakTakMultiplayerWindow.myTurn;	
-						System.out.println("ayy client");
+                                                        TakTakMultiplayerWindow.movePieceToLocation(new OrderedPair(initrowpost, initcolpost), new OrderedPair(movedrowpost, movedcolpost));
 						} catch (NumberFormatException | NullPointerException e) {
 							e.printStackTrace();
 							if (e instanceof NullPointerException)

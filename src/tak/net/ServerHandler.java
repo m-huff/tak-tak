@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.*;
+import tak.util.OrderedPair;
 import tak.window.TakTakMultiplayerWindow;
 
 public class ServerHandler {
@@ -50,6 +51,7 @@ public class ServerHandler {
 		if (connected) {
 			serverOut.println(initrow + ":" + initcol + ":" + movedrow + ":" + movedcol + ":" + myScore);
                         TakTakMultiplayerWindow.myTurn = !TakTakMultiplayerWindow.myTurn;
+                        TakTakMultiplayerWindow.movePieceToLocation(new OrderedPair(initrow, initcol), new OrderedPair(movedrow, movedcol));
 		}
 	}
 
@@ -85,7 +87,7 @@ public class ServerHandler {
 							TakTakMultiplayerWindow.movedCol = movedcolpost;
 							TakTakMultiplayerWindow.opponentScore = myScore;
 							TakTakMultiplayerWindow.myTurn = !TakTakMultiplayerWindow.myTurn;
-							System.out.println("ayy server");
+                                                        TakTakMultiplayerWindow.movePieceToLocation(new OrderedPair(initrowpost, initcolpost), new OrderedPair(movedrowpost, movedcolpost));
 						} catch (NumberFormatException | NullPointerException e) {
 							e.printStackTrace();
 							if (e instanceof NullPointerException)

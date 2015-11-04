@@ -464,6 +464,15 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 			// Stacking isn't working right, doesn't add stacks correctly because
 			// the contructor in Piece adds itself to the stack...
 			board[location.getX()][location.getY()].addStackToStack(board[piece.getX()][piece.getY()].getWholeStack());
+
+			for (int i = 0; i < board[piece.getX()][piece.getY()].getWholeStack().size(); i++) {
+				if (board[location.getX()][location.getY()].getWholeStack().get(i).getBackgroundColor() == Color.WHITE)
+					numWhitePiecesOnBoard--;
+				else
+					numBlackPiecesOnBoard--;
+                                numPiecesOnBoard--;
+			}
+                        
 			board[piece.getX()][piece.getY()] = null;
 		} else {
 			//This works just fine

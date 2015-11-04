@@ -9,11 +9,10 @@ public class TakTakMain {
 	//SFX - http://www.wavsource.com/sfx/sfx.htm - public domain
 	
 	//TODO
-	// - better AI
 	// - maybe add drag and drop for pieces?
 	// - add more sounds?
-	// - fix multiplayer
 	// - uhh... better music probably
+        // - fix piece scoring in multiplayer
 	
 	static Sound music = new Sound("swoosh.wav");
 
