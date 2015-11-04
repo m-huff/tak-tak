@@ -181,7 +181,6 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 								//Have turn only update after both players have gone
 								//AI taking a turn adds one to turn counter
 								myTurn = !myTurn;
-                                                                System.out.println("yeet");
 							}
 						}
 					}
@@ -445,7 +444,6 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 			if (!myTurn && aiMoveDelay >= 50) {
 				//TODO - well this is buggy
 				//Why the hell is this still going in multiplayer
-                                System.out.println("AI fuggin activated");
 				PlayerAI.makeMove();
 				myTurn = !myTurn;
 				turn++;
