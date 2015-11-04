@@ -115,7 +115,20 @@ public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
 								initCol = selectedColumn;
 								movedRow = currentRow;
 								movedCol = currentColumn;
-								initMovePiece();
+								//initMovePiece();
+                                                                if (isClient) {
+                                                                        ClientHandler.sendPieceMove(initRow, initCol, movedRow, movedCol, myScore);
+                                                                        System.out.println("Client just moved a piece");
+                                                                } else {
+                                                                        ServerHandler.sendPieceMove(initRow, initCol, movedRow, movedCol, myScore);
+                                                                        System.out.println("Server just moved a piece");
+                                                                }
+                                                                movePieceToLocation(new OrderedPair(initRow, initCol), new OrderedPair(movedRow, movedCol));
+                                                                System.out.println("Just moved the piece");
+
+                                                                selectedRow = 999;
+                                                                selectedColumn = 999;
+                                                                System.out.println("initMovePiece");
 							}
 						}
 					}
@@ -384,38 +397,27 @@ public class TakTakMultiplayerWindow extends TakTakSingleplayerWindow {
 		p.setKing(true);
 		board[1][4] = p;
 		
-		board[5][0] = new Piece(10, Color.orange, Color.black);
-		board[5][4] = new Piece(20, Color.orange, Color.black);
-		board[6][2] = new Piece(30, Color.orange, Color.black);
-		board[6][5] = new Piece(40, Color.orange, Color.black);
+		board[5][0] = new Piece(10, Color.orange, Color.white);
+		board[5][4] = new Piece(20, Color.orange, Color.white);
+		board[6][2] = new Piece(30, Color.orange, Color.white);
+		board[6][5] = new Piece(40, Color.orange, Color.white);
 		
-		board[6][3] = new Piece(10, Color.blue, Color.black);
-		board[6][0] = new Piece(20, Color.blue, Color.black);
-		board[5][1] = new Piece(30, Color.blue, Color.black);
-		board[5][5] = new Piece(40, Color.blue, Color.black);
+		board[6][3] = new Piece(10, Color.blue, Color.white);
+		board[6][0] = new Piece(20, Color.blue, Color.white);
+		board[5][1] = new Piece(30, Color.blue, Color.white);
+		board[5][5] = new Piece(40, Color.blue, Color.white);
 		
-		board[5][2] = new Piece(10, Color.green, Color.black);
-		board[6][1] = new Piece(20, Color.green, Color.black);
-		board[5][3] = new Piece(30, Color.green, Color.black);
+		board[5][2] = new Piece(10, Color.green, Color.white);
+		board[6][1] = new Piece(20, Color.green, Color.white);
+		board[5][3] = new Piece(30, Color.green, Color.white);
 		
-		Piece p2 = new Piece(0, Color.green, Color.black);
-		p.setKing(true);
-		board[6][4] = p;
+		Piece p2 = new Piece(0, Color.green, Color.white);
+		p2.setKing(true);
+		board[6][4] = p2;
 	}
 	
 	public void initMovePiece() {
-		if (isClient) {
-			ClientHandler.sendPieceMove(initRow, initCol, movedRow, movedCol, myScore, this);
-                        System.out.println("Client just moved a piece");
-		} else {
-			ServerHandler.sendPieceMove(initRow, initCol, movedRow, movedCol, myScore, this);
-                        System.out.println("Server just moved a piece");
-		}
-		movePieceToLocation(new OrderedPair(initRow, initCol), new OrderedPair(movedRow, movedCol));
-                System.out.println("Just moved the piece");
-                
-		selectedRow = 999;
-		selectedColumn = 999;
+		
 	}
 
 	public static void movePieceToLocation(OrderedPair piece, OrderedPair location) {

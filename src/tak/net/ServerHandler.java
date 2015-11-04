@@ -46,12 +46,10 @@ public class ServerHandler {
 		connected = false;
 	}
 
-	public static void sendPieceMove(int initrow, int initcol, int movedrow, int movedcol, int myScore, TakTakMultiplayerWindow w) {
+	public static void sendPieceMove(int initrow, int initcol, int movedrow, int movedcol, int myScore) {
 		if (connected) {
 			serverOut.println(initrow + ":" + initcol + ":" + movedrow + ":" + movedcol + ":" + myScore);
-			//Update turn when sending move
-			//This may not be being called
-            w.updateTurn();
+                        TakTakMultiplayerWindow.myTurn = !TakTakMultiplayerWindow.myTurn;
 		}
 	}
 
