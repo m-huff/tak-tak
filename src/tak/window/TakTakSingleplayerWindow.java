@@ -649,92 +649,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 		Piece p = board[row][column];
 		int pieceDirection = (p.getTopPiece().getBackgroundColor() == Color.black ? 0 : 1);
 
-		g.setColor(new Color(64, 128, 64, 150));
-
-		if (p.getTopPiece().isKing()) {
-			if (canPieceMoveToLocation(p.getTopPiece(), row + 1, column)) {
-				g.fillRect(column * (getWidth2() / COLUMNS) + getX(0), (row + 1) * (getHeight2() / ROWS) + getY(0), 94,
-						94);
-				validMoves.add(new OrderedPair(row + 1, column));
-			}
-			if (canPieceMoveToLocation(p.getTopPiece(), row + 2, column)) {
-				g.fillRect(column * (getWidth2() / COLUMNS) + getX(0), (row + 2) * (getHeight2() / ROWS) + getY(0), 94,
-						94);
-				validMoves.add(new OrderedPair(row + 2, column));
-			}
-			if (canPieceMoveToLocation(p.getTopPiece(), row + 1, column + 1)) {
-				g.fillRect((column + 1) * (getWidth2() / COLUMNS) + getX(0),
-						(row + 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
-				validMoves.add(new OrderedPair(row + 1, column + 1));
-			}
-			if (canPieceMoveToLocation(p.getTopPiece(), row + 2, column + 2)) {
-				g.fillRect((column + 2) * (getWidth2() / COLUMNS) + getX(0),
-						(row + 2) * (getHeight2() / ROWS) + getY(0), 94, 94);
-				validMoves.add(new OrderedPair(row + 2, column + 2));
-			}
-			if (canPieceMoveToLocation(p.getTopPiece(), row + 1, column - 1)) {
-				g.fillRect((column - 1) * (getWidth2() / COLUMNS) + getX(0),
-						(row + 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
-				validMoves.add(new OrderedPair(row + 1, column - 1));
-			}
-			if (canPieceMoveToLocation(p.getTopPiece(), row + 2, column - 2)) {
-				g.fillRect((column - 2) * (getWidth2() / COLUMNS) + getX(0),
-						(row + 2) * (getHeight2() / ROWS) + getY(0), 94, 94);
-				validMoves.add(new OrderedPair(row + 2, column - 2));
-			}
-			if (canPieceMoveToLocation(p.getTopPiece(), row - 1, column)) {
-				g.fillRect(column * (getWidth2() / COLUMNS) + getX(0), (row - 1) * (getHeight2() / ROWS) + getY(0), 94,
-						94);
-				validMoves.add(new OrderedPair(row - 1, column));
-			}
-			if (canPieceMoveToLocation(p.getTopPiece(), row - 2, column)) {
-				g.fillRect(column * (getWidth2() / COLUMNS) + getX(0), (row - 2) * (getHeight2() / ROWS) + getY(0), 94,
-						94);
-				validMoves.add(new OrderedPair(row - 2, column));
-			}
-			if (canPieceMoveToLocation(p.getTopPiece(), row - 1, column + 1)) {
-				g.fillRect((column + 1) * (getWidth2() / COLUMNS) + getX(0),
-						(row - 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
-				validMoves.add(new OrderedPair(row - 1, column + 1));
-			}
-			if (canPieceMoveToLocation(p.getTopPiece(), row - 2, column + 2)) {
-				g.fillRect((column + 2) * (getWidth2() / COLUMNS) + getX(0),
-						(row - 2) * (getHeight2() / ROWS) + getY(0), 94, 94);
-				validMoves.add(new OrderedPair(row - 2, column + 2));
-			}
-			if (canPieceMoveToLocation(p.getTopPiece(), row - 1, column - 1)) {
-				g.fillRect((column - 1) * (getWidth2() / COLUMNS) + getX(0),
-						(row - 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
-				validMoves.add(new OrderedPair(row - 1, column - 1));
-			}
-			if (canPieceMoveToLocation(p.getTopPiece(), row - 2, column - 2)) {
-				g.fillRect((column - 2) * (getWidth2() / COLUMNS) + getX(0),
-						(row - 2) * (getHeight2() / ROWS) + getY(0), 94, 94);
-				validMoves.add(new OrderedPair(row - 2, column - 2));
-			}
-			if (canPieceMoveToLocation(p.getTopPiece(), row, column - 1)) {
-				g.fillRect((column - 1) * (getWidth2() / COLUMNS) + getX(0),
-						(row) * (getHeight2() / ROWS) + getY(0), 94, 94);
-				validMoves.add(new OrderedPair(row, column - 1));
-			}
-			if (canPieceMoveToLocation(p.getTopPiece(), row, column - 2)) {
-				g.fillRect((column - 2) * (getWidth2() / COLUMNS) + getX(0),
-						(row) * (getHeight2() / ROWS) + getY(0), 94, 94);
-				validMoves.add(new OrderedPair(row, column - 2));
-			}
-			if (canPieceMoveToLocation(p.getTopPiece(), row, column + 1)) {
-				g.fillRect((column + 1) * (getWidth2() / COLUMNS) + getX(0),
-						(row) * (getHeight2() / ROWS) + getY(0), 94, 94);
-				validMoves.add(new OrderedPair(row, column + 1));
-			}
-			if (canPieceMoveToLocation(p.getTopPiece(), row, column + 2)) {
-				g.fillRect((column + 2) * (getWidth2() / COLUMNS) + getX(0),
-						(row) * (getHeight2() / ROWS) + getY(0), 94, 94);
-				validMoves.add(new OrderedPair(row, column + 2));
-			}
-		}
-
-		if (!p.getTopPiece().isKing() && pieceDirection == 1) {
+		if (pieceDirection == 1) {
 			if (canPieceMoveToLocation(p.getTopPiece(), row - 1, column)) {
 				g.fillRect(column * (getWidth2() / COLUMNS) + getX(0), (row - 1) * (getHeight2() / ROWS) + getY(0), 94,
 						94);
@@ -752,7 +667,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 			}
 		}
 
-		if (!p.getTopPiece().isKing() && pieceDirection == 0) {
+		if (pieceDirection == 0) {
 			if (canPieceMoveToLocation(p.getTopPiece(), row + 1, column)) {
 				g.fillRect(column * (getWidth2() / COLUMNS) + getX(0), (row + 1) * (getHeight2() / ROWS) + getY(0), 94,
 						94);
