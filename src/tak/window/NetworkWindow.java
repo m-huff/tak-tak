@@ -88,12 +88,10 @@ public class NetworkWindow extends JFrame implements Runnable {
                               try
                               {
                                   isConnecting = true;
-                                  System.out.println("is connecting true");
                                   ServerHandler.recieveConnect(5657);
-                                  System.out.println("after recieveConnect");
                                   if (ServerHandler.connected)
                                   {
-                                      TakTakMultiplayerWindow ttw = new TakTakMultiplayerWindow();
+                                      TakTakMultiplayerWindow ttw = new TakTakMultiplayerWindow(frame);
                                       ttw.isClient = false;
                                       ttw.myTurn = false;
                                       
@@ -120,18 +118,15 @@ public class NetworkWindow extends JFrame implements Runnable {
                                   {
                                       
                                       isConnecting = true;
-                                      System.out.println("is connecting true");
                                       ClientHandler.connect(ipAddress, 5657);
-                                      System.out.println("after connect");
                                       if (ClientHandler.connected)
                                       {
-                                          TakTakMultiplayerWindow ttw = new TakTakMultiplayerWindow();
+                                          TakTakMultiplayerWindow ttw = new TakTakMultiplayerWindow(frame);
                                           ttw.isClient = true;
                                           ttw.myTurn = true;
                                           
                                           theGame = ttw;
-                                          
-                                          System.out.println("Client window created");
+
                                           gameStarted = true;
                                           isConnecting = false;
                                       }
@@ -232,17 +227,19 @@ public class NetworkWindow extends JFrame implements Runnable {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-                            if (isPotentialGameClient)
-                                  {
-                                      ClientHandler.sendDisconnect();
-                                      ClientHandler.disconnect();
-                                  }
-                                  else
-                                  {
-                                      ServerHandler.sendDisconnect();
-                                      ServerHandler.disconnect();
-                                  }
 				new MenuWindow();
+				
+	            if (isPotentialGameClient)
+	                  {
+	                      ClientHandler.sendDisconnect();
+	                      ClientHandler.disconnect();
+	                  }
+	                  else
+	                  {
+	                      ServerHandler.sendDisconnect();
+	                      ServerHandler.disconnect();
+	                  }
+
 			}
 		});
 

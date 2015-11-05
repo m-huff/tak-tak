@@ -3,6 +3,8 @@ package tak.util;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+
+import tak.window.TakTakMultiplayerWindow;
 import tak.window.TakTakSingleplayerWindow;
 
 public class ScoreFader {
@@ -25,7 +27,9 @@ public class ScoreFader {
         fade = 255;
         isActive = true;
         
+        //This works because they can't be running at the same time
         TakTakSingleplayerWindow.faders.add(this);
+        TakTakMultiplayerWindow.faders.add(this);
     }
     
     public int getX() {
@@ -63,7 +67,9 @@ public class ScoreFader {
             fade -= 5;
         else {
             isActive = false;
+            //This works because they can't be running at the same time
             TakTakSingleplayerWindow.faders.remove(this);
+            TakTakMultiplayerWindow.faders.remove(this);
         }
     }
     
