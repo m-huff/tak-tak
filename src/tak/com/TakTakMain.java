@@ -14,14 +14,14 @@ public class TakTakMain {
 	// - uhh... better music probably
         // - fix piece scoring in multiplayer
 	
-	static Sound music = new Sound("swoosh.wav");
+	static Sound music = new Sound("darude_sandstorm.wav");
 
     public static void main(String[] args) {
         final MenuWindow ttw = new MenuWindow();
         
         while (true) {
 	        if(music.donePlaying == true)
-	        	music = new Sound("swoosh.wav");
+	        	music = new Sound("darude_sandstorm.wav");
         }
     }
 }

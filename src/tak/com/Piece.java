@@ -7,7 +7,6 @@ import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 
-import tak.util.MovingPiece;
 import tak.window.TakTakSingleplayerWindow;
 
 public class Piece {
