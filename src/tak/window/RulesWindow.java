@@ -53,9 +53,7 @@ public class RulesWindow extends JFrame implements Runnable {
 										"The more pieces in a stack, the higher the point value.",
 										"Getting your pieces into the opponent's safe zone is how you score.",
 										"You can't stack pieces on the opponent's if in their safe zone.",
-										"Your king piece can move two spaces in any direction.",
-										"It can even move backwards, unlike any other piece!",
-										"Stacks can be worth an unlimited number of points, unless it",
+										"Stacks can be worth an unlimited number of points; there is no limit.",
 										"You can stack on top of opponent's stacks to make them your own.",
 										"The king can never be stacked on top of, but can stack on top of",
 										"Your goal is to score the most points in your opponent's safe zone.",
@@ -67,9 +65,7 @@ public class RulesWindow extends JFrame implements Runnable {
 										"",
 										"When a piece reaches the opponent's safe zone, it disappears.",
 										"",
-										"",
-										"",
-										"contains the king. If the king is stacked, the entire value of the",
+                                                                                "",
 										"You can then control them for yourself, and score them.",
 										"others.",
 										"",
@@ -182,9 +178,6 @@ public class RulesWindow extends JFrame implements Runnable {
 		g.setFont(new Font("Arial", Font.BOLD, 12));
 		g.drawString(imageText[currentSlide], 95, 500);
 		g.drawString(imageText2[currentSlide], 95, 520);
-		if (currentSlide == 8) {
-			g.drawString("stack becomes 100.", 95, 540);
-		}
 		if (!images.isEmpty())
 			g.drawImage(images.get(currentSlide), 112, 190, null);
 		
@@ -230,7 +223,7 @@ public class RulesWindow extends JFrame implements Runnable {
 		}
 		
 		if (images.size() == 0) {
-			for (int i = 0; i < 13; i++) {
+			for (int i = 0; i < 11; i++) {
 				images.add(new ImageIcon(RulesWindow.class.getResource("/tak/assets/gifs/" + (i + 1) + ".gif")).getImage());
 			}
 		}

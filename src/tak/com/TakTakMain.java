@@ -7,7 +7,7 @@ public class TakTakMain {
 	
 	//Music - http://opsound.org/artist/macroform/ - public domain
 	//SFX - http://www.wavsource.com/sfx/sfx.htm - public domain
-        //Logo - http://www.flamingtext.com/net-fu/dynamic.cgi?script=inferno-logo - logo generator
+        //Logo - http://www.flamingtext.com/net-fu/dynamic.cgi?script=inferno-logo - logo generator WITH FLAMES
 	
 	//TODO
         // - more sounds
