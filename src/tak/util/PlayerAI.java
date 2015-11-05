@@ -14,58 +14,6 @@ public class PlayerAI {
 
 		ArrayList<OrderedPair> moves = new ArrayList<>();
 
-		if (p.getTopPiece().isKing()) {
-			if (TakTakSingleplayerWindow.canPieceMoveToLocation(p.getTopPiece(), row + 1, column)) {
-				moves.add(new OrderedPair(row + 1, column));
-			}
-			if (TakTakSingleplayerWindow.canPieceMoveToLocation(p.getTopPiece(), row + 2, column)) {
-				moves.add(new OrderedPair(row + 2, column));
-			}
-			if (TakTakSingleplayerWindow.canPieceMoveToLocation(p.getTopPiece(), row + 1, column + 1)) {
-				moves.add(new OrderedPair(row + 1, column + 1));
-			}
-			if (TakTakSingleplayerWindow.canPieceMoveToLocation(p.getTopPiece(), row + 2, column + 2)) {
-				moves.add(new OrderedPair(row + 2, column + 2));
-			}
-			if (TakTakSingleplayerWindow.canPieceMoveToLocation(p.getTopPiece(), row + 1, column - 1)) {
-				moves.add(new OrderedPair(row + 1, column - 1));
-			}
-			if (TakTakSingleplayerWindow.canPieceMoveToLocation(p.getTopPiece(), row + 2, column - 2)) {
-				moves.add(new OrderedPair(row + 2, column - 2));
-			}
-			if (TakTakSingleplayerWindow.canPieceMoveToLocation(p.getTopPiece(), row - 1, column)) {
-				moves.add(new OrderedPair(row - 1, column));
-			}
-			if (TakTakSingleplayerWindow.canPieceMoveToLocation(p.getTopPiece(), row - 2, column)) {
-				moves.add(new OrderedPair(row - 2, column));
-			}
-			if (TakTakSingleplayerWindow.canPieceMoveToLocation(p.getTopPiece(), row - 1, column + 1)) {
-				moves.add(new OrderedPair(row - 1, column + 1));
-			}
-			if (TakTakSingleplayerWindow.canPieceMoveToLocation(p.getTopPiece(), row - 2, column + 2)) {
-				moves.add(new OrderedPair(row - 2, column + 2));
-			}
-			if (TakTakSingleplayerWindow.canPieceMoveToLocation(p.getTopPiece(), row - 1, column - 1)) {
-				moves.add(new OrderedPair(row - 1, column - 1));
-			}
-			if (TakTakSingleplayerWindow.canPieceMoveToLocation(p.getTopPiece(), row - 2, column - 2)) {
-				moves.add(new OrderedPair(row - 2, column - 2));
-			}
-			if (TakTakSingleplayerWindow.canPieceMoveToLocation(p.getTopPiece(), row, column - 1)) {
-				moves.add(new OrderedPair(row, column - 1));
-			}
-			if (TakTakSingleplayerWindow.canPieceMoveToLocation(p.getTopPiece(), row, column - 2)) {
-				moves.add(new OrderedPair(row, column - 2));
-			}
-			if (TakTakSingleplayerWindow.canPieceMoveToLocation(p.getTopPiece(), row, column + 1)) {
-				moves.add(new OrderedPair(row, column + 1));
-			}
-			if (TakTakSingleplayerWindow.canPieceMoveToLocation(p.getTopPiece(), row, column + 2)) {
-				moves.add(new OrderedPair(row, column + 2));
-			}
-		}
-
-		if (!p.getTopPiece().isKing()) {
 			if (TakTakSingleplayerWindow.canPieceMoveToLocation(p.getTopPiece(), row + 1, column)) {
 				moves.add(new OrderedPair(row + 1, column));
 			}
@@ -74,7 +22,7 @@ public class PlayerAI {
 			}
 			if (TakTakSingleplayerWindow.canPieceMoveToLocation(p.getTopPiece(), row + 1, column - 1)) {
 				moves.add(new OrderedPair(row + 1, column - 1));
-			}
+			
 		}
 
 		return moves;
@@ -94,17 +42,7 @@ public class PlayerAI {
                                         {
 						for (OrderedPair temp : moves)
                                                 {
-                                                        if(TakTakSingleplayerWindow.board[zRow][zColumn].getTopPiece().isKing() && TakTakSingleplayerWindow.board[zRow][zColumn].getTopPiece().getValue() >= 100
-                                                           && temp.getY() > zRow)
-                                                        {
-                                                            blacktomove = new OrderedPair(zRow, zColumn);
-								placetomoveto = new OrderedPair(temp.getX(), temp.getY());
-                                                                ArrayList<OrderedPair> retpack = new ArrayList<>();
-                                                                retpack.add(blacktomove);
-                                                                retpack.add(placetomoveto);
-                                                                return (retpack);
-                                                        }
-                                                        else if (TakTakSingleplayerWindow.board[temp.getX()][temp.getY()] != null
+                                                        if (TakTakSingleplayerWindow.board[temp.getX()][temp.getY()] != null
 						            && TakTakSingleplayerWindow.board[temp.getX()][temp.getY()].getTopPiece().getBackgroundColor() == Color.WHITE) 
                                                         {
                                                                 blacktomove = new OrderedPair(zRow, zColumn);
