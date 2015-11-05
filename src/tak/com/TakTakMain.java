@@ -9,8 +9,8 @@ public class TakTakMain {
 	//SFX - http://www.wavsource.com/sfx/sfx.htm - public domain
 	
 	//TODO
-	// - maybe add drag and drop for pieces?
-	// - add more sounds?
+        // - more sounds
+        // - buttons (main menu, network window, after game single player and multi player)
 	
 	static Sound music = new Sound("darude_sandstorm.wav");
 
