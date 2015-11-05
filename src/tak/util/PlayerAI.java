@@ -94,7 +94,6 @@ public class PlayerAI {
                                         {
 						for (OrderedPair temp : moves)
                                                 {
-							//Got a nullpointerexception here for some reason
                                                         if(TakTakSingleplayerWindow.board[zRow][zColumn].getTopPiece().isKing() && TakTakSingleplayerWindow.board[zRow][zColumn].getTopPiece().getValue() >= 100
                                                            && temp.getY() > zRow)
                                                         {
@@ -153,8 +152,7 @@ public class PlayerAI {
 		ArrayList<OrderedPair> movings = new ArrayList<>(findMovements());	
 		OrderedPair moved = movings.get(0);
                 OrderedPair movee = movings.get(1);
-		
-        System.out.println("ai move");
+
 		TakTakSingleplayerWindow.movePieceToLocation(moved, movee);
 	}
 

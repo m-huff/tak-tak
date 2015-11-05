@@ -54,18 +54,24 @@ public class Piece {
 
 	public void setValue(int _value) {
 		value = _value;
-		if (value > 100)
-			value = 100;
-		else if (value < 0)
-			value = 0;
+		
+		if (getTopPiece().isKing()) {
+			if (value > 100)
+				value = 100;
+			else if (value < 0)
+				value = 0;
+		}
 	}
 	
 	public void addValue(int _value) {
 		value += _value;
-		if (value > 100)
-			value = 100;
-		else if (value < 0)
-			value = 0;
+		
+		if (getTopPiece().isKing()) {
+			if (value > 100)
+				value = 100;
+			else if (value < 0)
+				value = 0;
+		}
 	}
 
 	public int getValue() {

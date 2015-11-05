@@ -11,8 +11,6 @@ public class TakTakMain {
 	//TODO
 	// - maybe add drag and drop for pieces?
 	// - add more sounds?
-	// - uhh... better music probably
-        // - fix piece scoring in multiplayer
 	
 	static Sound music = new Sound("darude_sandstorm.wav");
 
