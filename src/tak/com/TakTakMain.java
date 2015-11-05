@@ -12,7 +12,6 @@ public class TakTakMain {
 	//TODO
         // - more sounds
         // - buttons (main menu, network window, after game single player and multi player)
-        // - update rules for new king stuff
 
 	static Sound music = new Sound("darude_sandstorm.wav");
 
