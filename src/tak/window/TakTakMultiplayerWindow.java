@@ -176,9 +176,9 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 								movedRow = currentRow;
 								movedCol = currentColumn;
 								if (isClient) {
-									ClientHandler.sendPieceMove(initRow, initCol, movedRow, movedCol, myScore);
+									ClientHandler.sendPieceMove(initRow, initCol, movedRow, movedCol);
 								} else {
-									ServerHandler.sendPieceMove(initRow, initCol, movedRow, movedCol, myScore);
+									ServerHandler.sendPieceMove(initRow, initCol, movedRow, movedCol);
 								}
 								selectedRow = 999;
 								selectedColumn = 999;

@@ -47,10 +47,11 @@ public class ServerHandler {
 		connected = false;
 	}
 
-	public static void sendPieceMove(int initrow, int initcol, int movedrow, int movedcol, int myScore) {
+	public static void sendPieceMove(int initrow, int initcol, int movedrow, int movedcol) {
 		if (connected) {
-			serverOut.println(initrow + ":" + initcol + ":" + movedrow + ":" + movedcol + ":" + myScore);
+			serverOut.println(initrow + ":" + initcol + ":" + movedrow + ":" + movedcol);
                         TakTakMultiplayerWindow.myTurn = !TakTakMultiplayerWindow.myTurn;
+                        TakTakMultiplayerWindow.turn++;
                         TakTakMultiplayerWindow.movePieceToLocation(new OrderedPair(initrow, initcol), new OrderedPair(movedrow, movedcol));
 		}
 	}
@@ -79,13 +80,11 @@ public class ServerHandler {
 							int initcolpost = Integer.parseInt(inputLine.split(":")[1]);
 							int movedrowpost = Integer.parseInt(inputLine.split(":")[2]);
 							int movedcolpost = Integer.parseInt(inputLine.split(":")[3]);
-							int myScore = Integer.parseInt(inputLine.split(":")[4]);
 
 							TakTakMultiplayerWindow.initRow = initrowpost;
 							TakTakMultiplayerWindow.initCol = initcolpost;
 							TakTakMultiplayerWindow.movedRow = movedrowpost;
 							TakTakMultiplayerWindow.movedCol = movedcolpost;
-							TakTakMultiplayerWindow.opponentScore = myScore;
 							TakTakMultiplayerWindow.myTurn = !TakTakMultiplayerWindow.myTurn;
                                                         TakTakMultiplayerWindow.movePieceToLocation(new OrderedPair(initrowpost, initcolpost), new OrderedPair(movedrowpost, movedcolpost));
 						} catch (NumberFormatException | NullPointerException e) {
