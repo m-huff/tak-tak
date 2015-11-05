@@ -594,6 +594,31 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 			if (!ServerHandler.isConnected())
 				dispose();
 		}
+                
+                if (numWhitePiecesOnBoard == 0 || numBlackPiecesOnBoard == 0) {
+				//If one side doesn't have any pieces left
+				//Score all remaining pieces
+				for (int zRow = 0; zRow < ROWS; zRow++) {
+					for (int zColumn = 0; zColumn < COLUMNS; zColumn++) {
+						if (board[zRow][zColumn] != null) {
+							if (board[zRow][zColumn].getTopPiece().getBackgroundColor() != myColor) {
+								opponentScore += board[zRow][zColumn].getValue();
+								ScoreFader sf2 = new ScoreFader(board[zRow][zColumn].getValue(),
+										getX(0) + zColumn * getWidth2() / COLUMNS, getY(0) + zRow * getHeight2() / ROWS,
+										new Color(128, 64, 64));
+							} else {
+								myScore += board[zRow][zColumn].getValue();
+								ScoreFader sf2 = new ScoreFader(board[zRow][zColumn].getValue(),
+										getX(0) + zColumn * getWidth2() / COLUMNS, getY(0) + zRow * getHeight2() / ROWS,
+										new Color(64, 180, 64));
+							}
+							board[zRow][zColumn] = null;
+						}
+					}
+				}
+				//End the game
+				chooseWinner();
+			}
 	}
 
 	public void run() {
