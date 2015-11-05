@@ -59,21 +59,21 @@ public class RulesWindow extends JFrame implements Runnable {
 										"You can stack on top of opponent's stacks to make them your own.",
 										"The king can never be stacked on top of, but can stack on top of",
 										"Your goal is to score the most points in your opponent's safe zone.",
-										"Stacking your and your opponent's pieces allows you to move"};
+										"Stacking your and your opponent's pieces allows you to deny"};
 	
 	public static String[] imageText2 = {"If you accidentally select a piece, press BACKSPACE to cancel.",
 										"You can only stack pieces if they have the same point value or color.",
 										"This display will also tell you the total point value of the stack.",
 										"",
-										"",
 										"When a piece reaches the opponent's safe zone, it disappears.",
+										"",
 										"",
 										"",
 										"contains the king. If the king is stacked, the entire value of the",
 										"You can then control them for yourself, and score them.",
 										"others.",
 										"",
-										"across the board faster, and steal points from the opponent."};
+										"them their pieces' points, and gives you the opportunity to score."};
 
 	
 	public static ArrayList<Piece> pieces = new ArrayList<Piece>();

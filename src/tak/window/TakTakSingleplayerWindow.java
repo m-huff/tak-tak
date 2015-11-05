@@ -84,7 +84,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 	static Sound cha_ching;
 
 	public static ArrayList<OrderedPair> validMoves = new ArrayList<OrderedPair>();
-        public static ArrayList<ScoreFader> faders = new ArrayList<ScoreFader>();
+    public static ArrayList<ScoreFader> faders = new ArrayList<ScoreFader>();
 
 	public static int tipTime;
 	public static String HINT_PREFIX = "Tip: ";
@@ -102,7 +102,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 			"Your king piece can't be stacked on top of!",
 			"The king can't be stacked on top of, so it will block a stack from growing.",
 			"Even if a stack has a value of over 100 points, the king will limit it to 100.",
-			"When you right-click a piece, you can see a cool 3D image of the entire stack!" };
+			"When you right-click a piece, you can see a cool 3D image of the entire stack!"};
 
 	public static enum EnumWinner {
 		PlayerOne,
@@ -219,10 +219,6 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 						lilWindaColumn = currentColumn;
 						mousex = e.getX();
 						mousey = e.getY();
-					} else if (board[currentRow][currentColumn] == null) {
-						//Tell the player the spot is empty
-					} else if (lilWindaRow != 999) {
-
 					}
 				}
 				repaint();
@@ -246,6 +242,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 				}
 				if (KeyEvent.VK_ENTER == e.getKeyCode() && winner != EnumWinner.None) {
 					reset();
+					resetBoard();
 				}
 				repaint();
 			}
@@ -256,6 +253,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
+				reset();
 				new MenuWindow();
 			}
 		});
@@ -376,9 +374,9 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 				fadeOut -= 5;
 		}
                 
-                for (int i = 0; i < faders.size(); i++) {
-                    faders.get(i).draw(g);
-                }
+        for (int i = 0; i < faders.size(); i++) {
+            faders.get(i).draw(g);
+        }
 
 		gOld.drawImage(image, 0, 0, null);
 	}
@@ -442,8 +440,6 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 		
 		if (numBlackPiecesOnBoard > 0) {
 			if (!myTurn && aiMoveDelay >= 50) {
-				//TODO - well this is buggy
-				//Why the hell is this still going in multiplayer
 				PlayerAI.makeMove();
 				myTurn = !myTurn;
 				turn++;
@@ -459,21 +455,15 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 	public static void movePieceToLocation(OrderedPair piece, OrderedPair location) {
 
 		if (board[location.getX()][location.getY()] != null) {
-			// Stacking isn't working right, doesn't add stacks correctly because
-			// the contructor in Piece adds itself to the stack...
-			board[location.getX()][location.getY()].addStackToStack(board[piece.getX()][piece.getY()].getWholeStack());
+			if (board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.black)
+				numBlackPiecesOnBoard--;
+			else
+				numWhitePiecesOnBoard--;
 
-			for (int i = 0; i < board[piece.getX()][piece.getY()].getWholeStack().size(); i++) {
-				if (board[location.getX()][location.getY()].getWholeStack().get(i).getBackgroundColor() == Color.WHITE)
-					numWhitePiecesOnBoard--;
-				else
-					numBlackPiecesOnBoard--;
-                                numPiecesOnBoard--;
-			}
-                        
+			board[location.getX()][location.getY()].addStackToStack(board[piece.getX()][piece.getY()].getWholeStack());
 			board[piece.getX()][piece.getY()] = null;
 		} else {
-			//This works just fine
+			
 			board[location.getX()][location.getY()] = board[piece.getX()][piece.getY()];
 			board[piece.getX()][piece.getY()] = null;
 		}
@@ -483,30 +473,20 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 			location.getX() < 2 && board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.white) {
 			if (board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.black) {
 				aiScore += board[location.getX()][location.getY()].getValue();
+				numBlackPiecesOnBoard--;
 			} else {
 				myScore += board[location.getX()][location.getY()].getValue();
+				numWhitePiecesOnBoard--;
 			}
-			
-			int whitePieces = 0, blackPieces = 0;
-			for (int i = 0; i < board[location.getX()][location.getY()].getWholeStack().size(); i++) {
-				if (board[location.getX()][location.getY()].getWholeStack().get(i).getBackgroundColor() == Color.WHITE)
-					whitePieces++;
-				else
-					blackPieces++;
-			}
-                        
+      
             Color c;
             if (location.getX() >= 5 && board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.black)
                 c = new Color(128, 64, 64);
             else
                 c = new Color(64, 180, 64);
-            
-            //Works
+
             ScoreFader sf = new ScoreFader(board[location.getX()][location.getY()].getValue(),getX(0) + location.getY() * getWidth2() / COLUMNS,
 				getY(0) + location.getX() * getHeight2() / ROWS, c);
-
-			numWhitePiecesOnBoard -= whitePieces;
-			numBlackPiecesOnBoard -= blackPieces;
 			numPiecesOnBoard -= board[location.getX()][location.getY()].getWholeStack().size();
 			board[location.getX()][location.getY()] = null;
 			move = new Sound("chaching.wav");

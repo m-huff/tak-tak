@@ -16,8 +16,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Random;
-import javax.swing.ImageIcon;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 import tak.com.Piece;
@@ -96,20 +96,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 	public static int tipTime;
 	public static String HINT_PREFIX = "Tip: ";
 	public static String currentHint = "";
-	public static String[] HINTS = {"Stack your pieces to move across the board faster!",
-			"The king piece moves twice as fast, but won't stack anything on top of it!",
-			"The king piece can also move backwards!",
-			"Press the ESC key to quit the game and return to the main menu!",
-			"Right-click a piece to see the stack size and total value!",
-			"Press BACKSPACE after you've selected a piece to cancel the selection.",
-			"Once you've selected a piece, all valid spaces to move turn green.",
-			"Press the ESC key from any screen to return to the main menu.",
-			"Right-clicking a piece will reveal all of the information about it!",
-			"You can stack your pieces in your own safe zone to get pieces across faster!",
-			"Your king piece can't be stacked on top of!",
-			"The king can't be stacked on top of, so it will block a stack from growing.",
-			"Even if a stack has a value of over 100 points, the king will limit it to 100.",
-			"When you right-click a piece, you can see a cool 3D image of the entire stack!" };
+	public static String[] HINTS = TakTakSingleplayerWindow.HINTS;
 
 	static Sound move;
 	static Sound cha_ching;
@@ -188,10 +175,8 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 								initCol = selectedColumn;
 								movedRow = currentRow;
 								movedCol = currentColumn;
-								//initMovePiece();
 								if (isClient) {
 									ClientHandler.sendPieceMove(initRow, initCol, movedRow, movedCol, myScore);
-
 								} else {
 									ServerHandler.sendPieceMove(initRow, initCol, movedRow, movedCol, myScore);
 								}
@@ -235,10 +220,6 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 						lilWindaColumn = currentColumn;
 						mousex = e.getX();
 						mousey = e.getY();
-					} else if (board[currentRow][currentColumn] == null) {
-						//Tell the player the spot is empty
-					} else if (lilWindaRow != 999) {
-
 					}
 				}
 				repaint();
@@ -413,11 +394,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 		for (int i = 0; i < faders.size(); i++) {
 			faders.get(i).draw(g);
 		}
-
-		//Draw a little indicator for which you are, client or server
-		g.setFont(new Font("Arial Bold", Font.PLAIN, 4));
-		g.drawString(isClient ? "C" : "S", WINDOW_WIDTH - getX(0) - 5, WINDOW_HEIGHT);
-
+		
 		gOld.drawImage(image, 0, 0, null);
 	}
 
@@ -522,14 +499,12 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 			board[piece.getX()][piece.getY()] = null;
 		} else {
 			board[location.getX()][location.getY()] = board[piece.getX()][piece.getY()];
-			board[location.getX()][location.getY()] = board[piece.getX()][piece.getY()];
 
 			board[piece.getX()][piece.getY()] = null;
 		}
 		
 		System.out.println("White: " + numWhitePiecesOnBoard + " | Black: " + numBlackPiecesOnBoard);
 
-		//Problems are here
 		//Pieces are in opponent's safe zone
 		//"my" pieces are black if I'm a client
 		if (location.getX() >= 5 || location.getX() < 2) {
