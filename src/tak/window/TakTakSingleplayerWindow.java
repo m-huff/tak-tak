@@ -421,7 +421,20 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 
 		gOld.drawImage(image, 0, 0, null);
 	}
+////////////////////////////////////////////////////////////////////////////
+    public void drawCircle(int xpos,int ypos,double rot,double xscale,double yscale)
+    {
+        g.translate(xpos,ypos);
+        g.rotate(rot  * Math.PI/180.0);
+        g.scale( xscale , yscale );
 
+        g.fillOval(-10,-10,20,20);
+
+        g.scale( 1.0/xscale,1.0/yscale );
+        g.rotate(-rot  * Math.PI/180.0);
+        g.translate(-xpos,-ypos);
+    }
+    ////////////////////////////////////////////////////////////////////////////
 	public void run() {
 		while (true) {
 			animate();
@@ -688,7 +701,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 		// that space is not possible.
 
 		g.setColor(new Color(10, 10, 10, 150));
-		g.fillRect(column * (getWidth2() / COLUMNS) + getX(0), row * (getHeight2() / ROWS) + getY(0), 94, 94);
+                drawCircle(column * (getWidth2() / COLUMNS) + getX(0) + (getWidth2() / COLUMNS/2)+1, row * (getHeight2() / ROWS) + getY(0)+ (getHeight2() / ROWS/2)+4,0, 1+selCircling, 1+selCircling);
 
 		Piece p = board[row][column];
 		int pieceDirection = (p.getTopPiece().getBackgroundColor() == Color.black ? 0 : 1);
