@@ -213,7 +213,7 @@ public class RulesWindow extends JFrame implements Runnable {
 			pieces.add(p);
 		}
 		
-		if (images.size() == 0) {
+		if (images.isEmpty()) {
 			for (int i = 0; i < 11; i++) {
 				images.add(new ImageIcon(RulesWindow.class.getResource("/tak/assets/gifs/" + (i + 1) + ".gif")).getImage());
 			}
