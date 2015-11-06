@@ -73,7 +73,7 @@ public class NetworkWindow extends JFrame implements Runnable {
 		isPotentialGameClient = isClient;
 
 		setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 		setResizable(false);
 		setIconImage(icon.getImage());
@@ -243,27 +243,6 @@ public class NetworkWindow extends JFrame implements Runnable {
 				}
 
 				repaint();
-			}
-		});
-
-		//Send the user back to the menu screen to make sure the entire system gets exited
-		//Without this the sound will continue to run until it finishes	
-		addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(WindowEvent e) {
-				new MenuWindow();
-				
-	            if (isPotentialGameClient)
-	                  {
-	                      ClientHandler.sendDisconnect();
-	                      ClientHandler.disconnect();
-	                  }
-	                  else
-	                  {
-	                      ServerHandler.sendDisconnect();
-	                      ServerHandler.disconnect();
-	                  }
-
 			}
 		});
 

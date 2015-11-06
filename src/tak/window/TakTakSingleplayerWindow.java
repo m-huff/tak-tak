@@ -119,7 +119,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 	public TakTakSingleplayerWindow() {
 
 		setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 		setResizable(false);
 		setTitle("Tak-Tak");
@@ -277,16 +277,6 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 					validMoves.clear();
 				}
 				repaint();
-			}
-		});
-		
-		//Send the user back to the menu screen to make sure the entire system gets exited
-		//Without this the sound will continue to run until it finishes	
-		addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(WindowEvent e) {
-				reset();
-				new MenuWindow();
 			}
 		});
 		
