@@ -83,6 +83,9 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 
 	static ImageIcon icon = new ImageIcon(TakTakSingleplayerWindow.class.getResource("/tak/assets/icon.png"));
 	static ImageIcon background = new ImageIcon(TakTakSingleplayerWindow.class.getResource("/tak/assets/wood.png"));
+        
+        private static ImageIcon hoverButton = new ImageIcon(MenuWindow.class.getResource("/tak/assets/button_hover.png"));
+	private static ImageIcon button = new ImageIcon(MenuWindow.class.getResource("/tak/assets/button.png"));
 
 	public static ArrayList<OrderedPair> validMoves = new ArrayList<OrderedPair>();
 	public static ArrayList<ScoreFader> faders = new ArrayList<ScoreFader>();
@@ -100,6 +103,8 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 
 	static Sound move;
 	static Sound cha_ching;
+        
+        private boolean mouseoverReturn;
 
 	public static enum EnumWinner {
 		PlayerOne, PlayerTwo, PlayerAI, Tie, None
@@ -128,6 +133,22 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 				repaint();
 			}
 		});
+                addMouseMotionListener(new MouseMotionAdapter() {
+			public void mouseMoved(MouseEvent e) {
+				if (fadeOut < 150)
+					return;
+				int xpos = e.getX();
+				int ypos = e.getY() + 2;
+
+				if (xpos >= 225 && xpos <= 365 && ypos >= 450 && ypos <= 490)
+					mouseoverReturn = true;
+				else
+					mouseoverReturn = false;
+
+				repaint();
+			}
+		});
+                
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				if (MouseEvent.BUTTON1 == e.getButton() && myTurn) {
@@ -229,7 +250,21 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 		addKeyListener(new KeyAdapter() {
 
 			public void keyPressed(KeyEvent e) {
-				if (KeyEvent.VK_ESCAPE == e.getKeyCode()) {
+				if (KeyEvent.VK_BACK_SPACE == e.getKeyCode()) {
+					selectedRow = 999;
+					selectedColumn = 999;
+					validMoves.clear();
+				}
+                                
+				repaint();
+			}
+		});
+                
+                addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				if (fadeOut < 150)
+					return;
+				if (MouseEvent.BUTTON1 == e.getButton() && mouseoverReturn) {
 					if (isClient) {
 						ClientHandler.sendDisconnect();
 						ClientHandler.disconnect();
@@ -242,12 +277,6 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 					controller.dispose();
 					frame.dispose();
 				}
-				if (KeyEvent.VK_BACK_SPACE == e.getKeyCode()) {
-					selectedRow = 999;
-					selectedColumn = 999;
-					validMoves.clear();
-				}
-				repaint();
 			}
 		});
 
@@ -372,10 +401,20 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 
 			g.setFont(new Font("Arial Bold", Font.PLAIN, 22));
 			g.drawString("New game begins in " + ((gameDelayTimer / 25) + 1) + " seconds", 160, 390);
-			g.drawString("Press ESC to disconnect to the main menu", 90, 410);
+			//g.drawString("Press ESC to disconnect to the main menu", 90, 410);
 
 			if (fadeOut < 230)
 				fadeOut += 5;
+                        
+                        if (mouseoverReturn)
+                            g.drawImage(hoverButton.getImage(), 225, 450, null);
+                        else
+                            g.drawImage(button.getImage(), 225, 450, null);
+
+
+                        g.setFont(new Font("Arial", Font.BOLD, 16));
+                        g.setColor(mouseoverReturn ? Color.red : Color.black);
+                        g.drawString("Return to Menu", 287, 425);
 
 			if (gameDelayTimer > 0) {
 				gameDelayTimer--;
@@ -393,7 +432,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 
 		for (int i = 0; i < faders.size(); i++) {
 			faders.get(i).draw(g);
-		}
+                }
 		
 		gOld.drawImage(image, 0, 0, null);
 	}
@@ -457,7 +496,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 		board[1][1] = new Piece(20, Color.green, Color.black);
 		board[0][3] = new Piece(30, Color.green, Color.black);
 
-		Piece p = new Piece(0, Color.green, Color.black);
+		Piece p = new Piece(50, Color.green, Color.black);
 		p.setKing(true);
 		board[1][4] = p;
 
@@ -475,7 +514,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 		board[6][1] = new Piece(20, Color.green, Color.white);
 		board[5][3] = new Piece(30, Color.green, Color.white);
 
-		Piece p2 = new Piece(0, Color.green, Color.white);
+		Piece p2 = new Piece(50, Color.green, Color.white);
 		p2.setKing(true);
 		board[6][4] = p2;
 	}
@@ -571,7 +610,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 				dispose();
 		}
                 
-                if (numWhitePiecesOnBoard == 0 && winner == EnumWinner.None || numBlackPiecesOnBoard == 0 && winner == EnumWinner.None) {
+                if ( (numWhitePiecesOnBoard == 0 || numBlackPiecesOnBoard == 0) && winner == EnumWinner.None) {
 				//If one side doesn't have any pieces left
 				//Score all remaining pieces
 				for (int zRow = 0; zRow < ROWS; zRow++) {

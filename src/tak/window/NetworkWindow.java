@@ -199,7 +199,6 @@ public class NetworkWindow extends JFrame implements Runnable {
                                 }
                                 catch (IOException ex)
                                 {
-                                    System.out.println("Cannot join server: " + ex.getMessage());
                                     isConnecting = false;
                                 }                    
                         }
@@ -217,15 +216,13 @@ public class NetworkWindow extends JFrame implements Runnable {
                                     ttw.myTurn = false;
                                     
                                     theGame = ttw;
-                                    
-                                    System.out.println("Server window created");
+
                                     gameStarted = true;
                                     isConnecting = false;
                                 }
                             }
                             catch (IOException ex)
                             {
-                                System.out.println("Cannot host server: " + ex.getMessage());
                                 isConnecting = false;
                             }                        
                         }

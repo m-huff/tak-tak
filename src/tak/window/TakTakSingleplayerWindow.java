@@ -48,6 +48,9 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 	public static Random rand = new Random();
 	static ImageIcon icon = new ImageIcon(TakTakSingleplayerWindow.class.getResource("/tak/assets/icon.png"));
 	static ImageIcon background = new ImageIcon(TakTakSingleplayerWindow.class.getResource("/tak/assets/wood.png"));
+        
+        private static ImageIcon hoverButton = new ImageIcon(MenuWindow.class.getResource("/tak/assets/button_hover.png"));
+	private static ImageIcon button = new ImageIcon(MenuWindow.class.getResource("/tak/assets/button.png"));
 
 	//Board of real game is 6x7
 	public static final int COLUMNS = 6;
@@ -79,6 +82,9 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 	public static int aiWins;
 	
 	public static int fadeOut;
+        
+        private boolean mouseoverPlayAgain;
+        private boolean mouseoverReturn;
 	
 	static Sound move;
 	static Sound cha_ching;
@@ -127,6 +133,46 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 				repaint();
 			}
 		});
+                
+                addMouseMotionListener(new MouseMotionAdapter() {
+			public void mouseMoved(MouseEvent e) {
+				if (fadeOut < 150)
+					return;
+				int xpos = e.getX();
+				int ypos = e.getY() + 2;
+
+				if (xpos >= 200 && xpos <= 340 && ypos >= 350 && ypos <= 390)
+					mouseoverPlayAgain = true;
+				else
+					mouseoverPlayAgain = false;
+
+				//AI button
+				if (xpos >= 200 && xpos <= 340 && ypos >= 400 && ypos <= 440) {
+					mouseoverReturn = true;
+				} else {
+					mouseoverReturn = false;
+                                }
+
+				repaint();
+			}
+		});
+                
+                addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				if (fadeOut < 150)
+					return;
+				if (MouseEvent.BUTTON1 == e.getButton() && mouseoverPlayAgain) {
+					reset();
+				} else if (MouseEvent.BUTTON1 == e.getButton() && mouseoverReturn) {
+					reset();
+					myWins = 0;
+					aiWins = 0;
+					new MenuWindow();
+					frame.dispose();
+				}
+			}
+		});
+                
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				if (MouseEvent.BUTTON1 == e.getButton() && myTurn && singleplayer) {
@@ -225,21 +271,10 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 		addKeyListener(new KeyAdapter() {
 
 			public void keyPressed(KeyEvent e) {
-				if (KeyEvent.VK_ESCAPE == e.getKeyCode()) {
-					reset();
-					myWins = 0;
-					aiWins = 0;
-					new MenuWindow();
-					frame.dispose();
-				}
 				if (KeyEvent.VK_BACK_SPACE == e.getKeyCode()) {
 					selectedRow = 999;
 					selectedColumn = 999;
 					validMoves.clear();
-				}
-				if (KeyEvent.VK_ENTER == e.getKeyCode() && winner != EnumWinner.None) {
-					reset();
-					resetBoard();
 				}
 				repaint();
 			}
@@ -358,11 +393,30 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 				if (winner == EnumWinner.Tie)
 					g.drawString("You tied!", 220, 300);
 				
-				g.setFont(new Font("Arial Bold", Font.PLAIN, 22));
-				g.drawString("Press ENTER to play again", 160, 390);
-				g.drawString("Press ESC to return to the main menu", 100, 410);
+//				g.setFont(new Font("Arial Bold", Font.PLAIN, 22));
+//				g.drawString("Press ENTER to play again", 160, 390);
+//				g.drawString("Press ESC to return to the main menu", 100, 410);
+                                
+                                if (mouseoverPlayAgain)
+                                    g.drawImage(hoverButton.getImage(), 225, 350, null);
+                                else
+                                    g.drawImage(button.getImage(), 225, 350, null);
+
+                                if (mouseoverReturn)
+                                    g.drawImage(hoverButton.getImage(), 225, 400, null);
+                                else
+                                    g.drawImage(button.getImage(), 225, 400, null);
+
+                                
+                                g.setFont(new Font("Arial", Font.BOLD, 16));
+                                g.setColor(mouseoverPlayAgain ? Color.red : Color.black);
+                                g.drawString("Play Again", 254, 373);
+                                g.setColor(mouseoverReturn ? Color.red : Color.black);
+                                g.drawString("Return to Menu", 237, 425);
+                                
+                                
 				
-				if (fadeOut < 230)
+				if (fadeOut < 150)
 					fadeOut += 5;
 		}
 		
