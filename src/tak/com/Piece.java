@@ -11,11 +11,6 @@ import tak.window.TakTakSingleplayerWindow;
 
 public class Piece {
 
-	/**
-	 * Possible values for pieces - 10, 20, 30, 40
-	 * Possible front colors - orange, blue, green
-	 * Possible back colors - black, white
-	 */
 	private ArrayList<Piece> stack = new ArrayList<Piece>();
 
 	private int value;
@@ -29,12 +24,6 @@ public class Piece {
 	private ImageIcon green = new ImageIcon(Piece.class.getResource("/tak/assets/green.png"));
 	private ImageIcon orange = new ImageIcon(Piece.class.getResource("/tak/assets/orange.png"));
 	private ImageIcon crown = new ImageIcon(Piece.class.getResource("/tak/assets/crown.png"));
-
-	// Kings can move backwards, and two spaces forward. However, the stack they are
-	// in is limited in value to 100 points, and once the king has been placed on the
-	// stack, no other pieces can stack with it - the king will always be on top.
-	// The king's stack instantly becomes worth 100 points, no matter how many points
-	// it was previously.
 	
 	private boolean isKing;
 

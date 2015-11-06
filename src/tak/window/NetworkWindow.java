@@ -9,6 +9,9 @@ import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -48,6 +51,9 @@ public class NetworkWindow extends JFrame implements Runnable {
 	public static Random rand = new Random();
 	public static ImageIcon icon = new ImageIcon(NetworkWindow.class.getResource("/tak/assets/icon.png"));
 	static ImageIcon background = new ImageIcon(NetworkWindow.class.getResource("/tak/assets/wood.png"));
+	
+	private static ImageIcon hoverButton = new ImageIcon(MenuWindow.class.getResource("/tak/assets/button_hover.png"));
+	private static ImageIcon button = new ImageIcon(MenuWindow.class.getResource("/tak/assets/button.png"));
 
 	private final NetworkWindow frame = this;
 
@@ -55,6 +61,8 @@ public class NetworkWindow extends JFrame implements Runnable {
 	public static String ipAddress = new String();
 	public static boolean gameStarted = false;
 	public static boolean isConnecting = false;
+	
+	private boolean mouseoverPlay;
         
         TakTakMultiplayerWindow theGame;
 
@@ -79,64 +87,7 @@ public class NetworkWindow extends JFrame implements Runnable {
                   {            
                       if (e.VK_ESCAPE == e.getKeyCode()) {
                           new MenuWindow();
-                          frame.dispose();
-                      }
-                      else if (e.getKeyCode() == KeyEvent.VK_S)
-                      {
-                          if (!isConnecting)
-                          {
-                              try
-                              {
-                                  isConnecting = true;
-                                  ServerHandler.recieveConnect(5657);
-                                  if (ServerHandler.connected)
-                                  {
-                                      TakTakMultiplayerWindow ttw = new TakTakMultiplayerWindow(frame);
-                                      ttw.isClient = false;
-                                      ttw.myTurn = false;
-                                      
-                                      theGame = ttw;
-                                      
-                                      System.out.println("Server window created");
-                                      gameStarted = true;
-                                      isConnecting = false;
-                                  }
-                              }
-                              catch (IOException ex)
-                              {
-                                  System.out.println("Cannot host server: " + ex.getMessage());
-                                  isConnecting = false;
-                              }                        
-                          }
-                      }
-                      else if (e.getKeyCode() == KeyEvent.VK_C)
-                      {
-                          if (!isConnecting)
-                          {
-
-                                  try
-                                  {
-                                      
-                                      isConnecting = true;
-                                      ClientHandler.connect(ipAddress, 5657);
-                                      if (ClientHandler.connected)
-                                      {
-                                          TakTakMultiplayerWindow ttw = new TakTakMultiplayerWindow(frame);
-                                          ttw.isClient = true;
-                                          ttw.myTurn = true;
-                                          
-                                          theGame = ttw;
-
-                                          gameStarted = true;
-                                          isConnecting = false;
-                                      }
-                                  }
-                                  catch (IOException ex)
-                                  {
-                                      System.out.println("Cannot join server: " + ex.getMessage());
-                                      isConnecting = false;
-                                  }                    
-                          }
+                          frame.dispose(); 
                       }                
                       else
                       {
@@ -221,6 +172,82 @@ public class NetworkWindow extends JFrame implements Runnable {
                       repaint();
                   }
               });
+        
+        addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				if (MouseEvent.BUTTON1 == e.getButton() && mouseoverPlay) {
+					if (isPotentialGameClient) {
+						if (!isConnecting)
+                        {
+
+                                try
+                                {
+                                    
+                                    isConnecting = true;
+                                    ClientHandler.connect(ipAddress, 5657);
+                                    if (ClientHandler.connected)
+                                    {
+                                        TakTakMultiplayerWindow ttw = new TakTakMultiplayerWindow(frame);
+                                        ttw.isClient = true;
+                                        ttw.myTurn = true;
+                                        
+                                        theGame = ttw;
+
+                                        gameStarted = true;
+                                        isConnecting = false;
+                                    }
+                                }
+                                catch (IOException ex)
+                                {
+                                    System.out.println("Cannot join server: " + ex.getMessage());
+                                    isConnecting = false;
+                                }                    
+                        }
+					} else {
+						if (!isConnecting)
+                        {
+                            try
+                            {
+                                isConnecting = true;
+                                ServerHandler.recieveConnect(5657);
+                                if (ServerHandler.connected)
+                                {
+                                    TakTakMultiplayerWindow ttw = new TakTakMultiplayerWindow(frame);
+                                    ttw.isClient = false;
+                                    ttw.myTurn = false;
+                                    
+                                    theGame = ttw;
+                                    
+                                    System.out.println("Server window created");
+                                    gameStarted = true;
+                                    isConnecting = false;
+                                }
+                            }
+                            catch (IOException ex)
+                            {
+                                System.out.println("Cannot host server: " + ex.getMessage());
+                                isConnecting = false;
+                            }                        
+                        }
+					}
+				}
+			}
+		});
+        
+        addMouseMotionListener(new MouseMotionAdapter() {
+			public void mouseMoved(MouseEvent e) {
+				int xpos = e.getX();
+				int ypos = e.getY() + 2;
+
+				if (ypos >= 260 && ypos <= 295 && xpos >= 390 && xpos <= 530) {
+					mouseoverPlay = true;
+				} else {
+					mouseoverPlay = false;
+				}
+
+				repaint();
+			}
+		});
 
 		//Send the user back to the menu screen to make sure the entire system gets exited
 		//Without this the sound will continue to run until it finishes	
@@ -293,7 +320,7 @@ public class NetworkWindow extends JFrame implements Runnable {
 
 		g.setColor(new Color(0, 0, 0, 230));
 		g.fillRect(0, 0, WINDOW_WIDTH, 130);
-		g.fillRect(0, 235, WINDOW_WIDTH, 80);
+		g.fillRect(0, 255, WINDOW_WIDTH, 60);
 
 		g.setColor(Color.white);
 		g.setFont(new Font("Arial", Font.BOLD, 14));
@@ -305,9 +332,17 @@ public class NetworkWindow extends JFrame implements Runnable {
 			e.printStackTrace();
 		}
 		g.drawString("Enter an IP address to play against", 30, 90);
-		g.drawString("Press " + (isPotentialGameClient ? "C" : "S") + " to attempt to " + (isPotentialGameClient ? "join" : "start") + " a game", 30, 280);
-		g.drawString("You will play as " + (isPotentialGameClient ? "WHITE" : "BLACK"), 30, 260);
+		//g.drawString("Press " + (isPotentialGameClient ? "C" : "S") + " to attempt to " + (isPotentialGameClient ? "join" : "start") + " a game", 30, 280);
+		g.drawString("You will play as " + (isPotentialGameClient ? "WHITE" : "BLACK"), 30, 280);
 		g.drawString("Opponent IP: " + ipAddress, 30, 110);
+		
+		if (mouseoverPlay)
+			g.drawImage(hoverButton.getImage(), 390, 260, null);
+		else
+			g.drawImage(button.getImage(), 390, 260, null);
+		
+		g.setColor(mouseoverPlay ? Color.red : Color.black);
+		g.drawString("Start Game", 420, 283);
 
 		gOld.drawImage(image, 0, 0, null);
 	}

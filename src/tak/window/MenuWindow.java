@@ -43,14 +43,17 @@ public class MenuWindow extends JFrame implements Runnable {
 	public static Random rand = new Random();
 	public static ImageIcon icon = new ImageIcon(MenuWindow.class.getResource("/tak/assets/icon.png"));
 	static ImageIcon background = new ImageIcon(MenuWindow.class.getResource("/tak/assets/wood.png"));
-        private static ImageIcon bluebutton = new ImageIcon(MenuWindow.class.getResource("/tak/assets/buttonblue.png"));
-        private static ImageIcon redbutton = new ImageIcon(MenuWindow.class.getResource("/tak/assets/buttonred.png"));
-        
-        private boolean mouseoverAI;
-        private boolean mouseoverClient;
-        private boolean mouseoverServer;
-        private boolean mouseoverRules;
-        
+
+	private static ImageIcon hoverButton = new ImageIcon(MenuWindow.class.getResource("/tak/assets/button_hover.png"));
+	private static ImageIcon button = new ImageIcon(MenuWindow.class.getResource("/tak/assets/button.png"));
+	
+	private static ImageIcon logo = new ImageIcon(MenuWindow.class.getResource("/tak/assets/logo.png"));
+
+	private boolean mouseoverAI;
+	private boolean mouseoverClient;
+	private boolean mouseoverServer;
+	private boolean mouseoverRules;
+
 	private final MenuWindow frame = this;
 
 	public static int textPosition = WINDOW_WIDTH;
@@ -67,81 +70,60 @@ public class MenuWindow extends JFrame implements Runnable {
 		setTitle("Tak-Tak");
 		setLocation(CENTER_X, CENTER_Y);
 
-                addMouseMotionListener(new MouseMotionAdapter() {
+		addMouseMotionListener(new MouseMotionAdapter() {
 			public void mouseMoved(MouseEvent e) {
-                            if(textPosition < 35)
-                                return;
+				if (textPosition < 35)
+					return;
 				int xpos = e.getX();
-				int ypos = e.getY()+2;
-                                
-                                if(xpos >= textPosition-90 && xpos <= textPosition+25 &&
-                                   ypos >= 100 && ypos<= 115)
-                                       mouseoverServer = true;
-                                else
-                                    mouseoverServer = false;
-                                
-                                if(xpos >= textPosition-90 && xpos <= textPosition+20 &&
-                                   ypos >= 140 && ypos<= 155)
-                                       mouseoverClient = true;
-                                else
-                                    mouseoverClient = false;
-                                
-                                if(xpos >= textPosition+68 && xpos <= textPosition+153 &&
-                                   ypos >= 120 && ypos<= 135)
-                                       mouseoverAI = true;
-                                else
-                                    mouseoverAI = false;
-                                
-                                if(xpos >= 475 && xpos <= 530 &&
-                                   ypos >= textPosition+48 && ypos<= textPosition+60)
-                                       mouseoverRules = true;
-                                else
-                                    mouseoverRules = false;
+				int ypos = e.getY() + 2;
+
+				if (xpos >= 475 && xpos <= 530 && ypos >= textPosition + 10 && ypos <= textPosition + 45)
+					mouseoverRules = true;
+				else
+					mouseoverRules = false;
+
+				//AI button
+				if (ypos >= textPosition + 10 && ypos <= textPosition + 45 && xpos >= 30 && xpos <= 170) {
+					mouseoverAI = true;
+				} else {
+					mouseoverAI = false;
+				}
+
+				//Client button
+				if (ypos >= textPosition + 10 && ypos <= textPosition + 45 && xpos >= 175 && xpos <= 315) {
+					mouseoverClient = true;
+				} else {
+					mouseoverClient = false;
+				}
+
+				//Client button
+				if (ypos >= textPosition + 10 && ypos <= textPosition + 45 && xpos >= 320 && xpos <= 460) {
+					mouseoverServer = true;
+				} else {
+					mouseoverServer = false;
+				}
+
 				repaint();
 			}
 		});
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
-                            if(textPosition < 35)
-                                return;
+				if (textPosition < 35)
+					return;
 				if (MouseEvent.BUTTON1 == e.getButton() && mouseoverAI) {
-                                        new TakTakSingleplayerWindow();
-				        frame.dispose();
-                                }
-                                else if (MouseEvent.BUTTON1 == e.getButton() && mouseoverClient) {
-                              		final NetworkWindow rw = new NetworkWindow(true);
+					new TakTakSingleplayerWindow();
 					frame.dispose();
-                                }
-                                else if (MouseEvent.BUTTON1 == e.getButton() && mouseoverServer) {
- 					final NetworkWindow rw = new NetworkWindow(false);
-					frame.dispose();                                  
-                                }
-                                else if (MouseEvent.BUTTON1 == e.getButton() && mouseoverRules) {
-                                        final RulesWindow rw = new RulesWindow();
+				} else if (MouseEvent.BUTTON1 == e.getButton() && mouseoverClient) {
+					final NetworkWindow rw = new NetworkWindow(true);
+					frame.dispose();
+				} else if (MouseEvent.BUTTON1 == e.getButton() && mouseoverServer) {
+					final NetworkWindow rw = new NetworkWindow(false);
+					frame.dispose();
+				} else if (MouseEvent.BUTTON1 == e.getButton() && mouseoverRules) {
+					final RulesWindow rw = new RulesWindow();
 					rw.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 					frame.dispose();
-                                }
-                        }
-                });
-                
-		addKeyListener(new KeyAdapter() {
-
-			@SuppressWarnings("static-access")
-			public void keyPressed(KeyEvent e) {
-				if (e.VK_X == e.getKeyCode()) {
-					
 				}
-				if (e.VK_Z == e.getKeyCode()) {
-
-				}
-				if (e.VK_C == e.getKeyCode()) {
-                                    
-				}
-				if (e.VK_V == e.getKeyCode()) {
-					
-				}
-
-				repaint();
 			}
 		});
 
@@ -171,13 +153,13 @@ public class MenuWindow extends JFrame implements Runnable {
 			gOld.drawImage(image, 0, 0, null);
 			return;
 		}
-		
+
 		for (int x = 0; x < WINDOW_WIDTH; x += background.getIconWidth()) {
 			for (int y = 0; y < WINDOW_HEIGHT; y += background.getIconHeight()) {
 				g.drawImage(background.getImage(), x, y, null);
 			}
 		}
-		
+
 		int index = 0;
 		for (int x = 0; x < WINDOW_WIDTH; x += 80) {
 			for (int y = 0; y < WINDOW_HEIGHT; y += 80) {
@@ -193,38 +175,40 @@ public class MenuWindow extends JFrame implements Runnable {
 			}
 		}
 
-		g.setColor(new Color(0, 0, 0, 230));
-		g.fillRect(0, 0, WINDOW_WIDTH, textPosition + 75);
+		g.setColor(new Color(0, 0, 0, 190));
+		g.fillRect(0, 0, WINDOW_WIDTH, textPosition + 60);
 
-		g.setColor(new Color(240, 240, 240));
-		g.setFont(new Font("Arial", Font.BOLD, 42));
-		g.drawString("TAK-TAK", textPosition - 105, 80);
+//		g.setColor(new Color(240, 240, 240));
+//		g.setFont(new Font("Arial", Font.BOLD, 42));
+//		g.drawString("TAK-TAK", textPosition - 105, 80);
+		
+		g.drawImage(logo.getImage(), textPosition - 105, 35, null);
 
-//                if(mouseoverServer)
-//                g.drawImage(bluebutton.getImage(), textPosition-105, 100, 105, 30, null);
-//                else
-//                g.drawImage(redbutton.getImage(), textPosition-105, 100, 105, 30, null);
-//                
-//                if(mouseoverClient)
-//                g.drawImage(bluebutton.getImage(), textPosition-105, 140, 105, 30, null);
-//                else
-//                g.drawImage(redbutton.getImage(), textPosition-105, 140, 105, 30, null);
-//                
-//                if(mouseoverAI)
-//                g.drawImage(bluebutton.getImage(), textPosition+40, 120, 105, 30, null);
-//                else
-//                g.drawImage(redbutton.getImage(), textPosition+40, 120, 105, 30, null);
-                
+		if (mouseoverServer)
+			g.drawImage(hoverButton.getImage(), 320, textPosition + 10, null);
+		else
+			g.drawImage(button.getImage(), 320, textPosition + 10, null);
+
+		if (mouseoverClient)
+			g.drawImage(hoverButton.getImage(), 175, textPosition + 10, null);
+		else
+			g.drawImage(button.getImage(), 175, textPosition + 10, null);
+
+		if (mouseoverAI)
+			g.drawImage(hoverButton.getImage(), 30, textPosition + 10, null);
+		else
+			g.drawImage(button.getImage(), 30, textPosition + 10, null);
+
 		g.setFont(new Font("Arial", Font.BOLD, 16));
-                
-                g.setColor(mouseoverRules?Color.red : Color.white);
-                g.drawString("Rules?",475, textPosition +60);
-                g.setColor(mouseoverAI?Color.red : Color.white);
-		g.drawString("Play Vs. AI", 135+62, textPosition +5);
-                g.setColor(mouseoverClient?Color.red : Color.white);
-		g.drawString("Play as Client",135-92, textPosition +25);
-                g.setColor(mouseoverServer?Color.red : Color.white);
-		g.drawString("Play as Server",135-92, textPosition -15);
+
+		g.setColor(mouseoverRules ? Color.red : Color.white);
+		g.drawString("Rules", 485, textPosition + 34);
+		g.setColor(mouseoverAI ? Color.red : Color.black);
+		g.drawString("Play Vs. AI", 59, textPosition + 34);
+		g.setColor(mouseoverClient ? Color.red : Color.black);
+		g.drawString("Play as Client", 194, textPosition + 34);
+		g.setColor(mouseoverServer ? Color.red : Color.black);
+		g.drawString("Play as Server", 335, textPosition + 34);
 
 		gOld.drawImage(image, 0, 0, null);
 	}

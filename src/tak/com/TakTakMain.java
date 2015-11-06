@@ -7,11 +7,11 @@ public class TakTakMain {
 	
 	//Music - http://opsound.org/artist/macroform/ - public domain
 	//SFX - http://www.wavsource.com/sfx/sfx.htm - public domain
-        //Logo - http://www.flamingtext.com/net-fu/dynamic.cgi?script=inferno-logo - logo generator WITH FLAMES
+    //Logo - http://www.flamingtext.com/net-fu/dynamic.cgi?script=inferno-logo
 	
 	//TODO
-        // - more sounds
-        // - buttons (main menu, network window, after game single player and multi player)
+    // - more sounds
+    // - buttons after a game has ended
 
 	static Sound music = new Sound("darude_sandstorm.wav");
 
