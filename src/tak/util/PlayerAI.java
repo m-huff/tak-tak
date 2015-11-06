@@ -45,6 +45,7 @@ public class PlayerAI {
                                                         if (TakTakSingleplayerWindow.board[temp.getX()][temp.getY()] != null
 						            && TakTakSingleplayerWindow.board[temp.getX()][temp.getY()].getTopPiece().getBackgroundColor() == Color.WHITE) 
                                                         {
+                                                            System.out.println("capture");
                                                                 blacktomove = new OrderedPair(zRow, zColumn);
 								placetomoveto = new OrderedPair(temp.getX(), temp.getY());
                                                                 ArrayList<OrderedPair> retpack = new ArrayList<>();
@@ -52,6 +53,16 @@ public class PlayerAI {
                                                                 retpack.add(placetomoveto);
                                                                 return (retpack);
 							}
+                                                        else if(zRow == 4)
+                                                        {
+                                                            System.out.println("score");
+                                                                blacktomove = new OrderedPair(zRow, zColumn);
+								placetomoveto = new OrderedPair(temp.getX(), temp.getY());
+                                                                ArrayList<OrderedPair> retpack = new ArrayList<>();
+                                                                retpack.add(blacktomove);
+                                                                retpack.add(placetomoveto);
+                                                                return (retpack);
+                                                        }
 						}
 					}
 				}
