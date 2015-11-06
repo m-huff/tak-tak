@@ -374,7 +374,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 		g.drawString("AI Score: " + aiScore, 460, 60);
 		g.drawString("AI Wins: " + aiWins, 460, 45);
 		g.setFont(new Font("Arial Bold", Font.BOLD, 18));
-		g.drawString((myTurn ? "YOUR" : "OPPONENT'S") + " Turn", myTurn ? 245 : 210, 55);
+		g.drawString((myTurn ? "YOUR (WHITE)" : "OPPONENT'S") + " Turn", myTurn ? 205 : 210, 55);
 		g.setFont(new Font("Arial Bold", Font.BOLD, 14));
 		g.drawString("Turn #" + (turn + 1), 270, 40);
 

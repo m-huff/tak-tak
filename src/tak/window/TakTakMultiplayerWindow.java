@@ -380,7 +380,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 		g.drawString("Opponent Wins: " + opponentWins, 430, 45);
 		g.drawString("Opponent Score: " + opponentScore, 430, 60);
 		g.setFont(new Font("Arial Bold", Font.BOLD, 18));
-		g.drawString((myTurn ? "YOUR" : "OPPONENT'S") + " Turn", myTurn ? 245 : 210, 55);
+                g.drawString((myTurn ? "YOUR (" + (myColor == Color.black? "BLACK)" : "WHITE)") : "OPPONENT'S") + " Turn", myTurn ? 205 : 210, 55);
 		g.setFont(new Font("Arial Bold", Font.BOLD, 14));
 		g.drawString("Turn #" + (turn + 1), 270, 40);
 
