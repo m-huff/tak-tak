@@ -81,10 +81,19 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 	public static final int ROWS = 7;
 	public static Piece[][] board;
 
+	//FULL_WIDTH allows room for the chat area
+	static public final int FULL_WIDTH = 840;
+
+	//This will hold every chat message sent
+	public static ArrayList<String> chat = new ArrayList<String>();
+
+	//The text the user is currently typing
+	public static String currentChatText = "Chat with your opponent!";
+
 	static ImageIcon icon = new ImageIcon(TakTakSingleplayerWindow.class.getResource("/tak/assets/icon.png"));
 	static ImageIcon background = new ImageIcon(TakTakSingleplayerWindow.class.getResource("/tak/assets/wood.png"));
-        
-        private static ImageIcon hoverButton = new ImageIcon(MenuWindow.class.getResource("/tak/assets/button_hover.png"));
+
+	private static ImageIcon hoverButton = new ImageIcon(MenuWindow.class.getResource("/tak/assets/button_hover.png"));
 	private static ImageIcon button = new ImageIcon(MenuWindow.class.getResource("/tak/assets/button.png"));
 
 	public static ArrayList<OrderedPair> validMoves = new ArrayList<OrderedPair>();
@@ -103,8 +112,8 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 
 	static Sound move;
 	static Sound cha_ching;
-        
-        private boolean mouseoverReturn;
+
+	private boolean mouseoverReturn;
 
 	public static enum EnumWinner {
 		PlayerOne, PlayerTwo, PlayerAI, Tie, None
@@ -115,10 +124,10 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 	public static int fadeOut;
 
 	public TakTakMultiplayerWindow(NetworkWindow _controller) {
-		
+
 		controller = _controller;
 
-		setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+		setSize(FULL_WIDTH, WINDOW_HEIGHT);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setVisible(true);
 		setResizable(false);
@@ -133,7 +142,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 				repaint();
 			}
 		});
-                addMouseMotionListener(new MouseMotionAdapter() {
+		addMouseMotionListener(new MouseMotionAdapter() {
 			public void mouseMoved(MouseEvent e) {
 				if (fadeOut < 150)
 					return;
@@ -148,7 +157,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 				repaint();
 			}
 		});
-                
+
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				if (MouseEvent.BUTTON1 == e.getButton() && myTurn) {
@@ -255,12 +264,12 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 					selectedColumn = 999;
 					validMoves.clear();
 				}
-                                
+
 				repaint();
 			}
 		});
-                
-                addMouseListener(new MouseAdapter() {
+
+		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				if (fadeOut < 150)
 					return;
@@ -276,6 +285,44 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 					opponentWins = 0;
 					controller.dispose();
 					frame.dispose();
+				}
+			}
+		});
+
+		//Writes your keystrokes to the chat thing
+		addKeyListener(new KeyAdapter() {
+
+			public void keyPressed(KeyEvent e) {
+				//In this if statement, there should be every key we don't want to add text
+				//to the current chat with
+
+				if (e.getKeyCode() != KeyEvent.VK_ESCAPE && e.getKeyCode() != KeyEvent.VK_CAPS_LOCK
+						&& e.getKeyCode() != KeyEvent.VK_SPACE && e.getKeyCode() != KeyEvent.VK_BACK_SPACE
+						&& e.getKeyCode() != KeyEvent.VK_ENTER && e.getKeyCode() != KeyEvent.VK_ALT
+						&& e.getKeyCode() != KeyEvent.VK_CONTROL && e.getKeyCode() != KeyEvent.VK_CONTEXT_MENU
+						&& e.getKeyCode() != KeyEvent.VK_UP && e.getKeyCode() != KeyEvent.VK_DOWN
+						&& e.getKeyCode() != KeyEvent.VK_RIGHT && e.getKeyCode() != KeyEvent.VK_LEFT) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = null;
+					currentChatText += KeyEvent.getKeyText(e.getKeyCode());
+				} else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+					currentChatText += " ";
+				} else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					String finalString = (isClient ? "P1:" : "P2:")
+							+ currentChatText.replaceAll("null", "").toLowerCase();
+
+					if (isClient) {
+						ClientHandler.sendChat(finalString);
+					} else {
+						ServerHandler.sendChat(finalString);
+					}
+					chat.add(finalString);
+					currentChatText = "Chat with your opponent!";
+				} else if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = null;
+					else if (currentChatText.length() >= 1)
+						currentChatText = currentChatText.substring(0, currentChatText.length() - 1);
 				}
 			}
 		});
@@ -380,9 +427,55 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 		g.drawString("Opponent Wins: " + opponentWins, 430, 45);
 		g.drawString("Opponent Score: " + opponentScore, 430, 60);
 		g.setFont(new Font("Arial Bold", Font.BOLD, 18));
-                g.drawString((myTurn ? "YOUR (" + (myColor == Color.black? "BLACK" : "WHITE") + ")" : "OPPONENT'S") + " Turn", myTurn ? 205 : 210, 55);
+		g.drawString((myTurn ? "YOUR (" + (myColor == Color.black ? "BLACK" : "WHITE") + ")" : "OPPONENT'S") + " Turn",
+				myTurn ? 205 : 210, 55);
 		g.setFont(new Font("Arial Bold", Font.BOLD, 14));
 		g.drawString("Turn #" + (turn + 1), 270, 40);
+
+		//Chat area background
+		g.setColor(new Color(20, 20, 20));
+		g.fillRect(590, 65, 230, 595);
+		g.fillRect(590, 665, 230, 38);
+		g.setColor(new Color(0, 0, 0));
+		g.fillRect(595, 70, 220, 585);
+		g.fillRect(595, 670, 220, 28);
+
+		//The current text is displayed
+		int stringWrap = 25;
+		g.setColor(Color.white);
+		g.setFont(new Font("Arial Bold", Font.BOLD, 14));
+
+		if (currentChatText != null) {
+			String finalText = currentChatText.replaceAll("null", "").toLowerCase();
+			g.drawString(
+					finalText.length() > stringWrap ? finalText.substring(finalText.length() - stringWrap) : finalText,
+					598, 690);
+		}
+
+		//The most recent chat is displayed
+		int chatBoardLength = 22;
+		g.setColor(Color.white);
+
+		if (chat.size() < chatBoardLength) {
+			int chatY = 0;
+			for (String msg : chat) {
+				g.drawString(msg, 600, 100 + chatY);
+				chatY += 25;
+			}
+		} else if (chat.size() > chatBoardLength) {
+			int chatY = 0;
+			ArrayList<String> chatToShow = new ArrayList<String>();
+
+			//Start at the index where we begin showing the chat
+			for (int i = chat.size() - 1 - chatBoardLength; i < chat.size(); i++) {
+				chatToShow.add(chat.get(i));
+			}
+
+			for (String msg : chatToShow) {
+				g.drawString(msg, 600, 100 + chatY);
+				chatY += 25;
+			}
+		}
 
 		g.setColor(new Color(0, 0, 0, fadeOut));
 		g.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -405,16 +498,15 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 
 			if (fadeOut < 230)
 				fadeOut += 5;
-                        
-                        if (mouseoverReturn)
-                            g.drawImage(hoverButton.getImage(), 225, 450, null);
-                        else
-                            g.drawImage(button.getImage(), 225, 450, null);
 
+			if (mouseoverReturn)
+				g.drawImage(hoverButton.getImage(), 225, 450, null);
+			else
+				g.drawImage(button.getImage(), 225, 450, null);
 
-                        g.setFont(new Font("Arial", Font.BOLD, 16));
-                        g.setColor(mouseoverReturn ? Color.red : Color.black);
-                        g.drawString("Return to Menu", 287, 425);
+			g.setFont(new Font("Arial", Font.BOLD, 16));
+			g.setColor(mouseoverReturn ? Color.red : Color.black);
+			g.drawString("Return to Menu", 287, 425);
 
 			if (gameDelayTimer > 0) {
 				gameDelayTimer--;
@@ -432,8 +524,8 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 
 		for (int i = 0; i < faders.size(); i++) {
 			faders.get(i).draw(g);
-                }
-		
+		}
+
 		gOld.drawImage(image, 0, 0, null);
 	}
 
@@ -525,7 +617,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 
 	//TODO - issues with scoring
 	public static void movePieceToLocation(OrderedPair piece, OrderedPair location) {
-		
+
 		//This works just fine
 		if (board[location.getX()][location.getY()] != null) {
 
@@ -533,7 +625,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 				numBlackPiecesOnBoard--;
 			else
 				numWhitePiecesOnBoard--;
-			
+
 			board[location.getX()][location.getY()].addStackToStack(board[piece.getX()][piece.getY()].getWholeStack());
 			board[piece.getX()][piece.getY()] = null;
 		} else {
@@ -541,43 +633,51 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 
 			board[piece.getX()][piece.getY()] = null;
 		}
-		
+
 		System.out.println("White: " + numWhitePiecesOnBoard + " | Black: " + numBlackPiecesOnBoard);
 
 		//Pieces are in opponent's safe zone
 		//"my" pieces are black if I'm a client
 		if (location.getX() >= 5 || location.getX() < 2) {
-			if (location.getX() >= 5 && board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.black) {
+			if (location.getX() >= 5
+					&& board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.black) {
 				if (isClient)
 					myScore += board[location.getX()][location.getY()].getValue();
 				else
 					opponentScore += board[location.getX()][location.getY()].getValue();
-				
+
 				numBlackPiecesOnBoard--;
 			}
 			//"my" pieces are white if I'm a server
-			else if (location.getX() < 2 && board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.white) {
+			else if (location.getX() < 2
+					&& board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.white) {
 				if (!isClient)
 					myScore += board[location.getX()][location.getY()].getValue();
 				else
 					opponentScore += board[location.getX()][location.getY()].getValue();
-				
+
 				numWhitePiecesOnBoard--;
 			}
-			
+
 			Color c;
-			if (location.getX() >= 5 && board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.black && isClient ||
-			    location.getX() < 2 && board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.white && !isClient)
+			if (location.getX() >= 5
+					&& board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.black
+					&& isClient
+					|| location.getX() < 2
+							&& board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.white
+							&& !isClient)
 				c = new Color(64, 180, 64);
 			else
 				c = new Color(128, 64, 64);
 
-			if (location.getX() >= 5 && board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.black ||
-				location.getX() < 2 && board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.white) {
+			if (location.getX() >= 5
+					&& board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.black
+					|| location.getX() < 2 && board[location.getX()][location.getY()].getTopPiece()
+							.getBackgroundColor() == Color.white) {
 				ScoreFader sf = new ScoreFader(board[location.getX()][location.getY()].getValue(),
-						getX(0) + location.getY() * getWidth2() / COLUMNS, getY(0) + location.getX() * getHeight2() / ROWS,
-						c);
-				
+						getX(0) + location.getY() * getWidth2() / COLUMNS,
+						getY(0) + location.getX() * getHeight2() / ROWS, c);
+
 				board[location.getX()][location.getY()] = null;
 			}
 			move = new Sound("chaching.wav");
@@ -600,7 +700,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 			tipTime = 0;
 			currentHint = HINT_PREFIX + HINTS[rand.nextInt(HINTS.length)];
 		}
-		
+
 		//If at any point we disconnect, dispose
 		if (isClient) {
 			if (!ClientHandler.isConnected())
@@ -609,31 +709,31 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 			if (!ServerHandler.isConnected())
 				dispose();
 		}
-                
-                if ( (numWhitePiecesOnBoard == 0 || numBlackPiecesOnBoard == 0) && winner == EnumWinner.None) {
-				//If one side doesn't have any pieces left
-				//Score all remaining pieces
-				for (int zRow = 0; zRow < ROWS; zRow++) {
-					for (int zColumn = 0; zColumn < COLUMNS; zColumn++) {
-						if (board[zRow][zColumn] != null) {
-							if (board[zRow][zColumn].getTopPiece().getBackgroundColor() != myColor) {
-								opponentScore += board[zRow][zColumn].getValue();
-								ScoreFader sf2 = new ScoreFader(board[zRow][zColumn].getValue(),
-										getX(0) + zColumn * getWidth2() / COLUMNS, getY(0) + zRow * getHeight2() / ROWS,
-										new Color(128, 64, 64));
-							} else {
-								myScore += board[zRow][zColumn].getValue();
-								ScoreFader sf2 = new ScoreFader(board[zRow][zColumn].getValue(),
-										getX(0) + zColumn * getWidth2() / COLUMNS, getY(0) + zRow * getHeight2() / ROWS,
-										new Color(64, 180, 64));
-							}
-							board[zRow][zColumn] = null;
+
+		if ((numWhitePiecesOnBoard == 0 || numBlackPiecesOnBoard == 0) && winner == EnumWinner.None) {
+			//If one side doesn't have any pieces left
+			//Score all remaining pieces
+			for (int zRow = 0; zRow < ROWS; zRow++) {
+				for (int zColumn = 0; zColumn < COLUMNS; zColumn++) {
+					if (board[zRow][zColumn] != null) {
+						if (board[zRow][zColumn].getTopPiece().getBackgroundColor() != myColor) {
+							opponentScore += board[zRow][zColumn].getValue();
+							ScoreFader sf2 = new ScoreFader(board[zRow][zColumn].getValue(),
+									getX(0) + zColumn * getWidth2() / COLUMNS, getY(0) + zRow * getHeight2() / ROWS,
+									new Color(128, 64, 64));
+						} else {
+							myScore += board[zRow][zColumn].getValue();
+							ScoreFader sf2 = new ScoreFader(board[zRow][zColumn].getValue(),
+									getX(0) + zColumn * getWidth2() / COLUMNS, getY(0) + zRow * getHeight2() / ROWS,
+									new Color(64, 180, 64));
 						}
+						board[zRow][zColumn] = null;
 					}
 				}
-				//End the game
-				chooseWinner();
 			}
+			//End the game
+			chooseWinner();
+		}
 	}
 
 	public void run() {
@@ -671,11 +771,11 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 	}
 
 	public static int getWidth2() {
-		return (xsize - getX(0) - XBORDER);
+		return (WINDOW_WIDTH - getX(0) - XBORDER);
 	}
 
 	public static int getHeight2() {
-		return (ysize - getY(0) - YBORDER);
+		return (WINDOW_HEIGHT - getY(0) - YBORDER);
 	}
 
 	public void start() {

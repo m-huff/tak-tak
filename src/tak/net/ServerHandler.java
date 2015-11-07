@@ -32,6 +32,7 @@ public class ServerHandler {
 		serverIn = new BufferedReader(new InputStreamReader(client.getInputStream()));
 		connected = true;
 		recievePieceMove();
+		recieveChat();
 	}
 
 	public static void disconnect() {
@@ -55,6 +56,12 @@ public class ServerHandler {
                         TakTakMultiplayerWindow.movePieceToLocation(new OrderedPair(initrow, initcol), new OrderedPair(movedrow, movedcol));
 		}
 	}
+	
+	public static void sendChat(String chat) {
+		if (connected) {
+			serverOut.println("!" + chat);
+		}
+	}
 
 	public static void sendDisconnect() {
 		if (connected) {
@@ -75,18 +82,55 @@ public class ServerHandler {
 								disconnect();
 								return;
 							}
-							// row:col:initrow:initcol:myScore                     
-							int initrowpost = Integer.parseInt(inputLine.split(":")[0]);
-							int initcolpost = Integer.parseInt(inputLine.split(":")[1]);
-							int movedrowpost = Integer.parseInt(inputLine.split(":")[2]);
-							int movedcolpost = Integer.parseInt(inputLine.split(":")[3]);
+							
+							if (!inputLine.startsWith("!")) {
+								// row:col:initrow:initcol:myScore                     
+								int initrowpost = Integer.parseInt(inputLine.split(":")[0]);
+								int initcolpost = Integer.parseInt(inputLine.split(":")[1]);
+								int movedrowpost = Integer.parseInt(inputLine.split(":")[2]);
+								int movedcolpost = Integer.parseInt(inputLine.split(":")[3]);
+	
+								TakTakMultiplayerWindow.initRow = initrowpost;
+								TakTakMultiplayerWindow.initCol = initcolpost;
+								TakTakMultiplayerWindow.movedRow = movedrowpost;
+								TakTakMultiplayerWindow.movedCol = movedcolpost;
+								TakTakMultiplayerWindow.myTurn = !TakTakMultiplayerWindow.myTurn;
+	                            TakTakMultiplayerWindow.movePieceToLocation(new OrderedPair(initrowpost, initcolpost), new OrderedPair(movedrowpost, movedcolpost));
+							}
+						} catch (NumberFormatException | NullPointerException e) {
+							e.printStackTrace();
+							if (e instanceof NullPointerException)
+								disconnect();
+						}
+					}
+				} catch (SocketException e) {
+					disconnect();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 
-							TakTakMultiplayerWindow.initRow = initrowpost;
-							TakTakMultiplayerWindow.initCol = initcolpost;
-							TakTakMultiplayerWindow.movedRow = movedrowpost;
-							TakTakMultiplayerWindow.movedCol = movedcolpost;
-							TakTakMultiplayerWindow.myTurn = !TakTakMultiplayerWindow.myTurn;
-                                                        TakTakMultiplayerWindow.movePieceToLocation(new OrderedPair(initrowpost, initcolpost), new OrderedPair(movedrowpost, movedcolpost));
+			}
+		}).start();
+	}
+	
+	private static void recieveChat() {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				String inputLine;
+
+				try {
+					while ((inputLine = serverIn.readLine()) != null) {
+						try {
+							if (inputLine.equals("esc")) {
+								disconnect();
+								return;
+							}
+							if (inputLine.startsWith("!")) {
+								String msg = inputLine.replace("!", "");
+								TakTakMultiplayerWindow.chat.add(msg);
+								System.out.println("\"" + msg + "\" was added to server chat");
+							}
 						} catch (NumberFormatException | NullPointerException e) {
 							e.printStackTrace();
 							if (e instanceof NullPointerException)

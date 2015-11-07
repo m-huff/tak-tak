@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import tak.util.OrderedPair;
 import tak.window.TakTakMultiplayerWindow;
@@ -37,6 +38,7 @@ public class ClientHandler {
 		serverIn = new BufferedReader(new InputStreamReader(server.getInputStream()));
 		connected = true;
 		recievePieceMove();
+		recieveChat();
 	}
 
 	public static void disconnect() {
@@ -61,6 +63,12 @@ public class ClientHandler {
                     TakTakMultiplayerWindow.movePieceToLocation(new OrderedPair(initrow, initcol), new OrderedPair(movedrow, movedcol));
                 }
 	}
+	
+	public static void sendChat(String chat) {
+		if (connected) {
+		    serverOut.println("!" + chat);
+		    }
+	}
 
 	public static void sendDisconnect() {
 		if (connected) {
@@ -82,19 +90,22 @@ public class ClientHandler {
 								disconnect();
 								return;
 							}
-							//add or modify.
-							// row:col:initrow:initcol:myScore
-							int initrowpost = Integer.parseInt(inputLine.split(":")[0]);
-							int initcolpost = Integer.parseInt(inputLine.split(":")[1]);
-							int movedrowpost = Integer.parseInt(inputLine.split(":")[2]);
-							int movedcolpost = Integer.parseInt(inputLine.split(":")[3]);
-
-							TakTakMultiplayerWindow.initRow = initrowpost;
-							TakTakMultiplayerWindow.initCol = initcolpost;
-							TakTakMultiplayerWindow.movedRow = movedrowpost;
-							TakTakMultiplayerWindow.movedCol = movedcolpost;
-							TakTakMultiplayerWindow.myTurn = !TakTakMultiplayerWindow.myTurn;	
-                                                        TakTakMultiplayerWindow.movePieceToLocation(new OrderedPair(initrowpost, initcolpost), new OrderedPair(movedrowpost, movedcolpost));
+							
+							if (!inputLine.startsWith("!")) {
+								//add or modify.
+								// row:col:initrow:initcol:myScore
+								int initrowpost = Integer.parseInt(inputLine.split(":")[0]);
+								int initcolpost = Integer.parseInt(inputLine.split(":")[1]);
+								int movedrowpost = Integer.parseInt(inputLine.split(":")[2]);
+								int movedcolpost = Integer.parseInt(inputLine.split(":")[3]);
+	
+								TakTakMultiplayerWindow.initRow = initrowpost;
+								TakTakMultiplayerWindow.initCol = initcolpost;
+								TakTakMultiplayerWindow.movedRow = movedrowpost;
+								TakTakMultiplayerWindow.movedCol = movedcolpost;
+								TakTakMultiplayerWindow.myTurn = !TakTakMultiplayerWindow.myTurn;	
+	                            TakTakMultiplayerWindow.movePieceToLocation(new OrderedPair(initrowpost, initcolpost), new OrderedPair(movedrowpost, movedcolpost));
+							}
 						} catch (NumberFormatException | NullPointerException e) {
 							e.printStackTrace();
 							if (e instanceof NullPointerException)
@@ -103,6 +114,41 @@ public class ClientHandler {
 					}
 				} catch (IOException e) {
 					disconnect();
+				}
+
+			}
+		}).start();
+	}
+	
+	private static void recieveChat() {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				String inputLine;
+
+				try {
+					while ((inputLine = serverIn.readLine()) != null) {
+						try {
+							if (inputLine.equals("esc")) {
+								disconnect();
+								return;
+							}
+							
+							if (inputLine.startsWith("!")) {
+								String msg = inputLine.replace("!", "");
+								TakTakMultiplayerWindow.chat.add(msg);
+								System.out.println("\"" + msg + "\" was added to client chat");
+							}
+						} catch (NumberFormatException | NullPointerException e) {
+							e.printStackTrace();
+							if (e instanceof NullPointerException)
+								disconnect();
+						}
+					}
+				} catch (SocketException e) {
+					disconnect();
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
 
 			}
