@@ -394,7 +394,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 			return;
 		}
 
-		for (int x = 0; x < WINDOW_WIDTH; x += background.getIconWidth()) {
+		for (int x = 0; x < FULL_WIDTH; x += background.getIconWidth()) {
 			for (int y = 0; y < WINDOW_HEIGHT; y += background.getIconHeight()) {
 				g.drawImage(background.getImage(), x, y, null);
 			}
