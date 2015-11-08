@@ -190,7 +190,7 @@ public class NetworkWindow extends JFrame implements Runnable {
                                         TakTakMultiplayerWindow ttw = new TakTakMultiplayerWindow(frame);
                                         ttw.isClient = true;
                                         ttw.myTurn = true;
-                                        
+
                                         theGame = ttw;
 
                                         gameStarted = true;

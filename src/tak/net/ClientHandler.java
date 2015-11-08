@@ -39,6 +39,7 @@ public class ClientHandler {
 		connected = true;
 		recievePieceMove();
 		recieveChat();
+		System.out.println("recieveChat happened");
 	}
 
 	public static void disconnect() {
@@ -94,7 +95,7 @@ public class ClientHandler {
 								return;
 							}
 
-							if (!inputLine.startsWith("!")) {
+							if (!inputLine.startsWith("CHAT")) {
 								//add or modify.
 								// row:col:initrow:initcol:myScore
 								int initrowpost = Integer.parseInt(inputLine.split(":")[0]);
@@ -125,20 +126,25 @@ public class ClientHandler {
 	}
 
 	private static void recieveChat() {
+		System.out.println("thread opened");
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
 				String inputLine;
 
 				try {
+					System.out.println("starting the loop");
 					while ((inputLine = serverIn.readLine()) != null) {
 						try {
 							if (inputLine.equals("esc")) {
 								disconnect();
 								return;
 							}
+							
+							System.out.println("looking for new chat messages");
 
 							if (inputLine.startsWith("CHAT")) {
+								System.out.println("found one");
 								String msg = inputLine.replace("CHAT ", "");
 								TakTakMultiplayerWindow.chat.add(msg);
 								System.out.println("\"" + msg + "\" was added to client chat");
