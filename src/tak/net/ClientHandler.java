@@ -58,16 +58,19 @@ public class ClientHandler {
 
 	public static void sendPieceMove(int initrow, int initcol, int movedrow, int movedcol) {
 		if (connected) {
-		    serverOut.println(initrow + ":" + initcol + ":" + movedrow + ":" + movedcol);
-		    TakTakMultiplayerWindow.myTurn = !TakTakMultiplayerWindow.myTurn;
-                    TakTakMultiplayerWindow.movePieceToLocation(new OrderedPair(initrow, initcol), new OrderedPair(movedrow, movedcol));
-                }
+			serverOut.println(initrow + ":" + initcol + ":" + movedrow + ":" + movedcol);
+			TakTakMultiplayerWindow.myTurn = !TakTakMultiplayerWindow.myTurn;
+			TakTakMultiplayerWindow.movePieceToLocation(new OrderedPair(initrow, initcol),
+					new OrderedPair(movedrow, movedcol));
+		}
 	}
-	
+
 	public static void sendChat(String chat) {
 		if (connected) {
-		    serverOut.println("!" + chat);
-		    }
+			serverOut.println("!" + chat);
+			//For debug
+			System.out.println("!" + chat);
+		}
 	}
 
 	public static void sendDisconnect() {
@@ -90,7 +93,7 @@ public class ClientHandler {
 								disconnect();
 								return;
 							}
-							
+
 							if (!inputLine.startsWith("!")) {
 								//add or modify.
 								// row:col:initrow:initcol:myScore
@@ -98,13 +101,14 @@ public class ClientHandler {
 								int initcolpost = Integer.parseInt(inputLine.split(":")[1]);
 								int movedrowpost = Integer.parseInt(inputLine.split(":")[2]);
 								int movedcolpost = Integer.parseInt(inputLine.split(":")[3]);
-	
+
 								TakTakMultiplayerWindow.initRow = initrowpost;
 								TakTakMultiplayerWindow.initCol = initcolpost;
 								TakTakMultiplayerWindow.movedRow = movedrowpost;
 								TakTakMultiplayerWindow.movedCol = movedcolpost;
-								TakTakMultiplayerWindow.myTurn = !TakTakMultiplayerWindow.myTurn;	
-	                            TakTakMultiplayerWindow.movePieceToLocation(new OrderedPair(initrowpost, initcolpost), new OrderedPair(movedrowpost, movedcolpost));
+								TakTakMultiplayerWindow.myTurn = !TakTakMultiplayerWindow.myTurn;
+								TakTakMultiplayerWindow.movePieceToLocation(new OrderedPair(initrowpost, initcolpost),
+										new OrderedPair(movedrowpost, movedcolpost));
 							}
 						} catch (NumberFormatException | NullPointerException e) {
 							e.printStackTrace();
@@ -119,7 +123,7 @@ public class ClientHandler {
 			}
 		}).start();
 	}
-	
+
 	private static void recieveChat() {
 		new Thread(new Runnable() {
 			@Override
@@ -133,7 +137,7 @@ public class ClientHandler {
 								disconnect();
 								return;
 							}
-							
+
 							if (inputLine.startsWith("!")) {
 								String msg = inputLine.replace("!", "");
 								TakTakMultiplayerWindow.chat.add(msg);

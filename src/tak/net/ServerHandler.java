@@ -60,6 +60,8 @@ public class ServerHandler {
 	public static void sendChat(String chat) {
 		if (connected) {
 			serverOut.println("!" + chat);
+			//For debug
+			System.out.println("!" + chat);
 		}
 	}
 
@@ -126,6 +128,7 @@ public class ServerHandler {
 								disconnect();
 								return;
 							}
+
 							if (inputLine.startsWith("!")) {
 								String msg = inputLine.replace("!", "");
 								TakTakMultiplayerWindow.chat.add(msg);

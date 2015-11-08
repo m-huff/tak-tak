@@ -307,7 +307,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 					currentChatText += KeyEvent.getKeyText(e.getKeyCode());
 				} else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 					currentChatText += " ";
-				} else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+				} else if (e.getKeyCode() == KeyEvent.VK_ENTER && !currentChatText.equals("Chat with your opponent!")) {
 					String finalString = (isClient ? "P1:" : "P2:")
 							+ currentChatText.replaceAll("null", "").toLowerCase();
 
@@ -456,10 +456,13 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 		int chatBoardLength = 22;
 		g.setColor(Color.white);
 
-		if (chat.size() < chatBoardLength) {
+		if (chat.size() <= chatBoardLength) {
 			int chatY = 0;
 			for (String msg : chat) {
-				g.drawString(msg, 600, 100 + chatY);
+				g.setColor((msg.startsWith("P1") ? Color.cyan : Color.green));
+				g.drawString(msg.substring(0, 3), 600, 100 + chatY);
+				g.setColor(Color.white);
+				g.drawString("      " + msg.substring(3), 600, 100 + chatY);
 				chatY += 25;
 			}
 		} else if (chat.size() > chatBoardLength) {
@@ -472,7 +475,10 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 			}
 
 			for (String msg : chatToShow) {
-				g.drawString(msg, 600, 100 + chatY);
+				g.setColor((msg.startsWith("P1") ? Color.cyan : Color.green));
+				g.drawString(msg.substring(0, 3), 600, 100 + chatY);
+				g.setColor(Color.white);
+				g.drawString("      " + msg.substring(3), 600, 100 + chatY);
 				chatY += 25;
 			}
 		}
