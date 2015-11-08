@@ -26,7 +26,7 @@ public class RulesWindow extends JFrame implements Runnable {
 	static final int YBORDER = 20;
 	static final int YTITLE = 30;
 	static final int WINDOW_BORDER = 8;
-	static final int WINDOW_WIDTH = 575;
+	static final int WINDOW_WIDTH = 572;
 	static final int WINDOW_HEIGHT = 640;
 	boolean animateFirstTime = true;
 	int xsize = -1;

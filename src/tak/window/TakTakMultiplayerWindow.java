@@ -39,12 +39,15 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 	static int ysize = -1;
 	Image image;
 	static Graphics2D g;
+	
+	//FULL_WIDTH allows room for the chat area
+	static public final int FULL_WIDTH = 840;
 
 	public static Random rand = new Random();
 	private static final int SCREEN_WIDTH = Toolkit.getDefaultToolkit().getScreenSize().width;
 	private static final int SCREEN_HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().height;
 
-	private static final int CENTER_X = (SCREEN_WIDTH / 2) - (WINDOW_WIDTH / 2);
+	private static final int CENTER_X = (SCREEN_WIDTH / 2) - (FULL_WIDTH / 2);
 	private static final int CENTER_Y = (SCREEN_HEIGHT / 2) - (WINDOW_HEIGHT / 2);
 
 	private final TakTakMultiplayerWindow frame = this;
@@ -80,9 +83,6 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 	public static final int COLUMNS = 6;
 	public static final int ROWS = 7;
 	public static Piece[][] board;
-
-	//FULL_WIDTH allows room for the chat area
-	static public final int FULL_WIDTH = 840;
 
 	//This will hold every chat message sent
 	public static ArrayList<String> chat = new ArrayList<String>();
@@ -290,6 +290,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 		});
 
 		//Writes your keystrokes to the chat thing
+		//This handles all keyboard input, and filters out any button press we shouldn't add to chat
 		addKeyListener(new KeyAdapter() {
 
 			public void keyPressed(KeyEvent e) {
@@ -310,12 +311,22 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 						&& e.getKeyCode() != KeyEvent.VK_F6 && e.getKeyCode() != KeyEvent.VK_F7
 						&& e.getKeyCode() != KeyEvent.VK_F8 && e.getKeyCode() != KeyEvent.VK_F9
 						&& e.getKeyCode() != KeyEvent.VK_F10 && e.getKeyCode() != KeyEvent.VK_F11
-						&& e.getKeyCode() != KeyEvent.VK_F12) {
+						&& e.getKeyCode() != KeyEvent.VK_F12 && e.getKeyCode() != KeyEvent.VK_COMMA
+						&& e.getKeyCode() != KeyEvent.VK_PERIOD && e.getKeyCode() != KeyEvent.VK_SLASH
+						&& e.getKeyCode() != KeyEvent.VK_BACK_SLASH) {
 					if (currentChatText.equals("Chat with your opponent!"))
 						currentChatText = "";
 					currentChatText += KeyEvent.getKeyText(e.getKeyCode());
 				} else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 					currentChatText += " ";
+				} else if (e.getKeyCode() == KeyEvent.VK_COMMA) {
+					currentChatText += ",";
+				} else if (e.getKeyCode() == KeyEvent.VK_PERIOD) {
+					currentChatText += ".";
+				} else if (e.getKeyCode() == KeyEvent.VK_SLASH) {
+					currentChatText += "/";
+				} else if (e.getKeyCode() == KeyEvent.VK_BACK_SLASH) {
+					currentChatText += "\\";
 				} else if (e.getKeyCode() == KeyEvent.VK_QUOTE) {
 					currentChatText += "'";
 				} else if (e.getKeyCode() == KeyEvent.VK_QUOTEDBL) {

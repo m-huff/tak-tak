@@ -26,8 +26,8 @@ public class MenuWindow extends JFrame implements Runnable {
 	static final int YBORDER = 20;
 	static final int YTITLE = 30;
 	static final int WINDOW_BORDER = 8;
-	static final int WINDOW_WIDTH = 2 * (WINDOW_BORDER + XBORDER) + 495;
-	static final int WINDOW_HEIGHT = YTITLE + WINDOW_BORDER + 2 * YBORDER + 225;
+	static final int WINDOW_WIDTH = 2 * (WINDOW_BORDER + XBORDER) + 575;
+	static final int WINDOW_HEIGHT = YTITLE + WINDOW_BORDER + 2 * YBORDER + 170;
 	boolean animateFirstTime = true;
 	int xsize = -1;
 	int ysize = -1;
@@ -77,7 +77,7 @@ public class MenuWindow extends JFrame implements Runnable {
 				int xpos = e.getX();
 				int ypos = e.getY() + 2;
 
-				if (xpos >= 475 && xpos <= 530 && ypos >= textPosition + 10 && ypos <= textPosition + 45)
+				if (xpos >= 475 && xpos <= 620 && ypos >= textPosition + 10 && ypos <= textPosition + 45)
 					mouseoverRules = true;
 				else
 					mouseoverRules = false;
@@ -182,8 +182,13 @@ public class MenuWindow extends JFrame implements Runnable {
 //		g.setFont(new Font("Arial", Font.BOLD, 42));
 //		g.drawString("TAK-TAK", textPosition - 105, 80);
 		
-		g.drawImage(logo.getImage(), textPosition - 105, 35, null);
+		g.drawImage(logo.getImage(), textPosition - 28, 35, null);
 
+		if (mouseoverRules)
+			g.drawImage(hoverButton.getImage(), 465, textPosition + 10, null);
+		else
+			g.drawImage(button.getImage(), 465, textPosition + 10, null);
+		
 		if (mouseoverServer)
 			g.drawImage(hoverButton.getImage(), 320, textPosition + 10, null);
 		else
@@ -201,8 +206,8 @@ public class MenuWindow extends JFrame implements Runnable {
 
 		g.setFont(new Font("Arial", Font.BOLD, 16));
 
-		g.setColor(mouseoverRules ? Color.red : Color.white);
-		g.drawString("Rules", 485, textPosition + 34);
+		g.setColor(mouseoverRules ? Color.red : Color.black);
+		g.drawString("Learn the Rules", 476, textPosition + 34);
 		g.setColor(mouseoverAI ? Color.red : Color.black);
 		g.drawString("Play Vs. AI", 59, textPosition + 34);
 		g.setColor(mouseoverClient ? Color.red : Color.black);

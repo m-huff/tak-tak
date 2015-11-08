@@ -151,7 +151,7 @@ public class ServerHandler {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-
+				System.out.println("done running");
 			}
 		}).start();
 	}
