@@ -59,9 +59,9 @@ public class ServerHandler {
 	
 	public static void sendChat(String chat) {
 		if (connected) {
-			serverOut.println("!" + chat);
+			serverOut.println("CHAT " + chat);
 			//For debug
-			System.out.println("!" + chat);
+			System.out.println("CHAT " + chat);
 		}
 	}
 
@@ -129,8 +129,8 @@ public class ServerHandler {
 								return;
 							}
 
-							if (inputLine.startsWith("!")) {
-								String msg = inputLine.replace("!", "");
+							if (inputLine.startsWith("CHAT")) {
+								String msg = inputLine.replace("CHAT ", "");
 								TakTakMultiplayerWindow.chat.add(msg);
 								System.out.println("\"" + msg + "\" was added to server chat");
 							}
