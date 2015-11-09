@@ -323,6 +323,9 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 						currentChatText = "";
 					currentChatText += KeyEvent.getKeyText(e.getKeyCode());
 				} else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+                                    if (currentChatText.equals("Chat with your opponent!"))
+                                        currentChatText = " ";
+                                    else
 					currentChatText += " ";
 				} else if (e.getKeyCode() == KeyEvent.VK_COMMA) {
 					currentChatText += ",";
@@ -550,7 +553,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 
 			g.setFont(new Font("Arial", Font.BOLD, 16));
 			g.setColor(mouseoverReturn ? Color.red : Color.black);
-			g.drawString("Return to Menu", 287, 425);
+			g.drawString("Return to Menu", 240, 470);
 
 			if (gameDelayTimer > 0) {
 				gameDelayTimer--;

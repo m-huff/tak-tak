@@ -527,6 +527,29 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
                     selCircling += 0.125;
                 else
                     selCircling -= 0.125;
+                
+                if (numWhitePiecesOnBoard == 0 || numBlackPiecesOnBoard == 0) {
+				//If one side doesn't have any more pieces
+				//Score all remaining pieces
+				for (int zRow = 0; zRow < ROWS; zRow++) {
+					for (int zColumn = 0; zColumn < COLUMNS; zColumn++) {
+						if (board[zRow][zColumn] != null) {
+							if (board[zRow][zColumn].getTopPiece().getBackgroundColor() == Color.black) {
+								aiScore += board[zRow][zColumn].getValue();
+								ScoreFader sf2 = new ScoreFader(board[zRow][zColumn].getValue(),getX(0) + zColumn * getWidth2() / COLUMNS,
+										getY(0) + zRow * getHeight2() / ROWS, new Color(128, 64, 64));
+							} else {
+								myScore += board[zRow][zColumn].getValue();
+								ScoreFader sf2 = new ScoreFader(board[zRow][zColumn].getValue(),getX(0) + zColumn * getWidth2() / COLUMNS,
+										getY(0) + zRow * getHeight2() / ROWS, new Color(64, 180, 64));
+							}
+							board[zRow][zColumn] = null;
+						}
+					}
+				}
+				//End the game
+				chooseWinner();
+			}
 	}
 
 	public static void movePieceToLocation(OrderedPair piece, OrderedPair location) {
@@ -567,28 +590,6 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 			numPiecesOnBoard -= board[location.getX()][location.getY()].getWholeStack().size();
 			board[location.getX()][location.getY()] = null;
 			move = new Sound("chaching.wav");
-			if (numWhitePiecesOnBoard == 0 || numBlackPiecesOnBoard == 0) {
-				//If one side doesn't have any more pieces
-				//Score all remaining pieces
-				for (int zRow = 0; zRow < ROWS; zRow++) {
-					for (int zColumn = 0; zColumn < COLUMNS; zColumn++) {
-						if (board[zRow][zColumn] != null) {
-							if (board[zRow][zColumn].getTopPiece().getBackgroundColor() == Color.black) {
-								aiScore += board[zRow][zColumn].getValue();
-								ScoreFader sf2 = new ScoreFader(board[zRow][zColumn].getValue(),getX(0) + zColumn * getWidth2() / COLUMNS,
-										getY(0) + zRow * getHeight2() / ROWS, new Color(128, 64, 64));
-							} else {
-								myScore += board[zRow][zColumn].getValue();
-								ScoreFader sf2 = new ScoreFader(board[zRow][zColumn].getValue(),getX(0) + zColumn * getWidth2() / COLUMNS,
-										getY(0) + zRow * getHeight2() / ROWS, new Color(64, 180, 64));
-							}
-							board[zRow][zColumn] = null;
-						}
-					}
-				}
-				//End the game
-				chooseWinner();
-			}
 		}
 	}
 
