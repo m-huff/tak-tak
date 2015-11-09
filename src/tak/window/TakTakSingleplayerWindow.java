@@ -80,6 +80,9 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 	public static int aiScore;
 	public static int aiMoveDelay;
 	public static int aiWins;
+        
+        public static double selCircling;
+        public static boolean selExpanding;
 	
 	public static int fadeOut;
         
@@ -471,6 +474,9 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 		
 		myScore = 0;
 		aiScore = 0;
+                
+                selCircling = 0.25;
+                selExpanding = true;
 		
 		winner = EnumWinner.None;
 	}
@@ -504,6 +510,14 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 		} else {
 			turn++;
 		}
+                if(selCircling >3.5)
+                    selExpanding = false;
+                else if (selCircling <1.5)
+                    selExpanding = true;
+                if(selExpanding)
+                    selCircling += 0.125;
+                else
+                    selCircling -= 0.125;
 	}
 
 	public static void movePieceToLocation(OrderedPair piece, OrderedPair location) {
@@ -701,47 +715,23 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 		// that space is not possible.
 
 		g.setColor(new Color(10, 10, 10, 150));
-                drawCircle(column * (getWidth2() / COLUMNS) + getX(0) + (getWidth2() / COLUMNS/2)+1, row * (getHeight2() / ROWS) + getY(0)+ (getHeight2() / ROWS/2)+4,0, 1+selCircling, 1+selCircling);
+                drawCircle(column * (getWidth2() / COLUMNS) + getX(0) + (getWidth2() / COLUMNS/2)+1, row * (getHeight2() / ROWS) + getY(0)+ (getHeight2() / ROWS/2)+4,0, selCircling, selCircling);
 
 		Piece p = board[row][column];
-		int pieceDirection = (p.getTopPiece().getBackgroundColor() == Color.black ? 0 : 1);
 		g.setColor(new Color(64, 128, 64, 150));
 
-		if (pieceDirection == 1) {
 			if (canPieceMoveToLocation(p.getTopPiece(), row - 1, column)) {
-				g.fillRect(column * (getWidth2() / COLUMNS) + getX(0), (row - 1) * (getHeight2() / ROWS) + getY(0), 94,
-						94);
+				drawCircle(column * (getWidth2() / COLUMNS) + getX(0) + (getWidth2() / COLUMNS/2)+1, (row-1) * (getHeight2() / ROWS) + getY(0)+ (getHeight2() / ROWS/2)+4,0, 3.5, 3.5);
 				validMoves.add(new OrderedPair(row - 1, column));
 			}
 			if (canPieceMoveToLocation(p.getTopPiece(), row - 1, column + 1)) {
-				g.fillRect((column + 1) * (getWidth2() / COLUMNS) + getX(0),
-						(row - 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
+			drawCircle((column+1) * (getWidth2() / COLUMNS) + getX(0) + (getWidth2() / COLUMNS/2)+1, (row-1) * (getHeight2() / ROWS) + getY(0)+ (getHeight2() / ROWS/2)+4,0, 3.5, 3.5);
 				validMoves.add(new OrderedPair(row - 1, column + 1));
 			}
 			if (canPieceMoveToLocation(p.getTopPiece(), row - 1, column - 1)) {
-				g.fillRect((column - 1) * (getWidth2() / COLUMNS) + getX(0),
-						(row - 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
+	        	drawCircle((column-1) * (getWidth2() / COLUMNS) + getX(0) + (getWidth2() / COLUMNS/2)+1, (row-1) * (getHeight2() / ROWS) + getY(0)+ (getHeight2() / ROWS/2)+4,0, 3.5, 3.5);
 				validMoves.add(new OrderedPair(row - 1, column - 1));
 			}
-		}
-
-		if (pieceDirection == 0) {
-			if (canPieceMoveToLocation(p.getTopPiece(), row + 1, column)) {
-				g.fillRect(column * (getWidth2() / COLUMNS) + getX(0), (row + 1) * (getHeight2() / ROWS) + getY(0), 94,
-						94);
-				validMoves.add(new OrderedPair(row + 1, column));
-			}
-			if (canPieceMoveToLocation(p.getTopPiece(), row + 1, column + 1)) {
-				g.fillRect((column + 1) * (getWidth2() / COLUMNS) + getX(0),
-						(row + 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
-				validMoves.add(new OrderedPair(row + 1, column + 1));
-			}
-			if (canPieceMoveToLocation(p.getTopPiece(), row + 1, column - 1)) {
-				g.fillRect((column - 1) * (getWidth2() / COLUMNS) + getX(0),
-						(row + 1) * (getHeight2() / ROWS) + getY(0), 94, 94);
-				validMoves.add(new OrderedPair(row + 1, column - 1));
-			}
-		}
 	}
 	
 	
