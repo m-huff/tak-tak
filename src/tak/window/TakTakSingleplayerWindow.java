@@ -1,5 +1,6 @@
 package tak.window;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -345,7 +346,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 
 		for (int zRow = 0; zRow < ROWS; zRow++) {
 			for (int zColumn = 0; zColumn < COLUMNS; zColumn++) {
-				if (board[zRow][zColumn] != null) {
+				if (board[zRow][zColumn] != null) {          
 					board[zRow][zColumn].draw(g, getX(0) + zColumn * getWidth2() / COLUMNS,
 							getY(0) + zRow * getHeight2() / ROWS);
 				}
@@ -713,7 +714,8 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 		// same color or value as the piece you're moving. Kings can move onto any piece,
 		// no matter what the value or color. If a piece/stack is a king, then a move to
 		// that space is not possible.
-
+                Graphics2D g2d = (Graphics2D)image.getGraphics();
+                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.3f));
 		g.setColor(new Color(10, 10, 10, 150));
                 drawCircle(column * (getWidth2() / COLUMNS) + getX(0) + (getWidth2() / COLUMNS/2)+1, row * (getHeight2() / ROWS) + getY(0)+ (getHeight2() / ROWS/2)+4,0, selCircling, selCircling);
 
@@ -721,15 +723,18 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 		g.setColor(new Color(64, 128, 64, 150));
 
 			if (canPieceMoveToLocation(p.getTopPiece(), row - 1, column)) {
-				drawCircle(column * (getWidth2() / COLUMNS) + getX(0) + (getWidth2() / COLUMNS/2)+1, (row-1) * (getHeight2() / ROWS) + getY(0)+ (getHeight2() / ROWS/2)+4,0, 3.5, 3.5);
-				validMoves.add(new OrderedPair(row - 1, column));
+                        p.draw(g2d, getX(0) + column * getWidth2() / COLUMNS,
+			getY(0) + (row-1) * getHeight2() / ROWS);
+                                validMoves.add(new OrderedPair(row - 1, column));
 			}
 			if (canPieceMoveToLocation(p.getTopPiece(), row - 1, column + 1)) {
-			drawCircle((column+1) * (getWidth2() / COLUMNS) + getX(0) + (getWidth2() / COLUMNS/2)+1, (row-1) * (getHeight2() / ROWS) + getY(0)+ (getHeight2() / ROWS/2)+4,0, 3.5, 3.5);
+			p.draw(g2d, getX(0) + (column+1) * getWidth2() / COLUMNS,
+			getY(0) + (row-1) * getHeight2() / ROWS);
 				validMoves.add(new OrderedPair(row - 1, column + 1));
 			}
 			if (canPieceMoveToLocation(p.getTopPiece(), row - 1, column - 1)) {
-	        	drawCircle((column-1) * (getWidth2() / COLUMNS) + getX(0) + (getWidth2() / COLUMNS/2)+1, (row-1) * (getHeight2() / ROWS) + getY(0)+ (getHeight2() / ROWS/2)+4,0, 3.5, 3.5);
+	        	p.draw(g2d, getX(0) + (column-1) * getWidth2() / COLUMNS,
+			getY(0) + (row-1) * getHeight2() / ROWS);
 				validMoves.add(new OrderedPair(row - 1, column - 1));
 			}
 	}
