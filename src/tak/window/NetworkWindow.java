@@ -309,7 +309,7 @@ public class NetworkWindow extends JFrame implements Runnable {
 		}
 		g.drawString("Enter an IP address to play against", 30, 90);
 		//g.drawString("Press " + (isPotentialGameClient ? "C" : "S") + " to attempt to " + (isPotentialGameClient ? "join" : "start") + " a game", 30, 280);
-		g.drawString("You will play as " + (isPotentialGameClient ? "WHITE" : "BLACK"), 30, 280);
+		g.drawString("You will play as " + (isPotentialGameClient ? "BLACK" : "WHITE"), 30, 280);
 		g.drawString("Opponent IP: " + ipAddress, 30, 110);
 		
 		if (mouseoverPlay)
@@ -342,7 +342,7 @@ public class NetworkWindow extends JFrame implements Runnable {
 		for (int i = 0; i < 20; i++) {
 			Color[] colors = {Color.orange, Color.blue, Color.green };
 			Piece p = new Piece((rand.nextInt(4) * 10) + 10, colors[rand.nextInt(colors.length)],
-					rand.nextBoolean() ? Color.black : Color.white);
+					isPotentialGameClient ? Color.black : Color.white);
 			if (rand.nextInt(10) == 0)
 				p.setKing(true);
 			pieces.add(p); 

@@ -31,9 +31,7 @@ public class ServerHandler {
 		serverOut = new PrintWriter(client.getOutputStream(), true);
 		serverIn = new BufferedReader(new InputStreamReader(client.getInputStream()));
 		connected = true;
-		recievePieceMove();
-		recieveChat();
-		System.out.println("recieveChat happened");
+		receiveData();
 	}
 
 	public static void disconnect() {
@@ -72,7 +70,7 @@ public class ServerHandler {
 		}
 	}
 
-	private static void recievePieceMove() {
+	private static void receiveData() {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -99,6 +97,11 @@ public class ServerHandler {
 								TakTakMultiplayerWindow.movedCol = movedcolpost;
 								TakTakMultiplayerWindow.myTurn = !TakTakMultiplayerWindow.myTurn;
 	                            TakTakMultiplayerWindow.movePieceToLocation(new OrderedPair(initrowpost, initcolpost), new OrderedPair(movedrowpost, movedcolpost));
+							} else {
+								System.out.println("found one");
+								String msg = inputLine.replace("CHAT ", "");
+								TakTakMultiplayerWindow.chat.add(msg);
+								System.out.println("\"" + msg + "\" was added to server chat");
 							}
 						} catch (NumberFormatException | NullPointerException e) {
 							e.printStackTrace();
@@ -116,46 +119,6 @@ public class ServerHandler {
 		}).start();
 	}
 	
-	private static void recieveChat() {
-		System.out.println("thread opened");
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				String inputLine;
-
-				try {
-					System.out.println("starting the loop");
-					while ((inputLine = serverIn.readLine()) != null) {
-						try {
-							if (inputLine.equals("esc")) {
-								disconnect();
-								return;
-							}
-							
-							System.out.println("checking for new chat messages");
-
-							if (inputLine.startsWith("CHAT")) {
-								System.out.println("found one");
-								String msg = inputLine.replace("CHAT ", "");
-								TakTakMultiplayerWindow.chat.add(msg);
-								System.out.println("\"" + msg + "\" was added to server chat");
-							}
-						} catch (NumberFormatException | NullPointerException e) {
-							e.printStackTrace();
-							if (e instanceof NullPointerException)
-								disconnect();
-						}
-					}
-				} catch (SocketException e) {
-					disconnect();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				System.out.println("done running");
-			}
-		}).start();
-	}
-
 	public static boolean isConnected() {
 		return connected;
 	}

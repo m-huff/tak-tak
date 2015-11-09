@@ -37,9 +37,7 @@ public class ClientHandler {
 		serverOut = new PrintWriter(server.getOutputStream(), true);
 		serverIn = new BufferedReader(new InputStreamReader(server.getInputStream()));
 		connected = true;
-		recievePieceMove();
-		recieveChat();
-		System.out.println("recieveChat happened");
+		receiveData();
 	}
 
 	public static void disconnect() {
@@ -80,7 +78,7 @@ public class ClientHandler {
 		}
 	}
 
-	private static void recievePieceMove() {
+	private static void receiveData() {
 		new Thread(new Runnable() {
 
 			@Override
@@ -110,40 +108,7 @@ public class ClientHandler {
 								TakTakMultiplayerWindow.myTurn = !TakTakMultiplayerWindow.myTurn;
 								TakTakMultiplayerWindow.movePieceToLocation(new OrderedPair(initrowpost, initcolpost),
 										new OrderedPair(movedrowpost, movedcolpost));
-							}
-						} catch (NumberFormatException | NullPointerException e) {
-							e.printStackTrace();
-							if (e instanceof NullPointerException)
-								disconnect();
-						}
-					}
-				} catch (IOException e) {
-					disconnect();
-				}
-
-			}
-		}).start();
-	}
-
-	private static void recieveChat() {
-		System.out.println("thread opened");
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				String inputLine;
-
-				try {
-					System.out.println("starting the loop");
-					while ((inputLine = serverIn.readLine()) != null) {
-						try {
-							if (inputLine.equals("esc")) {
-								disconnect();
-								return;
-							}
-							
-							System.out.println("looking for new chat messages");
-
-							if (inputLine.startsWith("CHAT")) {
+							} else {
 								System.out.println("found one");
 								String msg = inputLine.replace("CHAT ", "");
 								TakTakMultiplayerWindow.chat.add(msg);
@@ -155,16 +120,14 @@ public class ClientHandler {
 								disconnect();
 						}
 					}
-				} catch (SocketException e) {
-					disconnect();
 				} catch (IOException e) {
-					e.printStackTrace();
+					disconnect();
 				}
 
 			}
 		}).start();
 	}
-
+        
 	public static boolean isConnected() {
 		return connected;
 	}

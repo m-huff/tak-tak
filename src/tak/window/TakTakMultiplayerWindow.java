@@ -291,6 +291,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 
 		//Writes your keystrokes to the chat thing
 		//This handles all keyboard input, and filters out any button press we shouldn't add to chat
+                //Mr. Yee - please don't even look at this, it's terrible
 		addKeyListener(new KeyAdapter() {
 
 			public void keyPressed(KeyEvent e) {
@@ -453,6 +454,8 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 		g.setFont(new Font("Arial Bold", Font.BOLD, 18));
 		g.drawString((myTurn ? "YOUR (" + (myColor == Color.black ? "BLACK" : "WHITE") + ")" : "OPPONENT'S") + " Turn",
 				myTurn ? 205 : 210, 55);
+                g.setFont(new Font("Arial Bold", Font.BOLD, 24));
+                g.drawString("CHAT ROOM", 600, 55);
 		g.setFont(new Font("Arial Bold", Font.BOLD, 14));
 		g.drawString("Turn #" + (turn + 1), 270, 40);
 
@@ -470,10 +473,13 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 		g.setFont(new Font("Arial Bold", Font.BOLD, 14));
 
 		if (currentChatText != null) {
-			String finalText = currentChatText.replaceAll("null", "").toLowerCase();
-			g.drawString(
-					finalText.length() > stringWrap ? finalText.substring(finalText.length() - stringWrap) : finalText,
-					598, 690);
+			String finalText = currentChatText.replaceAll("null", "");
+                        
+                        if (!finalText.equals("Chat with your opponent!"))
+                            finalText = finalText.toLowerCase();
+                        
+			g.drawString(finalText.length() > stringWrap ? finalText.substring(finalText.length() - stringWrap) : finalText,
+                        598, 690);
 		}
 
 		//The most recent chat is displayed
@@ -483,10 +489,12 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 		if (chat.size() <= chatBoardLength) {
 			int chatY = 0;
 			for (String msg : chat) {
+                            boolean flag = msg.length() > 20;
+                            
 				g.setColor((msg.startsWith("P1") ? Color.cyan : Color.green));
 				g.drawString(msg.substring(0, 3), 600, 100 + chatY);
 				g.setColor(Color.white);
-				g.drawString("      " + msg.substring(3), 600, 100 + chatY);
+				g.drawString("      " + (flag ? msg.substring(3, 20) : msg.substring(3)), 600, 100 + chatY);
 				chatY += 25;
 			}
 		} else if (chat.size() > chatBoardLength) {
@@ -499,10 +507,12 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 			}
 
 			for (String msg : chatToShow) {
+                            boolean flag = msg.length() > 20;
+                            
 				g.setColor((msg.startsWith("P1") ? Color.cyan : msg.startsWith("GAME") ? Color.orange : Color.green));
 				g.drawString(msg.substring(0, 3), 600, 100 + chatY);
 				g.setColor(Color.white);
-				g.drawString("      " + msg.substring(3), 600, 100 + chatY);
+                                g.drawString("      " + (flag ? msg.substring(3, 20) : msg.substring(3)), 600, 100 + chatY);
 				chatY += 25;
 			}
 		}
