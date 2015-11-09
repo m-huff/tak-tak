@@ -342,7 +342,7 @@ public class NetworkWindow extends JFrame implements Runnable {
 		for (int i = 0; i < 20; i++) {
 			Color[] colors = {Color.orange, Color.blue, Color.green };
 			Piece p = new Piece((rand.nextInt(4) * 10) + 10, colors[rand.nextInt(colors.length)],
-					isPotentialGameClient ? Color.black : Color.white);
+					rand.nextBoolean() ? Color.black : Color.white);
 			if (rand.nextInt(10) == 0)
 				p.setKing(true);
 			pieces.add(p); 
