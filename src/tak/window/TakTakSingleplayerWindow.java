@@ -77,6 +77,8 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 	
 	public static int myScore;
 	public static int myWins;
+        
+        public static int selOpaque;
 	
 	public static int aiScore;
 	public static int aiMoveDelay;
@@ -212,6 +214,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 						if (board[currentRow][currentColumn].getTopPiece().getBackgroundColor() == Color.white) {
 							selectedRow = currentRow;
 							selectedColumn = currentColumn;
+                                                        selOpaque = 1;
 						}
 					} else if (selectedRow != 999) {
 						boolean movedPiece = false;
@@ -495,7 +498,8 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 			}
 			reset();
 		}
-
+                
+                
 		if (tipTime < 200) {
 			tipTime++;
 		} else {
@@ -727,9 +731,12 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 		g.setColor(new Color(64, 128, 64, 150));
 
 			if (canPieceMoveToLocation(p.getTopPiece(), row - 1, column)) {
-                        p.draw(g2d, getX(0) + column * getWidth2() / COLUMNS,
-			getY(0) + (row-1) * getHeight2() / ROWS);
-                                validMoves.add(new OrderedPair(row - 1, column));
+                            if(board[row-1][column] == null)
+                                p.draw(g2d, getX(0) + column * getWidth2() / COLUMNS,
+                                getY(0) + (row-1) * getHeight2() / ROWS);
+                            else
+                                
+                                        validMoves.add(new OrderedPair(row - 1, column));
 			}
 			if (canPieceMoveToLocation(p.getTopPiece(), row - 1, column + 1)) {
 			p.draw(g2d, getX(0) + (column+1) * getWidth2() / COLUMNS,
