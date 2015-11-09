@@ -280,6 +280,10 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 					selectedColumn = 999;
 					validMoves.clear();
 				}
+                                if (e.VK_ESCAPE == e.getKeyCode()) {
+					new MenuWindow();
+					frame.dispose();
+				}
 				repaint();
 			}
 		});
