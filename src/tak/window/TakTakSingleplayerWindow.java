@@ -169,7 +169,6 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 					return;
 				if (MouseEvent.BUTTON1 == e.getButton() && mouseoverPlayAgain) {
 					reset();
-                                        resetBoard();
 				} else if (MouseEvent.BUTTON1 == e.getButton() && mouseoverReturn) {
 					reset();
 					myWins = 0;
@@ -462,7 +461,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 
 	public void reset() {
 		board = new Piece[ROWS][COLUMNS];
-		resetBoard();
+
 		
 		//4 rows of 6
 		numPiecesOnBoard = 24;
@@ -488,6 +487,9 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
                 selExpanding = true;
 		
 		winner = EnumWinner.None;
+                
+                faders.clear();
+                resetBoard();
 	}
 
 	public void animate() {
