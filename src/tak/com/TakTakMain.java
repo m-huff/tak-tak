@@ -4,14 +4,11 @@ import tak.util.Sound;
 import tak.window.MenuWindow;
 
 public class TakTakMain {
-	
-	//Music - http://opsound.org/artist/macroform/ - public domain
+
 	//SFX - http://www.wavsource.com/sfx/sfx.htm - public domain
-    //Logo - http://www.flamingtext.com/net-fu/dynamic.cgi?script=inferno-logo
 	
 	//TODO
-    // - more sounds
-    // - buttons after a game has ended
+        // - buttons in more places
 
 	static Sound music = new Sound("darude_sandstorm.wav");
 
