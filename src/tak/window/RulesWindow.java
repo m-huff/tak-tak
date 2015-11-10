@@ -173,8 +173,8 @@ public class RulesWindow extends JFrame implements Runnable {
 		
 		if (currentSlide == 0 && !hasChangedSlides) {
 			g.setFont(new Font("Arial", Font.BOLD, 12));
-			g.setColor(Color.darkGray);
-			g.drawString("USE THE LEFT AND RIGHT ARROW KEYS TO NAVIGATE THE RULES", 102, 590);
+			g.setColor(Color.orange);
+			g.drawString("USE THE LEFT AND RIGHT ARROW KEYS TO NAVIGATE THE RULES", 102, 630);
 		}
 
 		g.setColor(new Color(240, 240, 240));

@@ -8,7 +8,10 @@ public class TakTakMain {
 	//SFX - http://www.wavsource.com/sfx/sfx.htm - public domain
 	
 	//TODO
-        // - buttons in more places
+        // - smaller button images for rules window
+        // - more buttons, extend game window to make room for quit/forfeit/help buttons
+        // - more sound effects
+        // - mute button maybe
 
 	static Sound music = new Sound("darude_sandstorm.wav");
 
