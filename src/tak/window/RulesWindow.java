@@ -50,26 +50,28 @@ public class RulesWindow extends JFrame implements Runnable {
 	public static String[] imageText = {"Tak-Tak pieces can move forward, straight and diagonally.",
 										"You can move your own pieces on top of each other, stacking them.",
 										"Right-click a piece to see how many pieces are in its stack.",
-										"The more pieces in a stack, the higher the point value.",
+										"Stacking pieces lets you make more efficient use of your turns,",
 										"Getting your pieces into the opponent's safe zone is how you score.",
-										"You can't stack pieces on the opponent's if in their safe zone.",
-										"Stacks can be worth an unlimited number of points; there is no limit.",
+										"In your safe zone, your pieces are safe from being stacked on.",
+										"Stacking pieces allows you to score more points with a single move;",
+										"Stacking on top of another piece/stack will add its points to",
 										"You can stack on top of opponent's stacks to make them your own.",
-										"The king can never be stacked on top of, but can stack on top of",
-										"Your goal is to score the most points in your opponent's safe zone.",
-										"Stacking your and your opponent's pieces allows you to deny"};
+										"The king can never be stacked on top of, and can also stack",
+										"Your goal is to score the most points in your opponent's safe zone."
+										};
 	
 	public static String[] imageText2 = {"If you accidentally select a piece, press BACKSPACE to cancel.",
 										"You can only stack pieces if they have the same point value or color.",
 										"This display will also tell you the total point value of the stack.",
-										"",
+										"allowing you to move more of your pieces across the board in a turn.",
 										"When a piece reaches the opponent's safe zone, it disappears.",
+										"Likewise, you can't stack on your opponent's pieces in their safe zone.",
+                                        "there is no limit to how many points you can score from a single stack!",
+                                        "the stack that stacked on top of it.",
+										"You will be able to control any stack whose top piece is your color.",
+										"on top of any other piece, regardless of color/number.",
 										"",
-                                        "",
-										"You can then control them for yourself, and score them.",
-										"others.",
-										"",
-										"them their pieces' points, and gives you the opportunity to score."};
+										};
 
 	
 	public static ArrayList<Piece> pieces = new ArrayList<Piece>();
