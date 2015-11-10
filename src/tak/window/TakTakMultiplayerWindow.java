@@ -300,7 +300,6 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 
 		//Writes your keystrokes to the chat thing
 		//This handles all keyboard input we want to add to the chat
-        //Mr. Yee - please don't even look at this, it's terrible
 		addKeyListener(new KeyAdapter() {
 
 			public void keyPressed(KeyEvent e) {
