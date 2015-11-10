@@ -933,8 +933,10 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 		if (location.getX() >= 5 || location.getX() < 2) {
 			if (location.getX() >= 5
 					&& board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.black) {
-				if (isClient)
+				if (isClient) {
+					move = new Sound("chaching.wav");
 					myScore += board[location.getX()][location.getY()].getValue();
+				}
 				else
 					opponentScore += board[location.getX()][location.getY()].getValue();
 
@@ -943,8 +945,10 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 			//"my" pieces are white if I'm a server
 			else if (location.getX() < 2
 					&& board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.white) {
-				if (!isClient)
+				if (!isClient) {
 					myScore += board[location.getX()][location.getY()].getValue();
+					move = new Sound("chaching.wav");
+				}
 				else
 					opponentScore += board[location.getX()][location.getY()].getValue();
 
@@ -972,7 +976,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 
 				board[location.getX()][location.getY()] = null;
 			}
-			move = new Sound("chaching.wav");
+
 		}
 	}
 
