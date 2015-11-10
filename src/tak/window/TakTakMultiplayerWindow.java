@@ -279,9 +279,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
-				if (fadeOut < 150)
-					return;
-				if (MouseEvent.BUTTON1 == e.getButton() && mouseoverReturn) {
+				if (MouseEvent.BUTTON1 == e.getButton() && mouseoverReturn && fadeOut >= 150) {
 					if (isClient) {
 						ClientHandler.sendDisconnect();
 						ClientHandler.disconnect();
