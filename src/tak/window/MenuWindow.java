@@ -208,7 +208,7 @@ public class MenuWindow extends JFrame implements Runnable {
 		g.setColor(mouseoverRules ? Color.red : Color.black);
 		g.drawString("Learn the Rules", 476, textPosition + 34);
 		g.setColor(mouseoverAI ? Color.red : Color.black);
-		g.drawString("Play Vs. AI", 59, textPosition + 34);
+		g.drawString("Play vs. AI", 59, textPosition + 34);
 		g.setColor(mouseoverClient ? Color.red : Color.black);
 		g.drawString("Play as Client", 194, textPosition + 34);
 		g.setColor(mouseoverServer ? Color.red : Color.black);
