@@ -732,12 +732,9 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 		g.setColor(new Color(64, 128, 64, 150));
 
 			if (canPieceMoveToLocation(p.getTopPiece(), row - 1, column)) {
-                            if(board[row-1][column] == null)
                                 p.draw(g2d, getX(0) + column * getWidth2() / COLUMNS,
                                 getY(0) + (row-1) * getHeight2() / ROWS);
-                            else
-                                
-                                        validMoves.add(new OrderedPair(row - 1, column));
+                                validMoves.add(new OrderedPair(row - 1, column));
 			}
 			if (canPieceMoveToLocation(p.getTopPiece(), row - 1, column + 1)) {
 			p.draw(g2d, getX(0) + (column+1) * getWidth2() / COLUMNS,
