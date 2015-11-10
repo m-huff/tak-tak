@@ -289,6 +289,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 					}
 					myWins = 0;
 					opponentWins = 0;
+                                        reset();
 					controller.dispose();
 					frame.dispose();
 				}
