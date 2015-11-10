@@ -294,7 +294,7 @@ public class NetworkWindow extends JFrame implements Runnable {
 			}
 		}
 
-		g.setColor(new Color(0, 0, 0, 230));
+		g.setColor(new Color(0, 0, 0, 190));
 		g.fillRect(0, 0, WINDOW_WIDTH, 130);
 		g.fillRect(0, 255, WINDOW_WIDTH, 60);
 

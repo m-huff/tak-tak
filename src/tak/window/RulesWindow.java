@@ -156,7 +156,7 @@ public class RulesWindow extends JFrame implements Runnable {
 			}
 		}
 		
-		g.setColor(new Color(0, 0, 0, 230));
+		g.setColor(new Color(0, 0, 0, 190));
 		g.fillRect(0, 0, WINDOW_WIDTH, 100);
 
 		g.setColor(new Color(240, 240, 240));
