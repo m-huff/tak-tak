@@ -761,6 +761,8 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 		g.drawString("Help", 734, 724);
 		
 		if (winner != EnumWinner.None) {
+                    g.setColor(new Color(255, 255, 255, fadeOut));
+                    g.setFont(new Font("Arial Bold", Font.PLAIN, 36));
 			if (winner == EnumWinner.PlayerOne)
 				g.drawString("You win!", 220, 300);
 			if (winner == EnumWinner.PlayerAI)
@@ -771,7 +773,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 				g.drawString("You tied!", 220, 300);
 
 			g.setFont(new Font("Arial Bold", Font.PLAIN, 22));
-			g.drawString("New game begins in " + ((gameDelayTimer / 25) + 1) + " seconds", 160, 390);
+			g.drawString("New game begins in " + ((gameDelayTimer / 25) + 1) + " seconds", 140, 390);
 			//g.drawString("Press ESC to disconnect to the main menu", 90, 410);
 
 			if (fadeOut < 230)
