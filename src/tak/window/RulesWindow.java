@@ -93,11 +93,6 @@ public class RulesWindow extends JFrame implements Runnable {
 
 			@SuppressWarnings("static-access")
 			public void keyPressed(KeyEvent e) {
-				if (e.VK_ESCAPE == e.getKeyCode()) {
-					new MenuWindow();
-					frame.dispose();
-				}
-				
 				if (e.VK_RIGHT == e.getKeyCode()) {
 					if (currentSlide < images.size() - 1)
 						currentSlide++;

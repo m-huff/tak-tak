@@ -176,10 +176,6 @@ public class MenuWindow extends JFrame implements Runnable {
 
 		g.setColor(new Color(0, 0, 0, 190));
 		g.fillRect(0, 0, WINDOW_WIDTH, textPosition + 60);
-
-//		g.setColor(new Color(240, 240, 240));
-//		g.setFont(new Font("Arial", Font.BOLD, 42));
-//		g.drawString("TAK-TAK", textPosition - 105, 80);
 		
 		g.drawImage(logo.getImage(), textPosition - 28, 35, null);
 
