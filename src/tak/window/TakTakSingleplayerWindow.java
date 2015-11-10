@@ -169,6 +169,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 					return;
 				if (MouseEvent.BUTTON1 == e.getButton() && mouseoverPlayAgain) {
 					reset();
+                                        resetBoard();
 				} else if (MouseEvent.BUTTON1 == e.getButton() && mouseoverReturn) {
 					reset();
 					myWins = 0;
@@ -528,7 +529,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
                 else
                     selCircling -= 0.125;
                 
-                if (numWhitePiecesOnBoard == 0 || numBlackPiecesOnBoard == 0) {
+                if ((numWhitePiecesOnBoard == 0 || numBlackPiecesOnBoard == 0) && winner == EnumWinner.None) {
 				//If one side doesn't have any more pieces
 				//Score all remaining pieces
 				for (int zRow = 0; zRow < ROWS; zRow++) {
