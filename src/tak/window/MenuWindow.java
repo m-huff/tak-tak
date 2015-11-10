@@ -122,7 +122,6 @@ public class MenuWindow extends JFrame implements Runnable {
 				} else if (MouseEvent.BUTTON1 == e.getButton() && mouseoverRules) {
 					final RulesWindow rw = new RulesWindow();
 					rw.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-					frame.dispose();
 				}
 			}
 		});

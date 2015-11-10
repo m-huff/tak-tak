@@ -115,7 +115,7 @@ public class NetworkWindow extends JFrame implements Runnable {
                               }
                               else if (e.getKeyCode() == KeyEvent.VK_5)
                               {
-                                  ipAddress += "=5";
+                                  ipAddress += "5";
                               }
                               else if (e.getKeyCode() == KeyEvent.VK_6)
                               {

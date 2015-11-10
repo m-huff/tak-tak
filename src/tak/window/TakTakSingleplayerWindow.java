@@ -689,13 +689,13 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 
 		int row = rand.nextInt(2);
 		int column = rand.nextInt(COLUMNS);
-		Piece blackKing = new Piece(0, Color.black, Color.black);
+		Piece blackKing = new Piece(50, Color.black, Color.black);
 		blackKing.setKing(true);
 		board[row][column] = blackKing;
 
 		row = rand.nextInt(2) + 5;
 		column = rand.nextInt(COLUMNS);
-		Piece whiteKing = new Piece(0, Color.white, Color.white);
+		Piece whiteKing = new Piece(50, Color.white, Color.white);
 		whiteKing.setKing(true);
 		board[row][column] = whiteKing;
 	}

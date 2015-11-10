@@ -118,6 +118,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 	static Sound cha_ching;
 
 	private boolean mouseoverReturn;
+	private boolean mouseoverHelp;
 
 	public static enum EnumWinner {
 		PlayerOne, PlayerTwo, PlayerAI, Tie, None
@@ -148,15 +149,18 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 		});
 		addMouseMotionListener(new MouseMotionAdapter() {
 			public void mouseMoved(MouseEvent e) {
-				if (fadeOut < 150)
-					return;
 				int xpos = e.getX();
 				int ypos = e.getY() + 2;
 
-				if (xpos >= 225 && xpos <= 365 && ypos >= 450 && ypos <= 490)
+				if (xpos >= 225 && xpos <= 365 && ypos >= 450 && ypos <= 490 && fadeOut >= 150)
 					mouseoverReturn = true;
 				else
 					mouseoverReturn = false;
+				
+				if (xpos >= 680 && xpos <= 820 && ypos >= 700 && ypos <= 735)
+					mouseoverHelp = true;
+				else
+					mouseoverHelp = false;
 
 				repaint();
 			}
@@ -290,59 +294,279 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 					controller.dispose();
 					frame.dispose();
 				}
+				if (MouseEvent.BUTTON1 == e.getButton() && mouseoverHelp) {
+					final RulesWindow w = new RulesWindow();
+				}
 			}
 		});
 
 		//Writes your keystrokes to the chat thing
-		//This handles all keyboard input, and filters out any button press we shouldn't add to chat
-                //Mr. Yee - please don't even look at this, it's terrible
+		//This handles all keyboard input we want to add to the chat
+        //Mr. Yee - please don't even look at this, it's terrible
 		addKeyListener(new KeyAdapter() {
 
 			public void keyPressed(KeyEvent e) {
 				//In this if statement, there should be every key we don't want to add text
 				//to the current chat with
+				//I guess there isn't an easy way to do capital letters
 
-				if (e.getKeyCode() != KeyEvent.VK_ESCAPE && e.getKeyCode() != KeyEvent.VK_CAPS_LOCK
-						&& e.getKeyCode() != KeyEvent.VK_SPACE && e.getKeyCode() != KeyEvent.VK_BACK_SPACE
-						&& e.getKeyCode() != KeyEvent.VK_ENTER && e.getKeyCode() != KeyEvent.VK_ALT
-						&& e.getKeyCode() != KeyEvent.VK_CONTROL && e.getKeyCode() != KeyEvent.VK_CONTEXT_MENU
-						&& e.getKeyCode() != KeyEvent.VK_UP && e.getKeyCode() != KeyEvent.VK_DOWN
-						&& e.getKeyCode() != KeyEvent.VK_RIGHT && e.getKeyCode() != KeyEvent.VK_LEFT
-						&& e.getKeyCode() != KeyEvent.VK_SHIFT && e.getKeyCode() != KeyEvent.VK_TAB
-						&& e.getKeyCode() != KeyEvent.VK_QUOTE && e.getKeyCode() != KeyEvent.VK_QUOTEDBL
-						&& e.getKeyCode() != KeyEvent.VK_WINDOWS && e.getKeyCode() != KeyEvent.VK_F1
-						&& e.getKeyCode() != KeyEvent.VK_F2 && e.getKeyCode() != KeyEvent.VK_F3
-						&& e.getKeyCode() != KeyEvent.VK_F4 && e.getKeyCode() != KeyEvent.VK_F5
-						&& e.getKeyCode() != KeyEvent.VK_F6 && e.getKeyCode() != KeyEvent.VK_F7
-						&& e.getKeyCode() != KeyEvent.VK_F8 && e.getKeyCode() != KeyEvent.VK_F9
-						&& e.getKeyCode() != KeyEvent.VK_F10 && e.getKeyCode() != KeyEvent.VK_F11
-						&& e.getKeyCode() != KeyEvent.VK_F12 && e.getKeyCode() != KeyEvent.VK_COMMA
-						&& e.getKeyCode() != KeyEvent.VK_PERIOD && e.getKeyCode() != KeyEvent.VK_SLASH
-						&& e.getKeyCode() != KeyEvent.VK_BACK_SLASH) {
+				if (e.getKeyCode() == KeyEvent.VK_0) {
+						if (currentChatText.equals("Chat with your opponent!"))
+							currentChatText = "";
+						if (e.isShiftDown())
+							currentChatText += ")";
+						else
+							currentChatText += "0";
+				} else if (e.getKeyCode() == KeyEvent.VK_1) {
 					if (currentChatText.equals("Chat with your opponent!"))
 						currentChatText = "";
-					currentChatText += KeyEvent.getKeyText(e.getKeyCode());
-				} else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-                                    if (currentChatText.equals("Chat with your opponent!"))
-                                        currentChatText = " ";
-                                    else
-					currentChatText += " ";
+					if (e.isShiftDown())
+						currentChatText += "!";
+					else
+						currentChatText += "1";
+				} else if (e.getKeyCode() == KeyEvent.VK_2) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					if (e.isShiftDown())
+						currentChatText += "@";
+					else
+						currentChatText += "2";
+				} else if (e.getKeyCode() == KeyEvent.VK_3) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					if (e.isShiftDown())
+						currentChatText += "$";
+					else
+						currentChatText += "3";
+				} else if (e.getKeyCode() == KeyEvent.VK_4) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					if (e.isShiftDown())
+						currentChatText += "5";
+					else
+						currentChatText += "4";
+				} else if (e.getKeyCode() == KeyEvent.VK_5) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					if (e.isShiftDown())
+						currentChatText += "%";
+					else
+						currentChatText += "5";
+				} else if (e.getKeyCode() == KeyEvent.VK_6) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					if (e.isShiftDown())
+						currentChatText += "^";
+					else
+						currentChatText += "6";
+				} else if (e.getKeyCode() == KeyEvent.VK_7) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					if (e.isShiftDown())
+						currentChatText += "&";
+					else
+						currentChatText += "7";
+				} else if (e.getKeyCode() == KeyEvent.VK_8) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					if (e.isShiftDown())
+						currentChatText += "*";
+					else
+						currentChatText += "8";
+				} else if (e.getKeyCode() == KeyEvent.VK_9) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					if (e.isShiftDown())
+						currentChatText += "(";
+					else
+						currentChatText += "9";
+				} else if (e.getKeyCode() == KeyEvent.VK_A) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					currentChatText += e.getKeyChar();
+				} else if (e.getKeyCode() == KeyEvent.VK_B) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					currentChatText += e.getKeyChar();
+				} else if (e.getKeyCode() == KeyEvent.VK_C) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					currentChatText += e.getKeyChar();
+				} else if (e.getKeyCode() == KeyEvent.VK_D) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					currentChatText += e.getKeyChar();
+				} else if (e.getKeyCode() == KeyEvent.VK_E) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					currentChatText += e.getKeyChar();
+				} else if (e.getKeyCode() == KeyEvent.VK_F) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					currentChatText += e.getKeyChar();
+				} else if (e.getKeyCode() == KeyEvent.VK_G) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					currentChatText += e.getKeyChar();
+				} else if (e.getKeyCode() == KeyEvent.VK_H) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					currentChatText += e.getKeyChar();
+				} else if (e.getKeyCode() == KeyEvent.VK_I) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					currentChatText += e.getKeyChar();
+				} else if (e.getKeyCode() == KeyEvent.VK_J) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					currentChatText += e.getKeyChar();
+				} else if (e.getKeyCode() == KeyEvent.VK_K) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					currentChatText += e.getKeyChar();
+				} else if (e.getKeyCode() == KeyEvent.VK_L) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					currentChatText += e.getKeyChar();
+				} else if (e.getKeyCode() == KeyEvent.VK_M) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					currentChatText += e.getKeyChar();
+				} else if (e.getKeyCode() == KeyEvent.VK_N) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					currentChatText += e.getKeyChar();
+				} else if (e.getKeyCode() == KeyEvent.VK_O) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					currentChatText += e.getKeyChar();
+				} else if (e.getKeyCode() == KeyEvent.VK_P) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					currentChatText += e.getKeyChar();
+				} else if (e.getKeyCode() == KeyEvent.VK_Q) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					currentChatText += e.getKeyChar();
+				} else if (e.getKeyCode() == KeyEvent.VK_R) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					currentChatText += e.getKeyChar();
+				} else if (e.getKeyCode() == KeyEvent.VK_S) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					currentChatText += e.getKeyChar();
+				} else if (e.getKeyCode() == KeyEvent.VK_T) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					currentChatText += e.getKeyChar();
+				} else if (e.getKeyCode() == KeyEvent.VK_U) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					currentChatText += e.getKeyChar();
+				} else if (e.getKeyCode() == KeyEvent.VK_V) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					currentChatText += e.getKeyChar();
+				} else if (e.getKeyCode() == KeyEvent.VK_W) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					currentChatText += e.getKeyChar();
+				} else if (e.getKeyCode() == KeyEvent.VK_X) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					currentChatText += e.getKeyChar();
+				} else if (e.getKeyCode() == KeyEvent.VK_Y) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					currentChatText += e.getKeyChar();
+				} else if (e.getKeyCode() == KeyEvent.VK_Z) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					currentChatText += e.getKeyChar();
 				} else if (e.getKeyCode() == KeyEvent.VK_COMMA) {
-					currentChatText += ",";
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					if (e.isShiftDown())
+						currentChatText += "<";
+					else
+						currentChatText += ",";
 				} else if (e.getKeyCode() == KeyEvent.VK_PERIOD) {
-					currentChatText += ".";
-				} else if (e.getKeyCode() == KeyEvent.VK_SLASH) {
-					currentChatText += "/";
-				} else if (e.getKeyCode() == KeyEvent.VK_BACK_SLASH) {
-					currentChatText += "\\";
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					if (e.isShiftDown())
+						currentChatText += ">";
+					else
+						currentChatText += ".";
+				} else if (e.getKeyCode() == KeyEvent.VK_SEMICOLON) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					if (e.isShiftDown())
+						currentChatText += ":";
+					else
+						currentChatText += ";";
 				} else if (e.getKeyCode() == KeyEvent.VK_QUOTE) {
-					currentChatText += "'";
-				} else if (e.getKeyCode() == KeyEvent.VK_QUOTEDBL) {
-					currentChatText += "\"";
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					if (e.isShiftDown())
+						currentChatText += "\"";
+					else
+						currentChatText += "'";
+				} else if (e.getKeyCode() == KeyEvent.VK_SLASH) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					if (e.isShiftDown())
+						currentChatText += "?";
+					else
+						currentChatText += "/";
+				} else if (e.getKeyCode() == KeyEvent.VK_BRACELEFT) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					if (e.isShiftDown())
+						currentChatText += "{";
+					else
+						currentChatText += "[";
+				} else if (e.getKeyCode() == KeyEvent.VK_BRACERIGHT) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					if (e.isShiftDown())
+						currentChatText += "}";
+					else
+						currentChatText += "]";
+				} else if (e.getKeyCode() == KeyEvent.VK_BACK_SLASH) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					if (e.isShiftDown())
+						currentChatText += "|";
+					else
+						currentChatText += "\\";
+				} else if (e.getKeyCode() == KeyEvent.VK_UNDERSCORE) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					if (e.isShiftDown())
+						currentChatText += "_";
+					else
+						currentChatText += "-";
+				} else if (e.getKeyCode() == KeyEvent.VK_EQUALS) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					if (e.isShiftDown())
+						currentChatText += "+";
+					else
+						currentChatText += "=";
+				} else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+						currentChatText += " ";
+				} else if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+					if (currentChatText.equals("Chat with your opponent!"))
+						currentChatText = "";
+					else if (currentChatText.length() >= 1)
+						currentChatText = currentChatText.substring(0, currentChatText.length() - 1);
 				} else if (e.getKeyCode() == KeyEvent.VK_ENTER && !currentChatText.equals("Chat with your opponent!")) {
 					String finalString = (isClient ? "P1:" : "P2:")
-							+ currentChatText.replaceAll("null", "").toLowerCase();
-
+					+ currentChatText.replaceAll("null", "").toLowerCase();
+		
 					if (isClient) {
 						ClientHandler.sendChat(finalString);
 					} else {
@@ -350,11 +574,6 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 					}
 					chat.add(finalString);
 					currentChatText = "Chat with your opponent!";
-				} else if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
-					if (currentChatText.equals("Chat with your opponent!"))
-						currentChatText = "";
-					else if (currentChatText.length() >= 1)
-						currentChatText = currentChatText.substring(0, currentChatText.length() - 1);
 				}
 			}
 		});
@@ -367,9 +586,13 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 				if (isClient) {
 					ClientHandler.sendDisconnect();
 					ClientHandler.disconnect();
+					controller.gameStarted = false;
+					controller.theGame = null;
 				} else {
 					ServerHandler.sendDisconnect();
 					ServerHandler.disconnect();
+					controller.gameStarted = false;
+					controller.theGame = null;
 				}
 				myWins = 0;
 				opponentWins = 0;
@@ -529,6 +752,16 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 
 		g.setColor(new Color(255, 255, 255, fadeOut));
 		g.setFont(new Font("Arial Bold", Font.PLAIN, 36));
+		
+		if (mouseoverHelp)
+			g.drawImage(hoverButton.getImage(), 680, 700, null);
+		else
+			g.drawImage(button.getImage(), 680, 700, null);
+		
+		g.setFont(new Font("Arial", Font.BOLD, 16));
+		g.setColor(mouseoverHelp ? Color.red : Color.black);
+		g.drawString("Help", 734, 724);
+		
 		if (winner != EnumWinner.None) {
 			if (winner == EnumWinner.PlayerOne)
 				g.drawString("You win!", 220, 300);
@@ -551,9 +784,11 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 			else
 				g.drawImage(button.getImage(), 225, 450, null);
 
+
 			g.setFont(new Font("Arial", Font.BOLD, 16));
 			g.setColor(mouseoverReturn ? Color.red : Color.black);
 			g.drawString("Return to Menu", 240, 470);
+
 
 			if (gameDelayTimer > 0) {
 				gameDelayTimer--;
@@ -674,10 +909,8 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 		board[6][4] = p2;
 	}
 
-	//TODO - issues with scoring
 	public static void movePieceToLocation(OrderedPair piece, OrderedPair location) {
 
-		//This works just fine
 		if (board[location.getX()][location.getY()] != null) {
 
 			if (board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.black)

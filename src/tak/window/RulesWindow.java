@@ -65,7 +65,7 @@ public class RulesWindow extends JFrame implements Runnable {
 										"",
 										"When a piece reaches the opponent's safe zone, it disappears.",
 										"",
-                                                                                "",
+                                        "",
 										"You can then control them for yourself, and score them.",
 										"others.",
 										"",
@@ -80,7 +80,7 @@ public class RulesWindow extends JFrame implements Runnable {
 	public RulesWindow() {
 
 		setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setVisible(true);
 		setResizable(false);
 		setIconImage(icon.getImage());
