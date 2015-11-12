@@ -56,7 +56,7 @@ public class MenuWindow extends JFrame implements Runnable {
 
 	private final MenuWindow frame = this;
 
-	public static int textPosition = WINDOW_WIDTH;
+	public int textPosition = WINDOW_WIDTH;
 
 	public static ArrayList<Piece> pieces = new ArrayList<Piece>();
 
@@ -235,7 +235,6 @@ public class MenuWindow extends JFrame implements Runnable {
 				p.setKing(true);
 			pieces.add(p);
 		}
-		textPosition = WINDOW_WIDTH;
 	}
 
 	public void animate() {

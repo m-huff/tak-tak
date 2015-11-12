@@ -9,8 +9,12 @@ import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -18,6 +22,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 import tak.com.Piece;
+import tak.net.ClientHandler;
+import tak.net.ServerHandler;
 
 @SuppressWarnings("serial")
 public class RulesWindow extends JFrame implements Runnable {
@@ -43,6 +49,11 @@ public class RulesWindow extends JFrame implements Runnable {
 	public static Random rand = new Random();
 	public static ImageIcon icon = new ImageIcon(RulesWindow.class.getResource("/tak/assets/icon.png"));
 	static ImageIcon background = new ImageIcon(RulesWindow.class.getResource("/tak/assets/wood.png"));
+	
+	private static ImageIcon hoverButton = new ImageIcon(MenuWindow.class.getResource("/tak/assets/button_hover.png"));
+	private static ImageIcon button = new ImageIcon(MenuWindow.class.getResource("/tak/assets/button.png"));
+	private static ImageIcon smallHoverButton = new ImageIcon(MenuWindow.class.getResource("/tak/assets/button_small_hover.png"));
+	private static ImageIcon smallButton = new ImageIcon(MenuWindow.class.getResource("/tak/assets/button_small.png"));
 
 	private final RulesWindow frame = this;
 
@@ -78,6 +89,10 @@ public class RulesWindow extends JFrame implements Runnable {
 	public static int currentSlide;
 	
 	public static boolean hasChangedSlides;
+	
+	public boolean mouseoverPrev;
+	public boolean mouseoverNext;
+	public boolean mouseoverReturn;
 
 	public RulesWindow() {
 
@@ -89,30 +104,56 @@ public class RulesWindow extends JFrame implements Runnable {
 		setTitle("Tak-Tak");
 		setLocation(CENTER_X, CENTER_Y);
 
-		addKeyListener(new KeyAdapter() {
+        addMouseMotionListener(new MouseMotionAdapter() {
+			public void mouseMoved(MouseEvent e) {
+				int xpos = e.getX();
+				int ypos = e.getY() + 2;
 
-			@SuppressWarnings("static-access")
-			public void keyPressed(KeyEvent e) {
-				if (e.VK_RIGHT == e.getKeyCode()) {
-					if (currentSlide < images.size() - 1)
-						currentSlide++;
-					else
-						currentSlide = 0;
-					hasChangedSlides = true;
+				if (ypos >= 585 && ypos <= 620 && xpos >= 220 && xpos <= 255) {
+					mouseoverPrev = true;
+				} else {
+					mouseoverPrev = false;
 				}
 				
-				if (e.VK_LEFT == e.getKeyCode()) {
+				if (ypos >= 585 && ypos <= 620 && xpos >= 320 && xpos <= 355) {
+					mouseoverNext = true;
+				} else {
+					mouseoverNext = false;
+				}
+				
+				if (ypos >= 540 && ypos <= 575 && xpos >= 217 && xpos <= 357) {
+					mouseoverReturn = true;
+				} else {
+					mouseoverReturn = false;
+				}
+
+				repaint();
+			}
+		});		
+        
+        addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				if (MouseEvent.BUTTON1 == e.getButton() && mouseoverReturn) {
+                    reset();
+					frame.dispose();
+				}
+				if (MouseEvent.BUTTON1 == e.getButton() && mouseoverPrev) {
 					if (currentSlide > 0)
 						currentSlide--;
 					else
 						currentSlide = images.size() - 1;
 					hasChangedSlides = true;
 				}
-
-				repaint();
+				if (MouseEvent.BUTTON1 == e.getButton() && mouseoverNext) {
+					if (currentSlide < images.size() - 1)
+						currentSlide++;
+					else
+						currentSlide = 0;
+					hasChangedSlides = true;
+				}
 			}
-		});
-
+		});        
+		
 		init();
 		start();
 	}
@@ -156,6 +197,29 @@ public class RulesWindow extends JFrame implements Runnable {
 			}
 		}
 		
+		if (mouseoverPrev)
+			g.drawImage(smallHoverButton.getImage(), 220, 585, null);
+		else
+			g.drawImage(smallButton.getImage(), 220, 585, null);
+		
+		if (mouseoverNext)
+			g.drawImage(smallHoverButton.getImage(), 320, 585, null);
+		else
+			g.drawImage(smallButton.getImage(), 320, 585, null);
+		
+		if (mouseoverReturn)
+			g.drawImage(hoverButton.getImage(), 217, 540, null);
+		else
+			g.drawImage(button.getImage(), 217, 540, null);
+		
+		g.setFont(new Font("Arial", Font.BOLD, 16));
+		g.setColor(mouseoverPrev ? Color.red : Color.black);
+		g.drawString("<", 232, 609);
+		g.setColor(mouseoverNext ? Color.red : Color.black);
+		g.drawString(">", 333, 609);
+		g.setColor(mouseoverReturn ? Color.red : Color.black);
+		g.drawString("Main Menu", 245, 563);
+		
 		g.setColor(new Color(0, 0, 0, 190));
 		g.fillRect(0, 0, WINDOW_WIDTH, 100);
 
@@ -168,18 +232,10 @@ public class RulesWindow extends JFrame implements Runnable {
 		g.drawString(imageText2[currentSlide], 95, 520);
 		if (!images.isEmpty())
 			g.drawImage(images.get(currentSlide), 112, 190, null);
-		
-		g.setFont(new Font("Arial", Font.BOLD, 18));
-		
-		if (currentSlide == 0 && !hasChangedSlides) {
-			g.setFont(new Font("Arial", Font.BOLD, 12));
-			g.setColor(Color.orange);
-			g.drawString("USE THE LEFT AND RIGHT ARROW KEYS TO NAVIGATE THE RULES", 102, 630);
-		}
 
 		g.setColor(new Color(240, 240, 240));
 		g.setFont(new Font("Arial", Font.BOLD, 18));
-		g.drawString((currentSlide + 1) + " of " + images.size(), 260, 610);
+		g.drawString((currentSlide + 1) + " of " + images.size(), (currentSlide + 1 < 10 ? 260 : 255), 610);
 
 		gOld.drawImage(image, 0, 0, null);
 	}

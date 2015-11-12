@@ -63,6 +63,7 @@ public class NetworkWindow extends JFrame implements Runnable {
 	public static boolean isConnecting = false;
 	
 	private boolean mouseoverPlay;
+	private boolean mouseoverReturn;
         
         TakTakMultiplayerWindow theGame;
 
@@ -227,6 +228,17 @@ public class NetworkWindow extends JFrame implements Runnable {
                             }                        
                         }
 					}
+				} else if (MouseEvent.BUTTON1 == e.getButton() && mouseoverReturn) {
+					if (isPotentialGameClient) {
+						ClientHandler.sendDisconnect();
+						ClientHandler.disconnect();
+					} else {
+						ServerHandler.sendDisconnect();
+						ServerHandler.disconnect();
+					}
+                    reset();
+                    new MenuWindow();
+					frame.dispose();
 				}
 			}
 		});
@@ -240,6 +252,12 @@ public class NetworkWindow extends JFrame implements Runnable {
 					mouseoverPlay = true;
 				} else {
 					mouseoverPlay = false;
+				}
+				
+				if (ypos >= 260 && ypos <= 295 && xpos >= 245 && xpos <= 385) {
+					mouseoverReturn = true;
+				} else {
+					mouseoverReturn = false;
 				}
 
 				repaint();
@@ -308,7 +326,6 @@ public class NetworkWindow extends JFrame implements Runnable {
 			e.printStackTrace();
 		}
 		g.drawString("Enter an IP address to play against", 30, 90);
-		//g.drawString("Press " + (isPotentialGameClient ? "C" : "S") + " to attempt to " + (isPotentialGameClient ? "join" : "start") + " a game", 30, 280);
 		g.drawString("You will play as " + (isPotentialGameClient ? "BLACK" : "WHITE"), 30, 280);
 		g.drawString("Opponent IP: " + ipAddress, 30, 110);
 		
@@ -317,8 +334,15 @@ public class NetworkWindow extends JFrame implements Runnable {
 		else
 			g.drawImage(button.getImage(), 390, 260, null);
 		
+		if (mouseoverReturn)
+			g.drawImage(hoverButton.getImage(), 245, 260, null);
+		else
+			g.drawImage(button.getImage(), 245, 260, null);
+		
 		g.setColor(mouseoverPlay ? Color.red : Color.black);
-		g.drawString("Start Game", 420, 283);
+		g.drawString("Start Game", 422, 283);
+		g.setColor(mouseoverReturn ? Color.red : Color.black);
+		g.drawString("Main Menu", 275, 283);
 
 		gOld.drawImage(image, 0, 0, null);
 	}

@@ -31,6 +31,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 
 	static public final int WINDOW_WIDTH = 590;
 	static public final int WINDOW_HEIGHT = 740;
+	static public final int FULL_HEIGHT = 770;
 	static final int XBORDER = 15;
 	static final int YBORDER = 40;
 	static final int YTITLE = 25;
@@ -44,7 +45,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 	private static final int SCREEN_HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().height;
 
 	private static final int CENTER_X = (SCREEN_WIDTH / 2) - (WINDOW_WIDTH / 2);
-	private static final int CENTER_Y = (SCREEN_HEIGHT / 2) - (WINDOW_HEIGHT / 2);
+	private static final int CENTER_Y = (SCREEN_HEIGHT / 2) - (FULL_HEIGHT / 2);
 
 	public static Random rand = new Random();
 	static ImageIcon icon = new ImageIcon(TakTakSingleplayerWindow.class.getResource("/tak/assets/icon.png"));
@@ -64,10 +65,9 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 	public static int numWhitePiecesOnBoard;
 
 	private final TakTakSingleplayerWindow frame = this;
-        static boolean singleplayer = true;
 
-	public static int turn;
-	public static boolean myTurn;
+	public int turn;
+	public boolean myTurn;
 
 	public static int selectedRow = 999;
 	public static int selectedColumn = 999;
@@ -79,17 +79,19 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 	public static int myScore;
 	public static int myWins;
         
-        public static int arrowLoc;
-        public static int arrowAnim;
+        public int arrowLoc;
+        public int arrowAnim;
 	
 	public static int aiScore;
-	public static int aiMoveDelay;
+	public int aiMoveDelay;
 	public static int aiWins;
 	
-	public static int fadeOut;
+	public int fadeOut;
         
         private boolean mouseoverPlayAgain;
         private boolean mouseoverReturn;
+        private boolean mouseoverHelp;
+        private boolean mouseoverQuit;
 	
 	static Sound move;
 	static Sound cha_ching;
@@ -97,7 +99,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 	public static ArrayList<OrderedPair> validMoves = new ArrayList<OrderedPair>();
     public static ArrayList<ScoreFader> faders = new ArrayList<ScoreFader>();
 
-	public static int tipTime;
+	public int tipTime;
 	public static String HINT_PREFIX = "Tip: ";
 	public static String currentHint = "";
 	public static String[] HINTS = {"Stack your pieces to move across the board faster!",
@@ -123,7 +125,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 	
 	public TakTakSingleplayerWindow() {
 
-		setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+		setSize(WINDOW_WIDTH, FULL_HEIGHT);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 		setResizable(false);
@@ -141,22 +143,31 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
                 
                 addMouseMotionListener(new MouseMotionAdapter() {
 			public void mouseMoved(MouseEvent e) {
-				if (fadeOut < 150)
-					return;
 				int xpos = e.getX();
 				int ypos = e.getY() + 2;
 
-				if (xpos >= 200 && xpos <= 340 && ypos >= 350 && ypos <= 390)
+				if (xpos >= 200 && xpos <= 340 && ypos >= 350 && ypos <= 390 && fadeOut >= 150)
 					mouseoverPlayAgain = true;
 				else
 					mouseoverPlayAgain = false;
 
-				//AI button
-				if (xpos >= 200 && xpos <= 340 && ypos >= 400 && ypos <= 440) {
+				if (xpos >= 200 && xpos <= 340 && ypos >= 400 && ypos <= 440 && fadeOut >= 150) {
 					mouseoverReturn = true;
 				} else {
 					mouseoverReturn = false;
-                                }
+                }
+
+				if (xpos >= 430 && xpos <= 570 && ypos >= 730 && ypos <= 765) {
+					mouseoverHelp = true;
+				} else {
+					mouseoverHelp = false;
+                }
+
+				if (xpos >= 285 && xpos <= 425 && ypos >= 730 && ypos <= 765) {
+					mouseoverQuit = true;
+				} else {
+					mouseoverQuit = false;
+                }
 
 				repaint();
 			}
@@ -164,11 +175,18 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
                 
                 addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
-				if (fadeOut < 150)
-					return;
-				if (MouseEvent.BUTTON1 == e.getButton() && mouseoverPlayAgain) {
+				if (MouseEvent.BUTTON1 == e.getButton() && mouseoverPlayAgain && fadeOut >= 150) {
 					reset();
-				} else if (MouseEvent.BUTTON1 == e.getButton() && mouseoverReturn) {
+				} else if (MouseEvent.BUTTON1 == e.getButton() && mouseoverReturn && fadeOut >= 150) {
+					reset();
+					myWins = 0;
+					aiWins = 0;
+					new MenuWindow();
+					frame.dispose();
+				} else if (MouseEvent.BUTTON1 == e.getButton() && mouseoverHelp) {
+					new RulesWindow();
+					//Maybe open up to different slides depending on what the state of the game is
+				} else if (MouseEvent.BUTTON1 == e.getButton() && mouseoverQuit) {
 					reset();
 					myWins = 0;
 					aiWins = 0;
@@ -180,7 +198,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
                 
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
-				if (MouseEvent.BUTTON1 == e.getButton() && myTurn && singleplayer) {
+				if (MouseEvent.BUTTON1 == e.getButton() && myTurn) {
 
 					int xpos = e.getX() - getX(0);
 					int ypos = e.getY() - getY(0);
@@ -227,9 +245,6 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 								selectedRow = 999;
 								selectedColumn = 999;
 								validMoves.clear();
-								//turn++;
-								//Have turn only update after both players have gone
-								//AI taking a turn adds one to turn counter
 								myTurn = !myTurn;
 							}
 						}
@@ -283,8 +298,9 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 					selectedColumn = 999;
 					validMoves.clear();
 				}
-                                if (e.VK_ESCAPE == e.getKeyCode()) {
+                if (e.VK_ESCAPE == e.getKeyCode()) {
 					new MenuWindow();
+					reset();
 					frame.dispose();
 				}
 				repaint();
@@ -319,7 +335,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 		}
 		
 		for (int x = 0; x < WINDOW_WIDTH; x += background.getIconWidth()) {
-			for (int y = 0; y < WINDOW_HEIGHT; y += background.getIconHeight()) {
+			for (int y = 0; y < FULL_HEIGHT; y += background.getIconHeight()) {
 				g.drawImage(background.getImage(), x, y, null);
 			}
 		}
@@ -369,7 +385,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 		}
 		g.setColor(Color.white);
 		g.setFont(new Font("Arial Bold", Font.PLAIN, 14));
-		g.drawString(currentHint, 15, 725);
+		g.drawString(currentHint, 15, 720);
 		
 		g.drawString("Player Score: " + myScore, 40, 60);
 		g.drawString("Your Wins: " + myWins, 40, 45);
@@ -385,7 +401,25 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 		
 		g.setColor(new Color(255, 255, 255, fadeOut));
 		g.setFont(new Font("Arial Bold", Font.PLAIN, 36));
+		
+		if (mouseoverHelp)
+            g.drawImage(hoverButton.getImage(), 430, 730, null);
+        else
+            g.drawImage(button.getImage(), 430, 730, null);
+		if (mouseoverQuit)
+            g.drawImage(hoverButton.getImage(), 285, 730, null);
+        else
+            g.drawImage(button.getImage(), 285, 730, null);
+		
+		g.setFont(new Font("Arial", Font.BOLD, 16));
+		g.setColor(mouseoverHelp ? Color.red : Color.black);
+		g.drawString("Help", 483, 753);
+		g.setColor(mouseoverQuit ? Color.red : Color.black);
+		g.drawString("Quit", 337, 753);
+		
 		if (winner != EnumWinner.None) {
+				g.setColor(new Color(255, 255, 255, fadeOut));
+				g.setFont(new Font("Arial Bold", Font.PLAIN, 36));
 				if (winner == EnumWinner.PlayerOne)
 					g.drawString("You win!", 220, 300);
 				if (winner == EnumWinner.PlayerAI)
@@ -394,11 +428,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 					g.drawString("The opponent won...", 130, 300);
 				if (winner == EnumWinner.Tie)
 					g.drawString("You tied!", 220, 300);
-				
-//				g.setFont(new Font("Arial Bold", Font.PLAIN, 22));
-//				g.drawString("Press ENTER to play again", 160, 390);
-//				g.drawString("Press ESC to return to the main menu", 100, 410);
-                                
+
                                 if (mouseoverPlayAgain)
                                     g.drawImage(hoverButton.getImage(), 225, 350, null);
                                 else
@@ -562,11 +592,18 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 				//End the game
 				chooseWinner();
 			}
+                
+        //Unselect a piece if there aren't any places it can move
+        //Stops the game from getting stuck sometimes
+        if (selectedRow != 999 && validMoves.isEmpty()) {
+        	selectedRow = 999;
+        	selectedColumn = 999;
+        }
 	}
 
 	public static void movePieceToLocation(OrderedPair piece, OrderedPair location) {
 
-		if (board[location.getX()][location.getY()] != null) {
+		if (board[location.getX()][location.getY()] != null && board[piece.getX()][piece.getY()] != null) {
 			if (board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.black)
 				numBlackPiecesOnBoard--;
 			else
@@ -838,7 +875,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 		return false;
 	}
 	
-	public static void updateTurn() {
+	public void updateTurn() {
 		myTurn = !myTurn;
 	}
 
@@ -862,10 +899,10 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 	}
 
 	public static int getWidth2() {
-		return (xsize - getX(0) - XBORDER);
+		return (WINDOW_WIDTH - getX(0) - XBORDER);
 	}
 
 	public static int getHeight2() {
-		return (ysize - getY(0) - YBORDER);
+		return (WINDOW_HEIGHT - getY(0) - YBORDER);
 	}
 }

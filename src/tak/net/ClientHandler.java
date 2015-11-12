@@ -112,7 +112,6 @@ public class ClientHandler {
 								System.out.println("found one");
 								String msg = inputLine.replace("CHAT ", "");
 								TakTakMultiplayerWindow.chat.add(msg);
-								System.out.println("\"" + msg + "\" was added to client chat");
 							}
 						} catch (NumberFormatException | NullPointerException e) {
 							e.printStackTrace();
