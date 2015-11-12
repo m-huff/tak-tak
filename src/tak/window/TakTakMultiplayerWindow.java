@@ -63,7 +63,10 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 	public static int initCol;
 	public static int movedRow;
 	public static int movedCol;
-
+                
+        public int arrowLoc;
+        public int arrowAnim;
+        
 	public static int myScore;
 	public static Color myColor;
 	public static int myWins;
@@ -74,9 +77,6 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 
 	public static int turn;
 	public static boolean myTurn;
-        public double selCircling;
-        public boolean selExpanding;
-        
 
 	public static int selectedRow = 999;
 	public static int selectedColumn = 999;
@@ -97,7 +97,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 
 	static ImageIcon icon = new ImageIcon(TakTakSingleplayerWindow.class.getResource("/tak/assets/icon.png"));
 	static ImageIcon background = new ImageIcon(TakTakSingleplayerWindow.class.getResource("/tak/assets/wood.png"));
-
+        private static ImageIcon arrow = new ImageIcon(MenuWindow.class.getResource("/tak/assets/greenarrow.png"));
 	private static ImageIcon hoverButton = new ImageIcon(TakTakSingleplayerWindow.class.getResource("/tak/assets/button_hover.png"));
 	private static ImageIcon button = new ImageIcon(TakTakSingleplayerWindow.class.getResource("/tak/assets/button.png"));
 
@@ -207,6 +207,8 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 						if (board[currentRow][currentColumn].getTopPiece().getBackgroundColor() == myColor) {
 							selectedRow = currentRow;
 							selectedColumn = currentColumn;
+                                                        arrowLoc = 0;
+                                                        arrowAnim = 0;
 						}
 					} else if (selectedRow != 999) {
 						boolean movedPiece = false;
@@ -915,13 +917,20 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 		gOld.drawImage(image, 0, 0, null);
 	}
 ////////////////////////////////////////////////////////////////////////////
-    public void drawCircle(int xpos,int ypos,double rot,double xscale,double yscale)
-    {
+    public void drawArrow(Image image,int xpos,int ypos,double rot,double xscale,
+            double yscale) {
+        int width;
+        int height;
+           
+        width = arrow.getImage().getWidth(this);
+        height = arrow.getImage().getHeight(this);
+        
         g.translate(xpos,ypos);
         g.rotate(rot  * Math.PI/180.0);
         g.scale( xscale , yscale );
 
-        g.fillOval(-10,-10,20,20);
+        g.drawImage(image,-width/2,-height/2,
+        width,height,this);
 
         g.scale( 1.0/xscale,1.0/yscale );
         g.rotate(-rot  * Math.PI/180.0);
@@ -953,8 +962,8 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 		myTurn = isClient;
 		myColor = (isClient ? Color.black : Color.white);
                 
-                selCircling = 0.25;
-                selExpanding = true;
+                arrowLoc = 0;
+                arrowAnim = 0;
 	}
 
 	public void chooseWinner() {
@@ -1093,6 +1102,14 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 			}
 			reset();
 		}
+                arrowAnim+=4;
+                if(arrowAnim<70)
+                    arrowLoc+=4;
+                if(arrowAnim>100)
+                {
+                    arrowLoc = 0;
+                    arrowAnim = 0;
+                }
 
 		if (tipTime < 200) {
 			tipTime++;
@@ -1101,25 +1118,16 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 			currentHint = HINT_PREFIX + HINTS[rand.nextInt(HINTS.length)];
 		}
 
-                if(selCircling >3.5)
-                    selExpanding = false;
-                else if (selCircling <1.5)
-                    selExpanding = true;
-                if(selExpanding)
-                    selCircling += 0.125;
-                else
-                    selCircling -= 0.125;
-                
 		//If at any point we disconnect, dispose
-		if (isClient) {
-			if (!ClientHandler.isConnected())
-				reset();
-				dispose();
-		} else {
-			if (!ServerHandler.isConnected())
-				reset();
-				dispose();
-		}
+//		if (isClient) {
+//			if (!ClientHandler.isConnected())
+//				reset();
+//				dispose();
+//		} else {
+//			if (!ServerHandler.isConnected())
+//				reset();
+//				dispose();
+//		}
 
 		if ((numWhitePiecesOnBoard == 0 || numBlackPiecesOnBoard == 0) && winner == EnumWinner.None) {
 			//If one side doesn't have any pieces left
@@ -1209,7 +1217,6 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
                 g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.3f));
                 
 		g.setColor(new Color(10, 10, 10, 150));
-	        drawCircle(column * (getWidth2() / COLUMNS) + getX(0) + (getWidth2() / COLUMNS/2)+1, row * (getHeight2() / ROWS) + getY(0)+ (getHeight2() / ROWS/2)+4,0, selCircling, selCircling);
 
 		Piece p = board[row][column];
 		int pieceDirection = (p.getTopPiece().getBackgroundColor() == Color.black ? 0 : 1);
@@ -1217,38 +1224,80 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 		g.setColor(new Color(64, 128, 64, 150));
 
 		if (pieceDirection == 1) {
-			if (canPieceMoveToLocation(p.getTopPiece(), row - 1, column)) {
-			p.draw(g2d, getX(0) + column * getWidth2() / COLUMNS,
-			getY(0) + (row-1) * getHeight2() / ROWS);
-				validMoves.add(new OrderedPair(row - 1, column));
+                        if (canPieceMoveToLocation(p.getTopPiece(), row - 1, column)) {
+                            if(board[row-1][column] == null)
+                            {
+                                    p.draw(g2d, getX(0) + column * getWidth2() / COLUMNS,
+                                    getY(0) + (row-1) * getHeight2() / ROWS);
+                            }
+                            drawArrow(arrow.getImage(), getX(0) + column * getWidth2() / COLUMNS + (getWidth2() / COLUMNS/2)+2,
+                                    getY(0) + (row+1) * getHeight2() / ROWS- arrowLoc -45,270, 0.1,0.2);
+                            p.draw(g, getX(0) + column * getWidth2() / COLUMNS,
+                                    getY(0) + (row) * getHeight2() / ROWS);
+                            validMoves.add(new OrderedPair(row - 1, column));
 			}
 			if (canPieceMoveToLocation(p.getTopPiece(), row - 1, column + 1)) {
-			p.draw(g2d, getX(0) + (column+1) * getWidth2() / COLUMNS,
-			getY(0) + (row-1) * getHeight2() / ROWS);
-				validMoves.add(new OrderedPair(row - 1, column + 1));
+                            if(board[row-1][column+1] == null)
+                            {
+                                    p.draw(g2d, getX(0) + (column+1) * getWidth2() / COLUMNS,
+                                    getY(0) + (row-1) * getHeight2() / ROWS);
+                            }
+                            drawArrow(arrow.getImage(), getX(0) + column * getWidth2() / COLUMNS + (getWidth2() / COLUMNS/2)+(arrowLoc/2),
+                                    getY(0) + (row+1) * getHeight2() / ROWS- (arrowLoc/2) -47,315, 0.13,0.2);
+                            p.draw(g, getX(0) + column * getWidth2() / COLUMNS,
+                                    getY(0) + (row) * getHeight2() / ROWS);
+                            validMoves.add(new OrderedPair(row - 1, column + 1));
 			}
 			if (canPieceMoveToLocation(p.getTopPiece(), row - 1, column - 1)) {
-	        	p.draw(g2d, getX(0) + (column-1) * getWidth2() / COLUMNS,
-			getY(0) + (row-1) * getHeight2() / ROWS);
-				validMoves.add(new OrderedPair(row - 1, column - 1));
+                            if(board[row-1][column-1] == null)
+                            {
+                                    p.draw(g2d, getX(0) + (column-1) * getWidth2() / COLUMNS,
+                                    getY(0) + (row-1) * getHeight2() / ROWS);
+                            }
+                            drawArrow(arrow.getImage(), getX(0) + column * getWidth2() / COLUMNS + (getWidth2() / COLUMNS/2)-(arrowLoc/2),
+                                    getY(0) + (row+1) * getHeight2() / ROWS- (arrowLoc/2) -47,235, 0.13,0.2);
+                            p.draw(g, getX(0) + column * getWidth2() / COLUMNS,
+                                    getY(0) + (row) * getHeight2() / ROWS);
+                            validMoves.add(new OrderedPair(row - 1, column - 1));
 			}
 		}
 
 		if (pieceDirection == 0) {
-			if (canPieceMoveToLocation(p.getTopPiece(), row + 1, column)) {
-			p.draw(g2d, getX(0) + column * getWidth2() / COLUMNS,
-			getY(0) + (row+1) * getHeight2() / ROWS);
-				validMoves.add(new OrderedPair(row + 1, column));
+                        if (canPieceMoveToLocation(p.getTopPiece(), row + 1, column)) {
+                            if(board[row+1][column] == null)
+                            {
+                                    p.draw(g2d, getX(0) + column * getWidth2() / COLUMNS,
+                                    getY(0) + (row+1) * getHeight2() / ROWS);
+                            }
+                            drawArrow(arrow.getImage(), getX(0) + column * getWidth2() / COLUMNS + (getWidth2() / COLUMNS/2)+2,
+                                    getY(0) + (row+1) * getHeight2() / ROWS+ arrowLoc -45,90, 0.1,0.2);
+                            p.draw(g, getX(0) + column * getWidth2() / COLUMNS,
+                                    getY(0) + (row) * getHeight2() / ROWS);
+                            validMoves.add(new OrderedPair(row + 1, column));
 			}
 			if (canPieceMoveToLocation(p.getTopPiece(), row + 1, column + 1)) {
-			p.draw(g2d, getX(0) + (column+1) * getWidth2() / COLUMNS,
-			getY(0) + (row+1) * getHeight2() / ROWS);
-				validMoves.add(new OrderedPair(row + 1, column + 1));
+                            if(board[row+1][column+1] == null)
+                            {
+                                    p.draw(g2d, getX(0) + (column+1) * getWidth2() / COLUMNS,
+                                    getY(0) + (row+1) * getHeight2() / ROWS);
+                            }
+                            drawArrow(arrow.getImage(), getX(0) + column * getWidth2() / COLUMNS + (getWidth2() / COLUMNS/2)+(arrowLoc/2)+3,
+                                    getY(0) + (row+1) * getHeight2() / ROWS+ (arrowLoc/2) -43,45, 0.13,0.2);
+                            p.draw(g, getX(0) + column * getWidth2() / COLUMNS,
+                                    getY(0) + (row) * getHeight2() / ROWS);
+                            validMoves.add(new OrderedPair(row + 1, column + 1));
 			}
 			if (canPieceMoveToLocation(p.getTopPiece(), row + 1, column - 1)) {
-	        	p.draw(g2d, getX(0) + (column-1) * getWidth2() / COLUMNS,
-			getY(0) + (row+1) * getHeight2() / ROWS);
-				validMoves.add(new OrderedPair(row + 1, column - 1));
+                            if(board[row+1][column-1] == null)
+                            {
+                                    p.draw(g2d, getX(0) + (column-1) * getWidth2() / COLUMNS,
+                                    getY(0) + (row+1) * getHeight2() / ROWS);
+                            }
+                            drawArrow(arrow.getImage(), getX(0) + column * getWidth2() / COLUMNS + (getWidth2() / COLUMNS/2)-(arrowLoc/2)-3,
+                                    getY(0) + (row+1) * getHeight2() / ROWS+ (arrowLoc/2) -43,135, 0.13,0.2);
+                            p.draw(g, getX(0) + column * getWidth2() / COLUMNS,
+                                    getY(0) + (row) * getHeight2() / ROWS);
+                            validMoves.add(new OrderedPair(row + 1, column - 1));
 			}
 		}
 	}
