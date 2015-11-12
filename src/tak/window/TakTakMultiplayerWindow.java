@@ -846,7 +846,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 		}
 
 		g.setColor(new Color(0, 0, 0, fadeOut));
-		g.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+		g.fillRect(0, 0, FULL_WIDTH, FULL_HEIGHT);
 
 		g.setColor(new Color(255, 255, 255, fadeOut));
 		g.setFont(new Font("Arial Bold", Font.PLAIN, 36));
