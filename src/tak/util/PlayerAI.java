@@ -45,7 +45,7 @@ public class PlayerAI {
                                                         if (TakTakSingleplayerWindow.board[temp.getX()][temp.getY()] != null
 						            && TakTakSingleplayerWindow.board[temp.getX()][temp.getY()].getTopPiece().getBackgroundColor() == Color.WHITE) 
                                                         {
-                                                            System.out.println("capture");
+                                                            //Capturing a piece
                                                                 blacktomove = new OrderedPair(zRow, zColumn);
 								placetomoveto = new OrderedPair(temp.getX(), temp.getY());
                                                                 ArrayList<OrderedPair> retpack = new ArrayList<>();
@@ -55,7 +55,7 @@ public class PlayerAI {
 							}
                                                         else if(zRow == 4)
                                                         {
-                                                            System.out.println("score");
+                                                            //Scoring a piece
                                                                 blacktomove = new OrderedPair(zRow, zColumn);
 								placetomoveto = new OrderedPair(temp.getX(), temp.getY());
                                                                 ArrayList<OrderedPair> retpack = new ArrayList<>();
@@ -78,12 +78,10 @@ public class PlayerAI {
 			       || TakTakSingleplayerWindow.board[row][column] != null && getAllValidMoves(row, column).isEmpty()
 			       || TakTakSingleplayerWindow.board[row][column] != null && TakTakSingleplayerWindow.board[row][column].getTopPiece().getBackgroundColor() != Color.black)
                         {
-                           // System.out.println(row + ", " + column);
 				column = (int)(Math.random()*TakTakSingleplayerWindow.COLUMNS);
 				row = (int)(Math.random()*TakTakSingleplayerWindow.ROWS);
 			}
                         moves = getAllValidMoves(row, column);
-                        System.out.println(moves);
                         blacktomove = new OrderedPair(row,column);
                         placetomoveto = moves.get((int)(Math.random()*moves.size()));
                         ArrayList<OrderedPair> retpack = new ArrayList<>();
