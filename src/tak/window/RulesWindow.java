@@ -218,7 +218,7 @@ public class RulesWindow extends JFrame implements Runnable {
 		g.setColor(mouseoverNext ? Color.red : Color.black);
 		g.drawString(">", 333, 609);
 		g.setColor(mouseoverReturn ? Color.red : Color.black);
-		g.drawString("Main Menu", 245, 563);
+		g.drawString("Return", 260, 563);
 		
 		g.setColor(new Color(0, 0, 0, 190));
 		g.fillRect(0, 0, WINDOW_WIDTH, 100);
