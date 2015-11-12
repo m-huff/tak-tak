@@ -103,16 +103,17 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 	public static String HINT_PREFIX = "Tip: ";
 	public static String currentHint = "";
 	public static String[] HINTS = {"Stack your pieces to move across the board faster!",
-			"Press the ESC key to quit the game and return to the main menu!",
 			"Right-click a piece to see the stack size and total value!",
 			"Press BACKSPACE after you've selected a piece to cancel the selection.",
-			"Once you've selected a piece, all valid spaces to move turn green.",
-			"Press the ESC key from any screen to return to the main menu.",
+			"Once you've selected a piece, the game shows you all of the places you can move.",
 			"Right-clicking a piece will reveal all of the information about it!",
 			"You can stack your pieces in your own safe zone to get pieces across faster!",
 			"Your king piece can't be stacked on top of!",
 			"The king can't be stacked on top of, so it will block a stack from growing.",
-			"When you right-click a piece, you can see a cool 3D image of the entire stack!"};
+			"When you right-click a piece, you can see a cool 3D image of the entire stack!",
+                        "The king is valuable because it can't be captured!",
+                        "If you're having trouble, click the \"Help\" button to relearn the rules!",
+                        "When you select a piece with left-click, hit BACKSPACE to cancel your selection."};
 
 	public static enum EnumWinner {
 		PlayerOne,
