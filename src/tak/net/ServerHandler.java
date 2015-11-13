@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.*;
+
+import tak.ui.TurnIndicator;
 import tak.util.OrderedPair;
 import tak.window.TakTakMultiplayerWindow;
 
@@ -97,6 +99,7 @@ public class ServerHandler {
 								TakTakMultiplayerWindow.movedCol = movedcolpost;
 								TakTakMultiplayerWindow.myTurn = !TakTakMultiplayerWindow.myTurn;
 	                            TakTakMultiplayerWindow.movePieceToLocation(new OrderedPair(initrowpost, initcolpost), new OrderedPair(movedrowpost, movedcolpost));
+	                            TakTakMultiplayerWindow.turnIndicator = new TurnIndicator();
 							} else {
 								String msg = inputLine.replace("CHAT ", "");
 								TakTakMultiplayerWindow.chat.add(msg);

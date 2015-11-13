@@ -22,9 +22,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 import tak.com.Piece;
+import tak.ui.ScoreFader;
+import tak.ui.TurnIndicator;
 import tak.util.OrderedPair;
 import tak.util.PlayerAI;
-import tak.util.ScoreFader;
 import tak.util.Sound;
 
 public class TakTakSingleplayerWindow extends JFrame implements Runnable {
@@ -92,12 +93,16 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
         private boolean mouseoverReturn;
         private boolean mouseoverHelp;
         private boolean mouseoverQuit;
+        
+        private boolean tellMeWhenItsMyTurn = true;
+        private boolean mouseoverConfig;
 	
 	static Sound move;
 	static Sound cha_ching;
 
 	public static ArrayList<OrderedPair> validMoves = new ArrayList<OrderedPair>();
     public static ArrayList<ScoreFader> faders = new ArrayList<ScoreFader>();
+    public static TurnIndicator turnIndicator = null;
 
 	public int tipTime;
 	public static String HINT_PREFIX = "Tip: ";
@@ -169,6 +174,11 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 				} else {
 					mouseoverQuit = false;
                 }
+				
+				if (xpos >= 135 && xpos <= 275 && ypos >= 730 && ypos <= 765)
+					mouseoverConfig = true;
+				else
+					mouseoverConfig = false;
 
 				repaint();
 			}
@@ -193,6 +203,9 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 					aiWins = 0;
 					new MenuWindow();
 					frame.dispose();
+				}
+				if (MouseEvent.BUTTON1 == e.getButton() && mouseoverConfig) {
+					tellMeWhenItsMyTurn = !tellMeWhenItsMyTurn;
 				}
 			}
 		});
@@ -412,6 +425,15 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
         else
             g.drawImage(button.getImage(), 285, 730, null);
 		
+		if (tellMeWhenItsMyTurn)
+			g.drawImage(hoverButton.getImage(), 135, 730, null);
+		else
+			g.drawImage(button.getImage(), 135, 730, null);
+
+		g.setFont(new Font("Arial", Font.BOLD, 12));
+		g.setColor(Color.black);
+		g.drawString("Turn Indicators: " + (tellMeWhenItsMyTurn ? "On" : "Off"), 150, 753);
+		
 		g.setFont(new Font("Arial", Font.BOLD, 16));
 		g.setColor(mouseoverHelp ? Color.red : Color.black);
 		g.drawString("Help", 483, 753);
@@ -460,6 +482,12 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
                 
         for (int i = 0; i < faders.size(); i++) {
             faders.get(i).draw(g);
+        }
+        
+        if (turnIndicator != null && tellMeWhenItsMyTurn) {
+            turnIndicator.draw(g);
+        } else if (!tellMeWhenItsMyTurn) {
+        	turnIndicator = null;
         }
 
 		gOld.drawImage(image, 0, 0, null);
@@ -562,6 +590,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 			if (!myTurn && aiMoveDelay >= 50) {
 				PlayerAI.makeMove();
 				myTurn = !myTurn;
+				turnIndicator = new TurnIndicator();
 				turn++;
 				aiMoveDelay = 0;
 			} else if (!myTurn && aiMoveDelay < 50) {
@@ -593,13 +622,6 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 				//End the game
 				chooseWinner();
 			}
-                
-        //Unselect a piece if there aren't any places it can move
-        //Stops the game from getting stuck sometimes
-        if (selectedRow != 999 && validMoves.isEmpty()) {
-        	selectedRow = 999;
-        	selectedColumn = 999;
-        }
 	}
 
 	public static void movePieceToLocation(OrderedPair piece, OrderedPair location) {

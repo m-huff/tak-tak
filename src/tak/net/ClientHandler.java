@@ -4,15 +4,16 @@
  */
 package tak.net;
 
-import java.awt.*;
+import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.net.SocketException;
 import java.net.UnknownHostException;
+
+import tak.ui.TurnIndicator;
 import tak.util.OrderedPair;
 import tak.window.TakTakMultiplayerWindow;
 
@@ -108,6 +109,7 @@ public class ClientHandler {
 								TakTakMultiplayerWindow.myTurn = !TakTakMultiplayerWindow.myTurn;
 								TakTakMultiplayerWindow.movePieceToLocation(new OrderedPair(initrowpost, initcolpost),
 										new OrderedPair(movedrowpost, movedcolpost));
+								TakTakMultiplayerWindow.turnIndicator = new TurnIndicator();
 							} else {
 								System.out.println("found one");
 								String msg = inputLine.replace("CHAT ", "");

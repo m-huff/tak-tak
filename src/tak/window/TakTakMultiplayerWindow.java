@@ -24,8 +24,9 @@ import javax.swing.JFrame;
 import tak.com.Piece;
 import tak.net.ClientHandler;
 import tak.net.ServerHandler;
+import tak.ui.ScoreFader;
+import tak.ui.TurnIndicator;
 import tak.util.OrderedPair;
-import tak.util.ScoreFader;
 import tak.util.Sound;
 
 public class TakTakMultiplayerWindow extends JFrame implements Runnable {
@@ -103,6 +104,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 
 	public static ArrayList<OrderedPair> validMoves = new ArrayList<OrderedPair>();
 	public static ArrayList<ScoreFader> faders = new ArrayList<ScoreFader>();
+	public static TurnIndicator turnIndicator = null;
 
 	static Sound tick;
 	static boolean singleplayer = false;
@@ -121,6 +123,9 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 	private boolean mouseoverReturn;
 	private boolean mouseoverHelp;
     private boolean mouseoverQuit;
+    
+    private boolean tellMeWhenItsMyTurn = true;
+    private boolean mouseoverConfig;
 
 	public static enum EnumWinner {
 		PlayerOne, PlayerTwo, PlayerAI, Tie, None
@@ -167,6 +172,10 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 					mouseoverQuit = true;
 				else
 					mouseoverQuit = false;
+				if (xpos >= 380 && xpos <= 520 && ypos >= 725 && ypos <= 760)
+					mouseoverConfig = true;
+				else
+					mouseoverConfig = false;
 
 				repaint();
 			}
@@ -315,6 +324,9 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 					opponentWins = 0;
                     reset();
 					frame.dispose();
+				}
+				if (MouseEvent.BUTTON1 == e.getButton() && mouseoverConfig) {
+					tellMeWhenItsMyTurn = !tellMeWhenItsMyTurn;
 				}
 			}
 		});
@@ -774,7 +786,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 		}
 		g.setColor(Color.white);
 		g.setFont(new Font("Arial Bold", Font.PLAIN, 14));
-		g.drawString(currentHint, 15, 725);
+		g.drawString(currentHint, 15, 719);
 
 		g.drawString("Your Score: " + myScore, 40, 60);
 		g.drawString("Your Wins: " + myWins, 40, 45);
@@ -860,11 +872,19 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 		else
 			g.drawImage(button.getImage(), 530, 725, null);
 		
+		if (tellMeWhenItsMyTurn)
+			g.drawImage(hoverButton.getImage(), 380, 725, null);
+		else
+			g.drawImage(button.getImage(), 380, 725, null);
+		
 		g.setFont(new Font("Arial", Font.BOLD, 16));
 		g.setColor(mouseoverHelp ? Color.red : Color.black);
 		g.drawString("Help", 734, 749);
 		g.setColor(mouseoverQuit ? Color.red : Color.black);
 		g.drawString("Quit", 585, 749);
+		
+		g.setFont(new Font("Arial", Font.BOLD, 12));
+		g.drawString("Turn Indicators: " + (tellMeWhenItsMyTurn ? "On" : "Off"), 394, 747);
 		
 		if (winner != EnumWinner.None) {
                     g.setColor(new Color(255, 255, 255, fadeOut));
@@ -879,7 +899,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 				g.drawString("You tied!", 220, 300);
 
 			g.setFont(new Font("Arial Bold", Font.PLAIN, 22));
-			g.drawString("New game begins in " + ((gameDelayTimer / 25) + 1) + " seconds", 140, 390);
+			g.drawString("New game begins in " + ((gameDelayTimer / 25) + 1) + " seconds", 145, 390);
 			//g.drawString("Press ESC to disconnect to the main menu", 90, 410);
 
 			if (fadeOut < 230)
@@ -913,6 +933,12 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 		for (int i = 0; i < faders.size(); i++) {
 			faders.get(i).draw(g);
 		}
+		
+		if (turnIndicator != null && tellMeWhenItsMyTurn) {
+            turnIndicator.draw(g);
+        } else if (!tellMeWhenItsMyTurn) {
+        	turnIndicator = null;
+        }
 
 		gOld.drawImage(image, 0, 0, null);
 	}
@@ -1117,17 +1143,6 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 			tipTime = 0;
 			currentHint = HINT_PREFIX + HINTS[rand.nextInt(HINTS.length)];
 		}
-
-		//If at any point we disconnect, dispose
-//		if (isClient) {
-//			if (!ClientHandler.isConnected())
-//				reset();
-//				dispose();
-//		} else {
-//			if (!ServerHandler.isConnected())
-//				reset();
-//				dispose();
-//		}
 
 		if ((numWhitePiecesOnBoard == 0 || numBlackPiecesOnBoard == 0) && winner == EnumWinner.None) {
 			//If one side doesn't have any pieces left

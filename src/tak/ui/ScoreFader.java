@@ -1,4 +1,4 @@
-package tak.util;
+package tak.ui;
 
 import java.awt.Color;
 import java.awt.Font;
