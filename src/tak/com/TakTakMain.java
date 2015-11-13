@@ -5,22 +5,21 @@ import tak.window.MenuWindow;
 
 public class TakTakMain {
 
-	//SFX - http://www.wavsource.com/sfx/sfx.htm - public domain
-	
-	//TODO
-        // - smaller button images for rules window
-        // - more buttons, extend game window to make room for quit/forfeit/help buttons
-        // - more sound effects
-        // - mute button maybe
-
-	static Sound music = new Sound("darude_sandstorm.wav");
+    //SFX - http://www.wavsource.com/sfx/sfx.htm - public domain
+    //TODO
+    // - smaller button images for rules window
+    // - more buttons, extend game window to make room for quit/forfeit/help buttons
+    // - more sound effects
+    // - mute button maybe
+    static Sound music = new Sound("darude_sandstorm.wav");
 
     public static void main(String[] args) {
         final MenuWindow ttw = new MenuWindow();
-        
+
         while (true) {
-	        if(music.donePlaying == true)
-	        	music = new Sound("darude_sandstorm.wav");
+            if (music.donePlaying == true) {
+                music = new Sound("darude_sandstorm.wav");
+            }
         }
     }
 }
