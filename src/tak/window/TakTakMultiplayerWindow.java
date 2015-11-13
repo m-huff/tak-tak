@@ -128,7 +128,6 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
             public void mouseMoved(MouseEvent e) {
                 lilWindaRow = 999;
                 lilWindaColumn = 999;
-                repaint();
             }
         });
         addMouseMotionListener(new MouseMotionAdapter() {
@@ -157,8 +156,6 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
                 } else {
                     mouseoverConfig = false;
                 }
-
-                repaint();
             }
         });
 
@@ -220,6 +217,13 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
                                 selectedRow = 999;
                                 selectedColumn = 999;
                             }
+                            else if(board[currentRow][currentColumn] != null && 
+                                    board[currentRow][currentColumn].getTopPiece().getBackgroundColor() == myColor) {
+                                selectedRow = currentRow;
+                                selectedColumn = currentColumn;
+                                arrowLoc = 0;
+                                arrowAnim = 0;
+                            }
                         }
                     }
                 }
@@ -260,18 +264,6 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
                         mousey = e.getY();
                     }
                 }
-                repaint();
-            }
-        });
-
-        addKeyListener(new KeyAdapter() {
-            public void keyPressed(KeyEvent e) {
-                if (KeyEvent.VK_BACK_SPACE == e.getKeyCode()) {
-                    selectedRow = 999;
-                    selectedColumn = 999;
-                    validMoves.clear();
-                }
-
                 repaint();
             }
         });
