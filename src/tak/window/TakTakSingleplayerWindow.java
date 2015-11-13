@@ -91,7 +91,6 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
     public static String currentHint = "";
     public static String[] HINTS = {"Stack your pieces to move across the board faster!",
         "Right-click a piece to see the stack size and total value!",
-        "Press BACKSPACE after you've selected a piece to cancel the selection.",
         "Once you've selected a piece, the green arrows show all of the places you can move.",
         "Right-clicking a piece will reveal all of the information about it!",
         "You can stack your pieces in your own safe zone to get pieces across faster!",
