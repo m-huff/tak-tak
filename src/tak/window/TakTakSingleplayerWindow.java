@@ -469,8 +469,10 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
                                 g.setColor(mouseoverReturn ? Color.red : Color.black);
                                 g.drawString("Return to Menu", 237, 425);
                                 
-                                
-				
+                                g.setColor(Color.white);
+                                g.drawString("Your score: " + myScore, 235, 475); 
+                                g.drawString("AI Score: " + aiScore, 235, 505);      
+
 				if (fadeOut < 150)
 					fadeOut += 5;
 		}

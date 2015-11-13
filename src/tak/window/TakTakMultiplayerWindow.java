@@ -913,7 +913,11 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 
 			g.setFont(new Font("Arial", Font.BOLD, 16));
 			g.setColor(mouseoverReturn ? Color.red : Color.black);
-			g.drawString("Return to Menu", 240, 470);
+			g.drawString("Return to Menu", 245, 470);
+			
+			g.setColor(Color.white);
+			g.drawString("Your score: " + myScore, 235, 490); 
+            g.drawString("Opponent score: " + opponentScore, 235, 520);   
 
 
 			if (gameDelayTimer > 0) {
