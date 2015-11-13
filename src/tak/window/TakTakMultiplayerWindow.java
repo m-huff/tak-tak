@@ -813,13 +813,15 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 		g.setColor(Color.white);
 		g.setFont(new Font("Arial Bold", Font.BOLD, 14));
 
-		if (currentChatText != null) {
+		if (!currentChatText.isEmpty() && currentChatText != "") {
 			String finalText = currentChatText.replaceAll("null", "");
                         
                         if (!finalText.equals("Chat with your opponent!"))
                         
 			g.drawString(finalText.length() > stringWrap ? finalText.substring(finalText.length() - stringWrap) : finalText,
                         598, 690);
+		} else {
+			g.drawString("Chat with your opponent!", 598, 690);
 		}
 
 		//The most recent chat is displayed
@@ -831,10 +833,17 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 			for (String msg : chat) {
                             boolean flag = msg.length() > 20;
                             
-				g.setColor((msg.startsWith("P1") ? Color.cyan : Color.green));
-				g.drawString(msg.substring(0, 3), 600, 100 + chatY);
-				g.setColor(Color.white);
-				g.drawString("      " + (flag ? msg.substring(3, 20) : msg.substring(3)), 600, 100 + chatY);
+                if (msg.startsWith("P1") || msg.startsWith("P2")) {
+					g.setColor((msg.startsWith("P1") ? Color.cyan : Color.green));
+					g.drawString(msg.substring(0, 3), 600, 100 + chatY);
+					g.setColor(Color.white);
+					g.drawString("      " + (flag ? msg.substring(3, 20) : msg.substring(3)), 600, 100 + chatY);
+                } else if (msg.startsWith("GAME")) {
+                	g.setColor(Color.ORANGE);
+					g.drawString(msg.substring(0, 5), 600, 100 + chatY);
+					g.setColor(Color.white);
+					g.drawString("           " + (flag ? msg.substring(5, 20) : msg.substring(5)), 600, 100 + chatY);
+                }
 				chatY += 25;
 			}
 		} else if (chat.size() > chatBoardLength) {
@@ -847,12 +856,19 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 			}
 
 			for (String msg : chatToShow) {
-                            boolean flag = msg.length() > 20;
-                            
-				g.setColor((msg.startsWith("P1") ? Color.cyan : msg.startsWith("GAME") ? Color.orange : Color.green));
-				g.drawString(msg.substring(0, 3), 600, 100 + chatY);
-				g.setColor(Color.white);
-                                g.drawString("      " + (flag ? msg.substring(3, 20) : msg.substring(3)), 600, 100 + chatY);
+                boolean flag = msg.length() > 20;
+                
+                if (msg.startsWith("P1") || msg.startsWith("P2")) {
+					g.setColor((msg.startsWith("P1") ? Color.cyan : Color.green));
+					g.drawString(msg.substring(0, 3), 600, 100 + chatY);
+					g.setColor(Color.white);
+					g.drawString("      " + (flag ? msg.substring(3, 20) : msg.substring(3)), 600, 100 + chatY);
+                } else if (msg.startsWith("GAME")) {
+                	g.setColor(Color.ORANGE);
+					g.drawString(msg.substring(0, 5), 600, 100 + chatY);
+					g.setColor(Color.white);
+					g.drawString("           " + (flag ? msg.substring(5, 20) : msg.substring(5)), 600, 100 + chatY);
+                };
 				chatY += 25;
 			}
 		}
@@ -900,7 +916,6 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 
 			g.setFont(new Font("Arial Bold", Font.PLAIN, 22));
 			g.drawString("New game begins in " + ((gameDelayTimer / 25) + 1) + " seconds", 145, 390);
-			//g.drawString("Press ESC to disconnect to the main menu", 90, 410);
 
 			if (fadeOut < 230)
 				fadeOut += 5;
@@ -916,8 +931,8 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 			g.drawString("Return to Menu", 245, 470);
 			
 			g.setColor(Color.white);
-			g.drawString("Your score: " + myScore, 235, 490); 
-            g.drawString("Opponent score: " + opponentScore, 235, 520);   
+			g.drawString("Your score: " + myScore, 235, 540); 
+            g.drawString("Opponent score: " + opponentScore, 235, 570);   
 
 
 			if (gameDelayTimer > 0) {
@@ -976,6 +991,8 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 
 		tipTime = 0;
 		currentHint = HINT_PREFIX + HINTS[rand.nextInt(HINTS.length)];
+		
+		currentChatText = "Chat with your opponent!";
 
 		turn = 0;
 		myTurn = true;
@@ -994,6 +1011,8 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
                 
                 arrowLoc = 0;
                 arrowAnim = 0;
+                
+        chat.add("GAME: Game started!");        
 	}
 
 	public void chooseWinner() {
@@ -1009,6 +1028,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 
 		//25 is one second
 		gameDelayTimer = 150;
+		chat.add("GAME: Game ended!");
 	}
 
 	//Multiplayer boards just can't be random, the amount of data that would
@@ -1056,10 +1076,12 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 
 		if (board[location.getX()][location.getY()] != null) {
 
-			if (board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.black)
+			if (board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.black) {
 				numBlackPiecesOnBoard--;
-			else
+			}
+			else {
 				numWhitePiecesOnBoard--;
+			}
 
 			board[location.getX()][location.getY()].addStackToStack(board[piece.getX()][piece.getY()].getWholeStack());
 			board[piece.getX()][piece.getY()] = null;
@@ -1084,6 +1106,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 					opponentScore += board[location.getX()][location.getY()].getValue();
 
 				numBlackPiecesOnBoard--;
+				chat.add("GAME: Black +" + board[location.getX()][location.getY()].getValue() + "!");
 			}
 			//"my" pieces are white if I'm a server
 			else if (location.getX() < 2
@@ -1096,6 +1119,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 					opponentScore += board[location.getX()][location.getY()].getValue();
 
 				numWhitePiecesOnBoard--;
+				chat.add("GAME: White +" + board[location.getX()][location.getY()].getValue() + "!");
 			}
 
 			Color c;
@@ -1171,6 +1195,10 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 			}
 			//End the game
 			chooseWinner();
+		}
+		
+		if (currentChatText == null) {
+			currentChatText = "Chat with your opponent!";
 		}
 	}
 
