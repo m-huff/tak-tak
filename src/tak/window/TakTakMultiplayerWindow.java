@@ -217,14 +217,14 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
                                 selectedRow = 999;
                                 selectedColumn = 999;
                             }
-                            else if(board[currentRow][currentColumn] != null && 
-                                    board[currentRow][currentColumn].getTopPiece().getBackgroundColor() == myColor) {
-                                selectedRow = currentRow;
-                                selectedColumn = currentColumn;
-                                arrowLoc = 0;
-                                arrowAnim = 0;
-                                return;
-                            }
+//                            else if(board[currentRow][currentColumn] != null && 
+//                                    board[currentRow][currentColumn].getTopPiece().getBackgroundColor() == myColor) {
+//                                selectedRow = currentRow;
+//                                selectedColumn = currentColumn;
+//                                arrowLoc = 0;
+//                                arrowAnim = 0;
+//                                return;
+//                            }
                         }
                     }
                 }

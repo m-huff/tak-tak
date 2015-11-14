@@ -243,15 +243,14 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
                                 validMoves.clear();
                                 myTurn = !myTurn;
                             }
-                            else if(board[currentRow][currentColumn] != null && 
-                                    board[currentRow][currentColumn].getTopPiece().getBackgroundColor() == Color.white) {
-                                selectedRow = currentRow;
-                                selectedColumn = currentColumn;
-                                arrowLoc = 0;
-                                arrowAnim = 0;
-                                return;
-                            }
-                           
+//                            else if(board[currentRow][currentColumn] != null && 
+//                                    board[currentRow][currentColumn].getTopPiece().getBackgroundColor() == Color.white) {
+//                                selectedRow = currentRow;
+//                                selectedColumn = currentColumn;
+//                                arrowLoc = 0;
+//                                arrowAnim = 0;
+//                                return;
+//                            }
                         }    
                     }
                     
