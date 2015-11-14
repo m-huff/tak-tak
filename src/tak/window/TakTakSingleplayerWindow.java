@@ -81,7 +81,6 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
     private boolean mouseoverQuit;
     private boolean tellMeWhenItsMyTurn = true;
     private boolean mouseoverConfig;
-    static Sound move;
     static Sound cha_ching;
     public static ArrayList<OrderedPair> validMoves = new ArrayList<OrderedPair>();
     public static ArrayList<ScoreFader> faders = new ArrayList<ScoreFader>();
@@ -663,7 +662,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
                     getY(0) + location.getX() * getHeight2() / ROWS, c);
             numPiecesOnBoard -= board[location.getX()][location.getY()].getWholeStack().size();
             board[location.getX()][location.getY()] = null;
-            move = new Sound("chaching.wav");
+            cha_ching = new Sound("src/tak/assets/sound/chaching.wav");
         }
     }
 

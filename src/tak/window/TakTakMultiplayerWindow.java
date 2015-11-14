@@ -97,7 +97,6 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
     public static String HINT_PREFIX = "Tip: ";
     public static String currentHint = "";
     public static String[] HINTS = TakTakSingleplayerWindow.HINTS;
-    static Sound move;
     static Sound cha_ching;
     private boolean mouseoverReturn;
     private boolean mouseoverHelp;
@@ -1015,7 +1014,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
             if (gameDelayTimer > 0) {
                 gameDelayTimer--;
                 if (gameDelayTimer % 25 == 0) {
-                    tick = new Sound("tick.wav");
+                    tick = new Sound("src/tak/assets/sound/tick.wav");
                 }
             } else if (gameDelayTimer == 0) {
                 reset();
@@ -1179,7 +1178,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
             if (location.getX() >= 5
                     && board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.black) {
                 if (isClient) {
-                    move = new Sound("chaching.wav");
+                    cha_ching = new Sound("src/tak/assets/sound/chaching.wav");
                     myScore += board[location.getX()][location.getY()].getValue();
                 } else {
                     opponentScore += board[location.getX()][location.getY()].getValue();
@@ -1192,7 +1191,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
                     && board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.white) {
                 if (!isClient) {
                     myScore += board[location.getX()][location.getY()].getValue();
-                    move = new Sound("chaching.wav");
+                    cha_ching = new Sound("src/tak/assets/sound/chaching.wav");
                 } else {
                     opponentScore += board[location.getX()][location.getY()].getValue();
                 }
