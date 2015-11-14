@@ -223,6 +223,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
                                 selectedColumn = currentColumn;
                                 arrowLoc = 0;
                                 arrowAnim = 0;
+                                return;
                             }
                         }
                     }
