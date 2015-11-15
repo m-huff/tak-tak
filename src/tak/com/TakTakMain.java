@@ -11,14 +11,14 @@ public class TakTakMain {
     // - more buttons, extend game window to make room for quit/forfeit/help buttons
     // - more sound effects
     // - mute button maybe
-    static Sound music = new Sound("darude_sandstorm.wav");
+    static Sound music = new Sound("sound/darude_sandstorm.wav");
 
     public static void main(String[] args) {
         final MenuWindow ttw = new MenuWindow();
 
         while (true) {
             if (music.donePlaying == true) {
-                music = new Sound("darude_sandstorm.wav");
+                music = new Sound("sound/darude_sandstorm.wav");
             }
         }
     }

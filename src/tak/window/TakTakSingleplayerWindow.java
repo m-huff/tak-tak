@@ -663,7 +663,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
                     getY(0) + location.getX() * getHeight2() / ROWS, c);
             numPiecesOnBoard -= board[location.getX()][location.getY()].getWholeStack().size();
             board[location.getX()][location.getY()] = null;
-            move = new Sound("chaching.wav");
+            move = new Sound("sound/chaching.wav");
         }
     }
 
