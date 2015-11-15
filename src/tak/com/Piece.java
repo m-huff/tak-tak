@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 
+import tak.window.MenuWindow;
 import tak.window.TakTakSingleplayerWindow;
 
 public class Piece {
@@ -20,7 +21,7 @@ public class Piece {
     private ImageIcon blue = new ImageIcon(Piece.class.getResource("/tak/assets/blue.png"));
     private ImageIcon green = new ImageIcon(Piece.class.getResource("/tak/assets/green.png"));
     private ImageIcon orange = new ImageIcon(Piece.class.getResource("/tak/assets/orange.png"));
-    private ImageIcon crown = new ImageIcon(Piece.class.getResource("/tak/assets/crown.png"));
+    private ImageIcon crown = new ImageIcon(Piece.class.getResource((MenuWindow.johnCena ? "/tak/assets/cenaking.png" : "/tak/assets/crown.png")));
     private boolean isKing;
 
     public Piece() {
@@ -35,6 +36,7 @@ public class Piece {
         frontColor = _frontColor;
         backColor = _backColor;
         stack.add(this);
+        update();
     }
 
     public void setValue(int _value) {
@@ -55,6 +57,10 @@ public class Piece {
             stack.add(_stack.get(index));
             addValue(_stack.get(index).getValue());
         }
+    }
+    
+    public void update() {
+    	crown = new ImageIcon(Piece.class.getResource((MenuWindow.johnCena ? "/tak/assets/cenaking.png" : "/tak/assets/crown.png")));
     }
 
     public Piece getTopPiece() {

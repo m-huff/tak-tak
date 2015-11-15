@@ -22,6 +22,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 import tak.com.Piece;
+import tak.com.TakTakMain;
 import tak.net.ClientHandler;
 import tak.net.ServerHandler;
 import tak.ui.ScoreFader;
@@ -89,6 +90,10 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 			TakTakSingleplayerWindow.class.getResource("/tak/assets/button_hover.png"));
 	private static ImageIcon button = new ImageIcon(
 			TakTakSingleplayerWindow.class.getResource("/tak/assets/button.png"));
+	private static ImageIcon smallHoverButton = new ImageIcon(MenuWindow.class.getResource("/tak/assets/button_small_hover.png"));
+    private static ImageIcon smallButton = new ImageIcon(MenuWindow.class.getResource("/tak/assets/button_small.png"));
+    private static ImageIcon muted = new ImageIcon(MenuWindow.class.getResource("/tak/assets/muted.png"));
+    private static ImageIcon notMuted = new ImageIcon(MenuWindow.class.getResource("/tak/assets/notmuted.png"));
 	public static ArrayList<OrderedPair> validMoves = new ArrayList<OrderedPair>();
 	public static ArrayList<ScoreFader> faders = new ArrayList<ScoreFader>();
 	public static TurnIndicator turnIndicator = null;
@@ -107,6 +112,8 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 	private boolean mouseoverQuit;
 	private boolean tellMeWhenItsMyTurn = true;
 	private boolean mouseoverConfig;
+	private boolean mouseoverMute;
+	public static boolean isWindowOpen;
 
 	public static enum EnumWinner {
 
@@ -117,6 +124,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 	public int fadeOut;
 
 	public TakTakMultiplayerWindow(NetworkWindow _controller) {
+		isWindowOpen = true;
 
 		controller = _controller;
 
@@ -127,6 +135,13 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 		setTitle("Tak-Tak");
 		setLocation(CENTER_X, CENTER_Y);
 		setIconImage(icon.getImage());
+		
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				isWindowOpen = false;
+			}
+		});
 
 		addMouseMotionListener(new MouseMotionAdapter() {
 			public void mouseMoved(MouseEvent e) {
@@ -145,20 +160,25 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 					mouseoverReturn = false;
 				}
 
-				if (xpos >= 680 && xpos <= 820 && ypos >= 725 && ypos <= 760) {
+				if (xpos >= 650 && xpos <= 790 && ypos >= 725 && ypos <= 760) {
 					mouseoverHelp = true;
 				} else {
 					mouseoverHelp = false;
 				}
-				if (xpos >= 530 && xpos <= 670 && ypos >= 725 && ypos <= 760) {
+				if (xpos >= 500 && xpos <= 640 && ypos >= 725 && ypos <= 760) {
 					mouseoverQuit = true;
 				} else {
 					mouseoverQuit = false;
 				}
-				if (xpos >= 380 && xpos <= 520 && ypos >= 725 && ypos <= 760) {
+				if (xpos >= 350 && xpos <= 490 && ypos >= 725 && ypos <= 760) {
 					mouseoverConfig = true;
 				} else {
 					mouseoverConfig = false;
+				}
+				if (xpos >= 795 && xpos <= 830 && ypos >= 725 && ypos <= 760) {
+					mouseoverMute = true;
+				} else {
+					mouseoverMute = false;
 				}
 			}
 		});
@@ -335,6 +355,9 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 				}
 				if (MouseEvent.BUTTON1 == e.getButton() && mouseoverConfig) {
 					tellMeWhenItsMyTurn = !tellMeWhenItsMyTurn;
+				}
+				if (MouseEvent.BUTTON1 == e.getButton() && mouseoverMute) {
+					TakTakMain.muted = !TakTakMain.muted;
 				}
 			}
 		});
@@ -872,6 +895,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 		for (int zRow = 0; zRow < ROWS; zRow++) {
 			for (int zColumn = 0; zColumn < COLUMNS; zColumn++) {
 				if (board[zRow][zColumn] != null) {
+					board[zRow][zColumn].update();
 					board[zRow][zColumn].draw(g, getX(0) + zColumn * getWidth2() / COLUMNS,
 							getY(0) + zRow * getHeight2() / ROWS);
 				}
@@ -981,30 +1005,39 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
 		g.setFont(new Font("Arial Bold", Font.PLAIN, 36));
 
 		if (mouseoverHelp) {
-			g.drawImage(hoverButton.getImage(), 680, 725, null);
+			g.drawImage(hoverButton.getImage(), 650, 725, null);
 		} else {
-			g.drawImage(button.getImage(), 680, 725, null);
+			g.drawImage(button.getImage(), 650, 725, null);
 		}
 		if (mouseoverQuit) {
-			g.drawImage(hoverButton.getImage(), 530, 725, null);
+			g.drawImage(hoverButton.getImage(), 500, 725, null);
 		} else {
-			g.drawImage(button.getImage(), 530, 725, null);
+			g.drawImage(button.getImage(), 500, 725, null);
 		}
+		
+		if (mouseoverMute) {
+            g.drawImage(smallHoverButton.getImage(), 795, 725, null);
+            g.drawImage((TakTakMain.muted ? muted.getImage() : notMuted.getImage()), 795, 725, null);
+        } else {
+            g.drawImage(smallButton.getImage(), 795, 725, null);
+            g.drawImage((TakTakMain.muted ? muted.getImage() : notMuted.getImage()), 795, 725, null);
+        }
 
 		if (tellMeWhenItsMyTurn) {
-			g.drawImage(hoverButton.getImage(), 380, 725, null);
+			g.drawImage(hoverButton.getImage(), 350, 725, null);
 		} else {
-			g.drawImage(button.getImage(), 380, 725, null);
+			g.drawImage(button.getImage(), 350, 725, null);
 		}
 
 		g.setFont(new Font("Arial", Font.BOLD, 16));
 		g.setColor(mouseoverHelp ? Color.red : Color.black);
-		g.drawString("Help", 734, 749);
+		g.drawString("Help", 704, 749);
 		g.setColor(mouseoverQuit ? Color.red : Color.black);
-		g.drawString("Quit", 585, 749);
+		g.drawString("Quit", 555, 749);
 
 		g.setFont(new Font("Arial", Font.BOLD, 12));
-		g.drawString("Turn Indicators: " + (tellMeWhenItsMyTurn ? "On" : "Off"), 394, 747);
+		g.setColor(mouseoverConfig ? Color.red : Color.black);
+		g.drawString("Turn Indicators: " + (tellMeWhenItsMyTurn ? "On" : "Off"), 364, 747);
 
 		if (winner != EnumWinner.None) {
 			g.setColor(new Color(255, 255, 255, fadeOut));

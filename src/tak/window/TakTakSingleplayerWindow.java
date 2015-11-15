@@ -22,6 +22,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 import tak.com.Piece;
+import tak.com.TakTakMain;
 import tak.ui.ScoreFader;
 import tak.ui.TurnIndicator;
 import tak.util.OrderedPair;
@@ -51,6 +52,10 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
     private static ImageIcon arrow = new ImageIcon(MenuWindow.class.getResource("/tak/assets/greenarrow.png"));
     private static ImageIcon hoverButton = new ImageIcon(MenuWindow.class.getResource("/tak/assets/button_hover.png"));
     private static ImageIcon button = new ImageIcon(MenuWindow.class.getResource("/tak/assets/button.png"));
+    private static ImageIcon smallHoverButton = new ImageIcon(MenuWindow.class.getResource("/tak/assets/button_small_hover.png"));
+    private static ImageIcon smallButton = new ImageIcon(MenuWindow.class.getResource("/tak/assets/button_small.png"));
+    private static ImageIcon muted = new ImageIcon(MenuWindow.class.getResource("/tak/assets/muted.png"));
+    private static ImageIcon notMuted = new ImageIcon(MenuWindow.class.getResource("/tak/assets/notmuted.png"));
     //Board of real game is 6x7
     public static final int COLUMNS = 6;
     public static final int ROWS = 7;
@@ -79,6 +84,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
     private boolean mouseoverReturn;
     private boolean mouseoverHelp;
     private boolean mouseoverQuit;
+    private boolean mouseoverMute;
     private boolean tellMeWhenItsMyTurn = true;
     private boolean mouseoverConfig;
     static Sound move;
@@ -87,6 +93,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
     public static ArrayList<ScoreFader> faders = new ArrayList<ScoreFader>();
     public static TurnIndicator turnIndicator = null;
     public int tipTime;
+    public static boolean isWindowOpen;
     public static String HINT_PREFIX = "Tip: ";
     public static String currentHint = "";
     public static String[] HINTS = {"Stack your pieces to move across the board faster!",
@@ -110,6 +117,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
     public static EnumWinner winner;
 
     public TakTakSingleplayerWindow() {
+    	isWindowOpen = true;
 
         setSize(WINDOW_WIDTH, FULL_HEIGHT);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -118,6 +126,13 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
         setTitle("Tak-Tak");
         setLocation(CENTER_X, CENTER_Y);
         setIconImage(icon.getImage());
+        
+        addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				isWindowOpen = false;
+			}
+		});
 
         addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseMoved(MouseEvent e) {
@@ -143,22 +158,28 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
                     mouseoverReturn = false;
                 }
 
-                if (xpos >= 430 && xpos <= 570 && ypos >= 730 && ypos <= 765) {
+                if (xpos >= 400 && xpos <= 540 && ypos >= 730 && ypos <= 765) {
                     mouseoverHelp = true;
                 } else {
                     mouseoverHelp = false;
                 }
 
-                if (xpos >= 285 && xpos <= 425 && ypos >= 730 && ypos <= 765) {
+                if (xpos >= 255 && xpos <= 395 && ypos >= 730 && ypos <= 765) {
                     mouseoverQuit = true;
                 } else {
                     mouseoverQuit = false;
                 }
 
-                if (xpos >= 135 && xpos <= 275 && ypos >= 730 && ypos <= 765) {
+                if (xpos >= 105 && xpos <= 245 && ypos >= 730 && ypos <= 765) {
                     mouseoverConfig = true;
                 } else {
                     mouseoverConfig = false;
+                }
+                
+                if (xpos >= 545 && xpos <= 580 && ypos >= 730 && ypos <= 765) {
+                    mouseoverMute = true;
+                } else {
+                	mouseoverMute = false;
                 }
             }
         });
@@ -185,6 +206,9 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
                 }
                 if (MouseEvent.BUTTON1 == e.getButton() && mouseoverConfig) {
                     tellMeWhenItsMyTurn = !tellMeWhenItsMyTurn;
+                }
+                if (MouseEvent.BUTTON1 == e.getButton() && mouseoverMute) {
+                    TakTakMain.muted = !TakTakMain.muted;
                 }
             }
         });
@@ -401,6 +425,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
         for (int zRow = 0; zRow < ROWS; zRow++) {
             for (int zColumn = 0; zColumn < COLUMNS; zColumn++) {
                 if (board[zRow][zColumn] != null) {
+                	board[zRow][zColumn].update();
                     board[zRow][zColumn].draw(g, getX(0) + zColumn * getWidth2() / COLUMNS,
                             getY(0) + zRow * getHeight2() / ROWS);
                 }
@@ -432,31 +457,39 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
         g.setFont(new Font("Arial Bold", Font.PLAIN, 36));
 
         if (mouseoverHelp) {
-            g.drawImage(hoverButton.getImage(), 430, 730, null);
+            g.drawImage(hoverButton.getImage(), 400, 730, null);
         } else {
-            g.drawImage(button.getImage(), 430, 730, null);
+            g.drawImage(button.getImage(), 400, 730, null);
         }
         if (mouseoverQuit) {
-            g.drawImage(hoverButton.getImage(), 285, 730, null);
+            g.drawImage(hoverButton.getImage(), 255, 730, null);
         } else {
-            g.drawImage(button.getImage(), 285, 730, null);
+            g.drawImage(button.getImage(), 255, 730, null);
         }
 
         if (tellMeWhenItsMyTurn) {
-            g.drawImage(hoverButton.getImage(), 135, 730, null);
+            g.drawImage(hoverButton.getImage(), 105, 730, null);
         } else {
-            g.drawImage(button.getImage(), 135, 730, null);
+            g.drawImage(button.getImage(), 105, 730, null);
+        }
+        
+        if (mouseoverMute) {
+            g.drawImage(smallHoverButton.getImage(), 545, 730, null);
+            g.drawImage((TakTakMain.muted ? muted.getImage() : notMuted.getImage()), 545, 730, null);
+        } else {
+            g.drawImage(smallButton.getImage(), 545, 730, null);
+            g.drawImage((TakTakMain.muted ? muted.getImage() : notMuted.getImage()), 545, 730, null);
         }
 
         g.setFont(new Font("Arial", Font.BOLD, 12));
         g.setColor(Color.black);
-        g.drawString("Turn Indicators: " + (tellMeWhenItsMyTurn ? "On" : "Off"), 150, 753);
+        g.drawString("Turn Indicators: " + (tellMeWhenItsMyTurn ? "On" : "Off"), 120, 753);
 
         g.setFont(new Font("Arial", Font.BOLD, 16));
         g.setColor(mouseoverHelp ? Color.red : Color.black);
-        g.drawString("Help", 483, 753);
+        g.drawString("Help", 453, 753);
         g.setColor(mouseoverQuit ? Color.red : Color.black);
-        g.drawString("Quit", 337, 753);
+        g.drawString("Quit", 307, 753);
 
         if (winner != EnumWinner.None) {
             g.setColor(new Color(255, 255, 255, fadeOut));

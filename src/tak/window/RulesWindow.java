@@ -81,8 +81,10 @@ public class RulesWindow extends JFrame implements Runnable {
     public boolean mouseoverPrev;
     public boolean mouseoverNext;
     public boolean mouseoverReturn;
+    public static boolean isWindowOpen;
 
     public RulesWindow() {
+    	isWindowOpen = true;
 
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -91,6 +93,13 @@ public class RulesWindow extends JFrame implements Runnable {
         setIconImage(icon.getImage());
         setTitle("Tak-Tak");
         setLocation(CENTER_X, CENTER_Y);
+        
+        addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				isWindowOpen = false;
+			}
+		});
 
         addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseMoved(MouseEvent e) {
@@ -176,6 +185,7 @@ public class RulesWindow extends JFrame implements Runnable {
 
                 if (index <= pieces.size() - 2 && pieces.get(index) != null) {
                     if (y < 160 || y >= 160 && x < 80 || y >= 160 && x > 400) {
+                    	pieces.get(index).update();
                         pieces.get(index).draw(g, x, y);
                     }
                     if (index < pieces.size() - 2) {
@@ -276,7 +286,6 @@ public class RulesWindow extends JFrame implements Runnable {
                 xsize = getSize().width;
                 ysize = getSize().height;
             }
-
             reset();
         }
     }

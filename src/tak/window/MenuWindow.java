@@ -18,6 +18,8 @@ import java.awt.event.WindowEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import tak.com.Piece;
+import tak.com.TakTakMain;
+import tak.util.Sound;
 
 @SuppressWarnings("serial")
 public class MenuWindow extends JFrame implements Runnable {
@@ -42,17 +44,28 @@ public class MenuWindow extends JFrame implements Runnable {
     static ImageIcon background = new ImageIcon(MenuWindow.class.getResource("/tak/assets/wood.png"));
     private static ImageIcon hoverButton = new ImageIcon(MenuWindow.class.getResource("/tak/assets/button_hover.png"));
     private static ImageIcon button = new ImageIcon(MenuWindow.class.getResource("/tak/assets/button.png"));
+    private static ImageIcon cenaButton = new ImageIcon(MenuWindow.class.getResource("/tak/assets/cenaButton.png"));
+    private static ImageIcon smallHoverButton = new ImageIcon(MenuWindow.class.getResource("/tak/assets/button_small_hover.png"));
+    private static ImageIcon smallButton = new ImageIcon(MenuWindow.class.getResource("/tak/assets/button_small.png"));
+    private static ImageIcon muted = new ImageIcon(MenuWindow.class.getResource("/tak/assets/muted.png"));
+    private static ImageIcon notMuted = new ImageIcon(MenuWindow.class.getResource("/tak/assets/notmuted.png"));
     private static ImageIcon logo = new ImageIcon(MenuWindow.class.getResource("/tak/assets/logo.png"));
     private boolean mouseoverAI;
     private boolean mouseoverClient;
     private boolean mouseoverServer;
     private boolean mouseoverRules;
+    private boolean mouseoverCena;
+    private boolean mouseoverMute;
     private final MenuWindow frame = this;
     public int textPosition = WINDOW_WIDTH;
     public static ArrayList<Piece> pieces = new ArrayList<Piece>();
+    public static boolean allowJohnCena = true;
+    public static boolean johnCena = false;
+    public static boolean isWindowOpen;
 
     public MenuWindow() {
-
+    	isWindowOpen = true;
+    	
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
@@ -60,6 +73,13 @@ public class MenuWindow extends JFrame implements Runnable {
         setIconImage(icon.getImage());
         setTitle("Tak-Tak");
         setLocation(CENTER_X, CENTER_Y);
+        
+        addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				isWindowOpen = false;
+			}
+		});
 
         addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseMoved(MouseEvent e) {
@@ -95,6 +115,19 @@ public class MenuWindow extends JFrame implements Runnable {
                 } else {
                     mouseoverServer = false;
                 }
+                
+              //Client button
+                if (ypos >= textPosition + 47 && ypos <= textPosition + 82 && xpos >= 247 && xpos <= 387) {
+                    mouseoverCena = true;
+                } else {
+                    mouseoverCena = false;
+                }
+
+                if (ypos >= textPosition + 82 && ypos <= textPosition + 117 && xpos >= 590 && xpos <= 625) {
+                    mouseoverMute = true;
+                } else {
+                	mouseoverMute = false;
+                }
 
                 repaint();
             }
@@ -116,6 +149,12 @@ public class MenuWindow extends JFrame implements Runnable {
                 } else if (MouseEvent.BUTTON1 == e.getButton() && mouseoverRules) {
                     final RulesWindow rw = new RulesWindow();
                     rw.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                } else if (MouseEvent.BUTTON1 == e.getButton() && mouseoverCena) {
+                	johnCena = !johnCena;
+                	TakTakMain.music.stop();
+                	TakTakMain.music = new Sound(johnCena ? "sound/time_is_now.wav" : "sound/darude_sandstorm.wav");
+                } else if (MouseEvent.BUTTON1 == e.getButton() && mouseoverMute) {
+                	TakTakMain.muted = !TakTakMain.muted;
                 }
             }
         });
@@ -164,6 +203,7 @@ public class MenuWindow extends JFrame implements Runnable {
             for (int y = 0; y < WINDOW_HEIGHT; y += 80) {
 
                 if (index <= pieces.size() - 2 && pieces.get(index) != null) {
+                	pieces.get(index).update();
                     pieces.get(index).draw(g, x, y);
                     if (index < pieces.size() - 2) {
                         index++;
@@ -175,7 +215,7 @@ public class MenuWindow extends JFrame implements Runnable {
         }
 
         g.setColor(new Color(0, 0, 0, 190));
-        g.fillRect(0, 0, WINDOW_WIDTH, textPosition + 60);
+        g.fillRect(0, 0, WINDOW_WIDTH, textPosition + (allowJohnCena ? 150 : 60));
 
         g.drawImage(logo.getImage(), textPosition - 28, 35, null);
 
@@ -202,6 +242,20 @@ public class MenuWindow extends JFrame implements Runnable {
         } else {
             g.drawImage(button.getImage(), 30, textPosition + 10, null);
         }
+        
+        if (johnCena) {
+            g.drawImage(cenaButton.getImage(), 247, textPosition + 47, null);
+        } else {
+            g.drawImage(button.getImage(), 247, textPosition + 47, null);
+        }
+        
+        if (mouseoverMute) {
+            g.drawImage(smallHoverButton.getImage(), 590, textPosition + 82, null);
+            g.drawImage((TakTakMain.muted ? muted.getImage() : notMuted.getImage()), 590, textPosition + 82, null);
+        } else {
+            g.drawImage(smallButton.getImage(), 590, textPosition + 82, null);
+            g.drawImage((TakTakMain.muted ? muted.getImage() : notMuted.getImage()), 590, textPosition + 82, null);
+        }
 
         g.setFont(new Font("Arial", Font.BOLD, 16));
 
@@ -213,6 +267,11 @@ public class MenuWindow extends JFrame implements Runnable {
         g.drawString("Play as Client", 194, textPosition + 34);
         g.setColor(mouseoverServer ? Color.red : Color.black);
         g.drawString("Play as Server", 335, textPosition + 34);
+        
+        g.setFont(new Font("Arial", Font.BOLD, 12));
+        
+        g.setColor(mouseoverCena ? Color.red : Color.black);
+        g.drawString("John Cena: " + (johnCena ? "On" : "Off"), 275, textPosition + 70);
 
         gOld.drawImage(image, 0, 0, null);
     }
@@ -250,7 +309,6 @@ public class MenuWindow extends JFrame implements Runnable {
                 xsize = getSize().width;
                 ysize = getSize().height;
             }
-
             reset();
         }
 

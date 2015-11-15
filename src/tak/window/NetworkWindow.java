@@ -24,6 +24,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 import tak.com.Piece;
+import tak.com.TakTakMain;
 import tak.net.ClientHandler;
 import tak.net.ServerHandler;
 
@@ -50,6 +51,10 @@ public class NetworkWindow extends JFrame implements Runnable {
     static ImageIcon background = new ImageIcon(NetworkWindow.class.getResource("/tak/assets/wood.png"));
     private static ImageIcon hoverButton = new ImageIcon(MenuWindow.class.getResource("/tak/assets/button_hover.png"));
     private static ImageIcon button = new ImageIcon(MenuWindow.class.getResource("/tak/assets/button.png"));
+    private static ImageIcon smallHoverButton = new ImageIcon(MenuWindow.class.getResource("/tak/assets/button_small_hover.png"));
+    private static ImageIcon smallButton = new ImageIcon(MenuWindow.class.getResource("/tak/assets/button_small.png"));
+    private static ImageIcon muted = new ImageIcon(MenuWindow.class.getResource("/tak/assets/muted.png"));
+    private static ImageIcon notMuted = new ImageIcon(MenuWindow.class.getResource("/tak/assets/notmuted.png"));
     private final NetworkWindow frame = this;
     public static boolean isPotentialGameClient;
     public static String ipAddress = new String();
@@ -57,11 +62,13 @@ public class NetworkWindow extends JFrame implements Runnable {
     public static boolean isConnecting = false;
     private boolean mouseoverPlay;
     private boolean mouseoverReturn;
+    private boolean mouseoverMute;
     TakTakMultiplayerWindow theGame;
     public static ArrayList<Piece> pieces = new ArrayList<Piece>();
+    public static boolean isWindowOpen;
 
     public NetworkWindow(boolean isClient) {
-
+    	isWindowOpen = true;
         isPotentialGameClient = isClient;
 
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -71,6 +78,13 @@ public class NetworkWindow extends JFrame implements Runnable {
         setIconImage(icon.getImage());
         setTitle("Tak-Tak");
         setLocation(CENTER_X, CENTER_Y);
+        
+        addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				isWindowOpen = false;
+			}
+		});
 
         addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent e) {
@@ -188,6 +202,8 @@ public class NetworkWindow extends JFrame implements Runnable {
                     reset();
                     new MenuWindow();
                     frame.dispose();
+                } else if (MouseEvent.BUTTON1 == e.getButton() && mouseoverMute) {
+                	TakTakMain.muted = !TakTakMain.muted;
                 }
             }
         });
@@ -197,16 +213,22 @@ public class NetworkWindow extends JFrame implements Runnable {
                 int xpos = e.getX();
                 int ypos = e.getY() + 2;
 
-                if (ypos >= 260 && ypos <= 295 && xpos >= 390 && xpos <= 530) {
+                if (ypos >= 260 && ypos <= 295 && xpos >= 350 && xpos <= 490) {
                     mouseoverPlay = true;
                 } else {
                     mouseoverPlay = false;
                 }
 
-                if (ypos >= 260 && ypos <= 295 && xpos >= 245 && xpos <= 385) {
+                if (ypos >= 260 && ypos <= 295 && xpos >= 205 && xpos <= 345) {
                     mouseoverReturn = true;
                 } else {
                     mouseoverReturn = false;
+                }
+                
+                if (ypos >= 260 && ypos <= 295 && xpos >= 495 && xpos <= 530) {
+                    mouseoverMute = true;
+                } else {
+                	mouseoverMute = false;
                 }
 
                 repaint();
@@ -250,6 +272,7 @@ public class NetworkWindow extends JFrame implements Runnable {
             for (int y = 0; y < WINDOW_HEIGHT; y += 80) {
 
                 if (index <= pieces.size() - 2 && pieces.get(index) != null) {
+                	pieces.get(index).update();
                     pieces.get(index).draw(g, x, y);
                     if (index < pieces.size() - 2) {
                         index++;
@@ -278,21 +301,30 @@ public class NetworkWindow extends JFrame implements Runnable {
         g.drawString("Opponent IP: " + ipAddress, 30, 110);
 
         if (mouseoverPlay) {
-            g.drawImage(hoverButton.getImage(), 390, 260, null);
+            g.drawImage(hoverButton.getImage(), 355, 260, null);
         } else {
-            g.drawImage(button.getImage(), 390, 260, null);
+            g.drawImage(button.getImage(), 355, 260, null);
         }
 
         if (mouseoverReturn) {
-            g.drawImage(hoverButton.getImage(), 245, 260, null);
+            g.drawImage(hoverButton.getImage(), 210, 260, null);
         } else {
-            g.drawImage(button.getImage(), 245, 260, null);
+            g.drawImage(button.getImage(), 210, 260, null);
+        }
+        
+        if (mouseoverMute) {
+            g.drawImage(smallHoverButton.getImage(), 505, 260, null);
+            g.drawImage((TakTakMain.muted ? muted.getImage() : notMuted.getImage()), 505, 260, null);
+        } else {
+            g.drawImage(smallButton.getImage(), 505, 260, null);
+            g.drawImage((TakTakMain.muted ? muted.getImage() : notMuted.getImage()), 505, 260, null);
         }
 
+
         g.setColor(mouseoverPlay ? Color.red : Color.black);
-        g.drawString("Start Game", 422, 283);
+        g.drawString("Start Game", 387, 283);
         g.setColor(mouseoverReturn ? Color.red : Color.black);
-        g.drawString("Main Menu", 275, 283);
+        g.drawString("Main Menu", 240, 283);
 
         gOld.drawImage(image, 0, 0, null);
     }
@@ -332,7 +364,6 @@ public class NetworkWindow extends JFrame implements Runnable {
                 xsize = getSize().width;
                 ysize = getSize().height;
             }
-
             reset();
         }
     }
