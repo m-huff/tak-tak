@@ -24,7 +24,6 @@ public class Sound implements Runnable {
         try {
             AudioInputStream ais = AudioSystem.getAudioInputStream(soundFile);
             AudioFormat format = ais.getFormat();
-            //    System.out.println("Format: " + format);
             DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
             SourceDataLine source = (SourceDataLine) AudioSystem.getLine(info);
             source.open(format);
