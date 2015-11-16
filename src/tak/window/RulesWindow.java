@@ -7,14 +7,11 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -22,8 +19,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 import tak.com.Piece;
-import tak.net.ClientHandler;
-import tak.net.ServerHandler;
 
 @SuppressWarnings("serial")
 public class RulesWindow extends JFrame implements Runnable {
@@ -64,7 +59,7 @@ public class RulesWindow extends JFrame implements Runnable {
         "The king can never be stacked on top of, and can also stack",
         "Your goal is to score the most points in your opponent's safe zone."
     };
-    public static String[] imageText2 = {"If you accidentally select a piece, press BACKSPACE to cancel.",
+    public static String[] imageText2 = {"If you accidentally select a piece, just click another to select.",
         "You can only stack pieces if they have the same point value or color.",
         "This display will also tell you the total point value of the stack.",
         "allowing you to move more of your pieces across the board in a turn.",
@@ -84,7 +79,7 @@ public class RulesWindow extends JFrame implements Runnable {
     public static boolean isWindowOpen;
 
     public RulesWindow() {
-    	isWindowOpen = true;
+        isWindowOpen = true;
 
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -93,13 +88,13 @@ public class RulesWindow extends JFrame implements Runnable {
         setIconImage(icon.getImage());
         setTitle("Tak-Tak");
         setLocation(CENTER_X, CENTER_Y);
-        
+
         addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(WindowEvent e) {
-				isWindowOpen = false;
-			}
-		});
+            @Override
+            public void windowClosing(WindowEvent e) {
+                isWindowOpen = false;
+            }
+        });
 
         addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseMoved(MouseEvent e) {
@@ -185,7 +180,7 @@ public class RulesWindow extends JFrame implements Runnable {
 
                 if (index <= pieces.size() - 2 && pieces.get(index) != null) {
                     if (y < 160 || y >= 160 && x < 80 || y >= 160 && x > 400) {
-                    	pieces.get(index).update();
+                        pieces.get(index).update();
                         pieces.get(index).draw(g, x, y);
                     }
                     if (index < pieces.size() - 2) {

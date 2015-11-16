@@ -68,7 +68,7 @@ public class NetworkWindow extends JFrame implements Runnable {
     public static boolean isWindowOpen;
 
     public NetworkWindow(boolean isClient) {
-    	isWindowOpen = true;
+        isWindowOpen = true;
         isPotentialGameClient = isClient;
 
         setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -78,13 +78,13 @@ public class NetworkWindow extends JFrame implements Runnable {
         setIconImage(icon.getImage());
         setTitle("Tak-Tak");
         setLocation(CENTER_X, CENTER_Y);
-        
+
         addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(WindowEvent e) {
-				isWindowOpen = false;
-			}
-		});
+            @Override
+            public void windowClosing(WindowEvent e) {
+                isWindowOpen = false;
+            }
+        });
 
         addKeyListener(new KeyAdapter() {
             public void keyPressed(KeyEvent e) {
@@ -203,7 +203,7 @@ public class NetworkWindow extends JFrame implements Runnable {
                     new MenuWindow();
                     frame.dispose();
                 } else if (MouseEvent.BUTTON1 == e.getButton() && mouseoverMute) {
-                	TakTakMain.muted = !TakTakMain.muted;
+                    TakTakMain.muted = !TakTakMain.muted;
                 }
             }
         });
@@ -224,11 +224,11 @@ public class NetworkWindow extends JFrame implements Runnable {
                 } else {
                     mouseoverReturn = false;
                 }
-                
+
                 if (ypos >= 260 && ypos <= 295 && xpos >= 495 && xpos <= 530) {
                     mouseoverMute = true;
                 } else {
-                	mouseoverMute = false;
+                    mouseoverMute = false;
                 }
 
                 repaint();
@@ -272,7 +272,7 @@ public class NetworkWindow extends JFrame implements Runnable {
             for (int y = 0; y < WINDOW_HEIGHT; y += 80) {
 
                 if (index <= pieces.size() - 2 && pieces.get(index) != null) {
-                	pieces.get(index).update();
+                    pieces.get(index).update();
                     pieces.get(index).draw(g, x, y);
                     if (index < pieces.size() - 2) {
                         index++;
@@ -311,7 +311,7 @@ public class NetworkWindow extends JFrame implements Runnable {
         } else {
             g.drawImage(button.getImage(), 210, 260, null);
         }
-        
+
         if (mouseoverMute) {
             g.drawImage(smallHoverButton.getImage(), 505, 260, null);
             g.drawImage((TakTakMain.muted ? muted.getImage() : notMuted.getImage()), 505, 260, null);

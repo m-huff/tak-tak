@@ -58,9 +58,9 @@ public class Piece {
             addValue(_stack.get(index).getValue());
         }
     }
-    
+
     public void update() {
-    	crown = new ImageIcon(Piece.class.getResource((MenuWindow.johnCena ? "/tak/assets/cenaking.png" : "/tak/assets/crown.png")));
+        crown = new ImageIcon(Piece.class.getResource((MenuWindow.johnCena ? "/tak/assets/cenaking.png" : "/tak/assets/crown.png")));
     }
 
     public Piece getTopPiece() {

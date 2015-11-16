@@ -117,7 +117,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
     public static EnumWinner winner;
 
     public TakTakSingleplayerWindow() {
-    	isWindowOpen = true;
+        isWindowOpen = true;
 
         setSize(WINDOW_WIDTH, FULL_HEIGHT);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -126,13 +126,13 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
         setTitle("Tak-Tak");
         setLocation(CENTER_X, CENTER_Y);
         setIconImage(icon.getImage());
-        
+
         addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(WindowEvent e) {
-				isWindowOpen = false;
-			}
-		});
+            @Override
+            public void windowClosing(WindowEvent e) {
+                isWindowOpen = false;
+            }
+        });
 
         addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseMoved(MouseEvent e) {
@@ -175,11 +175,11 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
                 } else {
                     mouseoverConfig = false;
                 }
-                
+
                 if (xpos >= 545 && xpos <= 580 && ypos >= 730 && ypos <= 765) {
                     mouseoverMute = true;
                 } else {
-                	mouseoverMute = false;
+                    mouseoverMute = false;
                 }
             }
         });
@@ -252,9 +252,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
                             arrowLoc = 0;
                             arrowAnim = 0;
                         }
-                    }
-                    
-                    else if (selectedRow != 999) {
+                    } else if (selectedRow != 999) {
                         boolean movedPiece = false;
                         for (int i = 0; i < validMoves.size() && !movedPiece; i++) {
                             if (validMoves.get(i).toString()
@@ -266,48 +264,47 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
                                 selectedColumn = 999;
                                 validMoves.clear();
                                 myTurn = !myTurn;
-                            }
-                            else if(board[currentRow][currentColumn] != null && 
-                                    board[currentRow][currentColumn].getTopPiece().getBackgroundColor() == Color.white) {
-                               
-                            	boolean isGoodMove = false;
-                            	for (int j = 0; j < validMoves.size(); j++) {
+                            } else if (board[currentRow][currentColumn] != null
+                                    && board[currentRow][currentColumn].getTopPiece().getBackgroundColor() == Color.white) {
+
+                                boolean isGoodMove = false;
+                                for (int j = 0; j < validMoves.size(); j++) {
                                     if (validMoves.get(j).toString()
-                                        .equals(new OrderedPair(currentRow, currentColumn).toString())) {
-                                    	isGoodMove = true;
+                                            .equals(new OrderedPair(currentRow, currentColumn).toString())) {
+                                        isGoodMove = true;
                                     }
-                            	}
-                            	
-                            	if (!isGoodMove) {
-	                            	selectedRow = currentRow;
-	                                selectedColumn = currentColumn;
-	                                arrowLoc = 0;
-	                                arrowAnim = 0;
-	                                return;
-                            	}
-                            } else if (board[currentRow][currentColumn] != null && 
-                                    board[currentRow][currentColumn].getTopPiece().getBackgroundColor() == Color.white) {
-                            	
-                            	boolean isGoodMove = false;
-                            	for (int j = 0; j < validMoves.size(); j++) {
+                                }
+
+                                if (!isGoodMove) {
+                                    selectedRow = currentRow;
+                                    selectedColumn = currentColumn;
+                                    arrowLoc = 0;
+                                    arrowAnim = 0;
+                                    return;
+                                }
+                            } else if (board[currentRow][currentColumn] != null
+                                    && board[currentRow][currentColumn].getTopPiece().getBackgroundColor() == Color.white) {
+
+                                boolean isGoodMove = false;
+                                for (int j = 0; j < validMoves.size(); j++) {
                                     if (validMoves.get(j).toString()
-                                        .equals(new OrderedPair(currentRow, currentColumn).toString())) {
-                                    	isGoodMove = true;
+                                            .equals(new OrderedPair(currentRow, currentColumn).toString())) {
+                                        isGoodMove = true;
                                     }
-                            	}
-                            	
-                            	if (isGoodMove) {
-	                            	movePieceToLocation(new OrderedPair(selectedRow, selectedColumn),
-	                                        new OrderedPair(currentRow, currentColumn));
-	                                selectedRow = 999;
-	                                selectedColumn = 999;
-	                                validMoves.clear();
-	                                myTurn = !myTurn;
-                            	}
+                                }
+
+                                if (isGoodMove) {
+                                    movePieceToLocation(new OrderedPair(selectedRow, selectedColumn),
+                                            new OrderedPair(currentRow, currentColumn));
+                                    selectedRow = 999;
+                                    selectedColumn = 999;
+                                    validMoves.clear();
+                                    myTurn = !myTurn;
+                                }
                             }
-                        }    
+                        }
                     }
-                    
+
                 }
                 if (MouseEvent.BUTTON3 == e.getButton()) {
 
@@ -425,7 +422,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
         for (int zRow = 0; zRow < ROWS; zRow++) {
             for (int zColumn = 0; zColumn < COLUMNS; zColumn++) {
                 if (board[zRow][zColumn] != null) {
-                	board[zRow][zColumn].update();
+                    board[zRow][zColumn].update();
                     board[zRow][zColumn].draw(g, getX(0) + zColumn * getWidth2() / COLUMNS,
                             getY(0) + zRow * getHeight2() / ROWS);
                 }
@@ -472,7 +469,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
         } else {
             g.drawImage(button.getImage(), 105, 730, null);
         }
-        
+
         if (mouseoverMute) {
             g.drawImage(smallHoverButton.getImage(), 545, 730, null);
             g.drawImage((TakTakMain.muted ? muted.getImage() : notMuted.getImage()), 545, 730, null);
