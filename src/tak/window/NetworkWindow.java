@@ -225,7 +225,7 @@ public class NetworkWindow extends JFrame implements Runnable {
                     mouseoverReturn = false;
                 }
 
-                if (ypos >= 260 && ypos <= 295 && xpos >= 495 && xpos <= 530) {
+                if (ypos >= 260 && ypos <= 295 && xpos >= 505 && xpos <= 540) {
                     mouseoverMute = true;
                 } else {
                     mouseoverMute = false;
