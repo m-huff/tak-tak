@@ -932,7 +932,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
         g.fillRect(595, 670, 220, 28);
 
         //The current text is displayed
-        int stringWrap = 25;
+        int stringWrap = 33;
         g.setColor(Color.white);
         g.setFont(new Font("Arial Bold", Font.BOLD, 14));
 
