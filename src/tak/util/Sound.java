@@ -36,13 +36,16 @@ public class Sound implements Runnable {
             byte[] audioData = new byte[16384];
             boolean isMuted = TakTakMain.muted;
             while (read > -1) {
-            	if (!TakTakMain.muted) {
-	                read = ais.read(audioData, 0, audioData.length);
-	                if (read >= 0) {
-	                    source.write(audioData, 0, read);
-	                }
+            	if (TakTakMain.muted) {
+            		source.stop();
+            	} else {
+            		source.start();
             	}
-                isMuted = TakTakMain.muted;
+            	
+                read = ais.read(audioData, 0, audioData.length);
+                if (read >= 0) {
+                    source.write(audioData, 0, read);
+                }
             }
             donePlaying = true;
 

@@ -153,7 +153,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
                 int xpos = e.getX();
                 int ypos = e.getY() + 2;
 
-                if (xpos >= 225 && xpos <= 365 && ypos >= 450 && ypos <= 490 && fadeOut >= 150) {
+                if (xpos >= 225 && xpos <= 365 && ypos >= 450 && ypos <= 490) {
                     mouseoverReturn = true;
                 } else {
                     mouseoverReturn = false;
@@ -213,71 +213,76 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
                     if (currentColumn < 0) {
                         currentColumn = 0;
                     }
+                    
+                    if (validMoves.isEmpty()) {
+                		selectedRow = 999;
+                		selectedColumn = 999;
+                	}
 
-                    if (selectedRow == 999 && board[currentRow][currentColumn] != null) {
+                    //If the place we're clicking on isn't empty
+                    //and we have no piece selected
+                    if (board[currentRow][currentColumn] != null && selectedRow == 999) {
                         if (board[currentRow][currentColumn].getTopPiece().getBackgroundColor() == myColor) {
                             selectedRow = currentRow;
                             selectedColumn = currentColumn;
                             arrowLoc = 0;
                             arrowAnim = 0;
                         }
+                    //If we already have a piece selected
                     } else if (selectedRow != 999) {
-                        boolean movedPiece = false;
-                        for (int i = 0; i < validMoves.size() && !movedPiece; i++) {
-                            if (validMoves.get(i).toString()
-                                    .equals(new OrderedPair(currentRow, currentColumn).toString())) {
-                                movedPiece = true;
+
+                    	int moveIndex = 0;
+                    	
+                    	//Let's loop through the 'available' moves and see if where
+                    	//we clicked is one of them
+                    	while (moveIndex < validMoves.size()) {
+                    		if (isMoveInArray(new OrderedPair(currentRow, currentColumn))) {
+                    			
+                    			//Set all network values
+                    			initRow = selectedRow;
+                    			initCol = selectedColumn;
+                    			movedRow = currentRow;
+                    			movedCol = currentColumn;
+                    			
+                    			//Send the data
+                    			if (isClient) {
+                    				ClientHandler.sendPieceMove(initRow, initCol, movedRow, movedCol);
+                    			} else {
+                    				ServerHandler.sendPieceMove(initRow, initCol, movedRow, movedCol);
+                    			}
+                    			
+                    			//Move the piece
+                    			movePieceToLocation(new OrderedPair(selectedRow, selectedColumn),
+                                new OrderedPair(currentRow, currentColumn));
+                    			
+                    			//Reset the state after the move is made
+                    			selectedRow = 999;
+                    			selectedColumn = 999;
+                    			validMoves.clear();
+                                myTurn = !myTurn;
+                                break;
+                    			
+                    		//If the piece CANT move here and the place is empty or not my color
+                    		} else if (board[currentRow][currentColumn] == null || 
+                    				   board[currentRow][currentColumn] != null &&
+                    				   board[currentRow][currentColumn].getTopPiece().getBackgroundColor()
+                    				   != myColor) {
+                    			selectedRow = 999;
+                    			selectedColumn = 999;
+                    			validMoves.clear();
+                    			break;
+                    		//If the piece CANT move here and it's another one of my pieces
+                    		} else if (board[currentRow][currentColumn] != null && board[currentRow][currentColumn]
+                                       .getTopPiece().getBackgroundColor() == myColor) {
+                    			selectedRow = currentRow;
+                                selectedColumn = currentColumn;
+                                arrowLoc = 0;
+                                arrowAnim = 0;
                                 validMoves.clear();
-                                initRow = selectedRow;
-                                initCol = selectedColumn;
-                                movedRow = currentRow;
-                                movedCol = currentColumn;
-                                if (isClient) {
-                                    ClientHandler.sendPieceMove(initRow, initCol, movedRow, movedCol);
-                                } else {
-                                    ServerHandler.sendPieceMove(initRow, initCol, movedRow, movedCol);
-                                }
-                                selectedRow = 999;
-                                selectedColumn = 999;
-                            } else if (board[currentRow][currentColumn] != null && board[currentRow][currentColumn]
-                                    .getTopPiece().getBackgroundColor() == myColor) {
-
-                                boolean isGoodMove = false;
-                                for (int j = 0; j < validMoves.size(); j++) {
-                                    if (validMoves.get(j).toString()
-                                            .equals(new OrderedPair(currentRow, currentColumn).toString())) {
-                                        isGoodMove = true;
-                                    }
-                                }
-
-                                if (!isGoodMove) {
-                                    selectedRow = currentRow;
-                                    selectedColumn = currentColumn;
-                                    arrowLoc = 0;
-                                    arrowAnim = 0;
-                                    return;
-                                }
-                            } else if (board[currentRow][currentColumn] != null && board[currentRow][currentColumn]
-                                    .getTopPiece().getBackgroundColor() == myColor) {
-
-                                boolean isGoodMove = false;
-                                for (int j = 0; j < validMoves.size(); j++) {
-                                    if (validMoves.get(j).toString()
-                                            .equals(new OrderedPair(currentRow, currentColumn).toString())) {
-                                        isGoodMove = true;
-                                    }
-                                }
-
-                                if (isGoodMove) {
-                                    movePieceToLocation(new OrderedPair(selectedRow, selectedColumn),
-                                            new OrderedPair(currentRow, currentColumn));
-                                    selectedRow = 999;
-                                    selectedColumn = 999;
-                                    validMoves.clear();
-                                    myTurn = !myTurn;
-                                }
-                            }
-                        }
+                                break;
+                    		}
+                    		moveIndex++;
+                    	}
                     }
                 }
                 if (MouseEvent.BUTTON3 == e.getButton()) {
@@ -902,7 +907,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
         }
 
         if (selectedRow != 999) {
-            displayAllValidMoves(g, selectedRow, selectedColumn);
+            displayAllValidMoves(g, selectedRow, selectedColumn, validMoves.isEmpty());
         }
         if (lilWindaRow != 999 && board[lilWindaRow][lilWindaColumn] != null) {
             board[lilWindaRow][lilWindaColumn].drawLilWinda(g, mousex, mousey);
@@ -1391,7 +1396,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
         }
     }
 
-    public void displayAllValidMoves(Graphics2D g, int row, int column) {
+    public void displayAllValidMoves(Graphics2D g, int row, int column, boolean add) {
 
         // Show all spaces that the piece can move to, represented by green rectangles
         // The piece can move to a space if it is one space above/below it, or diagonal,
@@ -1400,6 +1405,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
         // same color or value as the piece you're moving. Kings can move onto any piece,
         // no matter what the value or color. If a piece/stack is a king, then a move to
         // that space is not possible.
+    	
         Graphics2D g2d = (Graphics2D) image.getGraphics();
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
 
@@ -1418,7 +1424,8 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
                 drawArrow(arrow.getImage(), getX(0) + column * getWidth2() / COLUMNS + (getWidth2() / COLUMNS / 2) + 2,
                         getY(0) + (row + 1) * getHeight2() / ROWS - arrowLoc - 45, 270, 0.1, 0.2);
                 p.draw(g, getX(0) + column * getWidth2() / COLUMNS, getY(0) + (row) * getHeight2() / ROWS);
-                validMoves.add(new OrderedPair(row - 1, column));
+                if (add)
+                	validMoves.add(new OrderedPair(row - 1, column));
             }
             if (canPieceMoveToLocation(p.getTopPiece(), row - 1, column + 1)) {
                 if (board[row - 1][column + 1] == null) {
@@ -1429,7 +1436,8 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
                         getX(0) + column * getWidth2() / COLUMNS + (getWidth2() / COLUMNS / 2) + (arrowLoc / 2),
                         getY(0) + (row + 1) * getHeight2() / ROWS - (arrowLoc / 2) - 47, 315, 0.13, 0.2);
                 p.draw(g, getX(0) + column * getWidth2() / COLUMNS, getY(0) + (row) * getHeight2() / ROWS);
-                validMoves.add(new OrderedPair(row - 1, column + 1));
+                if (add)
+                	validMoves.add(new OrderedPair(row - 1, column + 1));
             }
             if (canPieceMoveToLocation(p.getTopPiece(), row - 1, column - 1)) {
                 if (board[row - 1][column - 1] == null) {
@@ -1440,8 +1448,10 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
                         getX(0) + column * getWidth2() / COLUMNS + (getWidth2() / COLUMNS / 2) - (arrowLoc / 2),
                         getY(0) + (row + 1) * getHeight2() / ROWS - (arrowLoc / 2) - 47, 235, 0.13, 0.2);
                 p.draw(g, getX(0) + column * getWidth2() / COLUMNS, getY(0) + (row) * getHeight2() / ROWS);
-                validMoves.add(new OrderedPair(row - 1, column - 1));
+                if (add)
+                	validMoves.add(new OrderedPair(row - 1, column - 1));
             }
+            p.drawFade(g, getX(0) + column * getWidth2() / COLUMNS, getY(0) + row * getHeight2() / ROWS);
         }
 
         if (pieceDirection == 0) {
@@ -1452,7 +1462,8 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
                 drawArrow(arrow.getImage(), getX(0) + column * getWidth2() / COLUMNS + (getWidth2() / COLUMNS / 2) + 2,
                         getY(0) + (row + 1) * getHeight2() / ROWS + arrowLoc - 45, 90, 0.1, 0.2);
                 p.draw(g, getX(0) + column * getWidth2() / COLUMNS, getY(0) + (row) * getHeight2() / ROWS);
-                validMoves.add(new OrderedPair(row + 1, column));
+                if (add)
+                	validMoves.add(new OrderedPair(row + 1, column));
             }
             if (canPieceMoveToLocation(p.getTopPiece(), row + 1, column + 1)) {
                 if (board[row + 1][column + 1] == null) {
@@ -1463,7 +1474,8 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
                         getX(0) + column * getWidth2() / COLUMNS + (getWidth2() / COLUMNS / 2) + (arrowLoc / 2) + 3,
                         getY(0) + (row + 1) * getHeight2() / ROWS + (arrowLoc / 2) - 43, 45, 0.13, 0.2);
                 p.draw(g, getX(0) + column * getWidth2() / COLUMNS, getY(0) + (row) * getHeight2() / ROWS);
-                validMoves.add(new OrderedPair(row + 1, column + 1));
+                if (add)
+                	validMoves.add(new OrderedPair(row + 1, column + 1));
             }
             if (canPieceMoveToLocation(p.getTopPiece(), row + 1, column - 1)) {
                 if (board[row + 1][column - 1] == null) {
@@ -1474,7 +1486,8 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
                         getX(0) + column * getWidth2() / COLUMNS + (getWidth2() / COLUMNS / 2) - (arrowLoc / 2) - 3,
                         getY(0) + (row + 1) * getHeight2() / ROWS + (arrowLoc / 2) - 43, 135, 0.13, 0.2);
                 p.draw(g, getX(0) + column * getWidth2() / COLUMNS, getY(0) + (row) * getHeight2() / ROWS);
-                validMoves.add(new OrderedPair(row + 1, column - 1));
+                if (add)
+                	validMoves.add(new OrderedPair(row + 1, column - 1));
             }
         }
     }
@@ -1527,5 +1540,19 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
             }
         }
         return false;
+    }
+    
+    public static boolean doMovesMatch(OrderedPair start, OrderedPair end) {
+    	if (start.getX() == end.getX() && start.getY() == end.getY())
+    		return true;
+    	return false;
+    }
+    
+    public static boolean isMoveInArray(OrderedPair move) {
+    	for (int i = 0; i < validMoves.size(); i++) {
+    		if (doMovesMatch(move, validMoves.get(i)))
+    			return true;
+    	}
+    	return false;
     }
 }

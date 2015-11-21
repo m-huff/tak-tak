@@ -21,6 +21,7 @@ public class Piece {
     private ImageIcon blue = new ImageIcon(Piece.class.getResource("/tak/assets/blue.png"));
     private ImageIcon green = new ImageIcon(Piece.class.getResource("/tak/assets/green.png"));
     private ImageIcon orange = new ImageIcon(Piece.class.getResource("/tak/assets/orange.png"));
+    private ImageIcon fade = new ImageIcon(Piece.class.getResource("/tak/assets/fade.png"));
     private ImageIcon crown = new ImageIcon(Piece.class.getResource((MenuWindow.johnCena ? "/tak/assets/cenaking.png" : "/tak/assets/crown.png")));
     private boolean isKing;
 
@@ -116,6 +117,10 @@ public class Piece {
                     255 - getTopPiece().backColor.getGreen(), 255 - getTopPiece().backColor.getBlue()));
             g.drawString(String.valueOf(stack.size()), x + 68, y + 23);
         }
+    }
+    
+    public void drawFade(Graphics2D g, int x, int y) {
+        g.drawImage(fade.getImage(), x + 10, y + 8, 75, 75, null);
     }
 
     public void drawLilWinda(Graphics2D g, int mousex, int mousey) {
