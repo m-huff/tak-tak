@@ -49,6 +49,7 @@ public class MenuWindow extends JFrame implements Runnable {
     private static ImageIcon smallButton = new ImageIcon(MenuWindow.class.getResource("/tak/assets/button_small.png"));
     private static ImageIcon muted = new ImageIcon(MenuWindow.class.getResource("/tak/assets/muted.png"));
     private static ImageIcon notMuted = new ImageIcon(MenuWindow.class.getResource("/tak/assets/notmuted.png"));
+    private static ImageIcon gear = new ImageIcon(MenuWindow.class.getResource("/tak/assets/gear.png"));
     private static ImageIcon logo = new ImageIcon(MenuWindow.class.getResource("/tak/assets/logo.png"));
     private boolean mouseoverAI;
     private boolean mouseoverClient;
@@ -56,6 +57,7 @@ public class MenuWindow extends JFrame implements Runnable {
     private boolean mouseoverRules;
     private boolean mouseoverCena;
     private boolean mouseoverMute;
+    private boolean mouseoverConfig;
     private final MenuWindow frame = this;
     public int textPosition = WINDOW_WIDTH;
     public static ArrayList<Piece> pieces = new ArrayList<Piece>();
@@ -128,6 +130,12 @@ public class MenuWindow extends JFrame implements Runnable {
                 } else {
                     mouseoverMute = false;
                 }
+                
+                if (ypos >= textPosition + 82 && ypos <= textPosition + 117 && xpos >= 550 && xpos <= 585) {
+                    mouseoverConfig = true;
+                } else {
+                	mouseoverConfig = false;
+                }
 
                 repaint();
             }
@@ -155,6 +163,9 @@ public class MenuWindow extends JFrame implements Runnable {
                     TakTakMain.music = new Sound(johnCena ? "sound/time_is_now.wav" : "sound/darude_sandstorm.wav");
                 } else if (MouseEvent.BUTTON1 == e.getButton() && mouseoverMute) {
                     TakTakMain.muted = !TakTakMain.muted;
+                } else if (MouseEvent.BUTTON1 == e.getButton() && mouseoverConfig) {
+                    //TODO - configuration window
+                	//movement, sound, stuff
                 }
             }
         });
@@ -256,6 +267,13 @@ public class MenuWindow extends JFrame implements Runnable {
             g.drawImage(smallButton.getImage(), 590, textPosition + 82, null);
             g.drawImage((TakTakMain.muted ? muted.getImage() : notMuted.getImage()), 590, textPosition + 82, null);
         }
+        
+        if (mouseoverConfig) {
+            g.drawImage(smallHoverButton.getImage(), 550, textPosition + 82, null);
+        } else {
+            g.drawImage(smallButton.getImage(), 550, textPosition + 82, null);
+        }
+        g.drawImage(gear.getImage(), 550, textPosition + 82, null);
 
         g.setFont(new Font("Arial", Font.BOLD, 16));
 
