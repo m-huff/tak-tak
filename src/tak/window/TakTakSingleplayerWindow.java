@@ -416,7 +416,28 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
             g.drawLine(getX(0) + i * getWidth2() / COLUMNS, getY(0), getX(0) + i * getWidth2() / COLUMNS,
                     getY(getHeight2()));
         }
-
+        
+        //Checkerboard look
+        for (int zRow = 0; zRow < ROWS; zRow++) {
+            for (int zColumn = 0; zColumn < COLUMNS; zColumn++) {
+            	if (zRow % 2 == 0) {
+            		if (zColumn % 2 == 1) {
+            		g.setColor(new Color(0, 0, 0, 35));
+            		g.fillRect(getX(0) + zColumn * getWidth2() / COLUMNS,
+                            getY(0) + zRow * getHeight2() / ROWS, getWidth2() / COLUMNS,
+                            getHeight2() / ROWS);
+            		}
+            	}
+            	if (zRow % 2 == 1) {
+            		if (zColumn % 2 == 0) {
+            		g.setColor(new Color(0, 0, 0, 35));
+            		g.fillRect(getX(0) + zColumn * getWidth2() / COLUMNS,
+                            getY(0) + zRow * getHeight2() / ROWS, getWidth2() / COLUMNS,
+                            getHeight2() / ROWS);
+            		}
+            	}
+            }
+        }
 
 
         for (int zRow = 0; zRow < ROWS; zRow++) {
