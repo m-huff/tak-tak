@@ -153,7 +153,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
                 int xpos = e.getX();
                 int ypos = e.getY() + 2;
 
-                if (xpos >= 225 && xpos <= 365 && ypos >= 450 && ypos <= 490) {
+                if (xpos >= 225 && xpos <= 365 && ypos >= 450 && ypos <= 490 && winner != EnumWinner.None) {
                     mouseoverReturn = true;
                 } else {
                     mouseoverReturn = false;

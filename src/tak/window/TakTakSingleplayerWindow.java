@@ -148,13 +148,13 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
                 int xpos = e.getX();
                 int ypos = e.getY() + 2;
 
-                if (xpos >= 200 && xpos <= 340 && ypos >= 350 && ypos <= 390) {
+                if (xpos >= 200 && xpos <= 340 && ypos >= 350 && ypos <= 390 && winner != EnumWinner.None) {
                     mouseoverPlayAgain = true;
                 } else {
                     mouseoverPlayAgain = false;
                 }
 
-                if (xpos >= 200 && xpos <= 340 && ypos >= 400 && ypos <= 440) {
+                if (xpos >= 200 && xpos <= 340 && ypos >= 400 && ypos <= 440 && winner != EnumWinner.None) {
                     mouseoverReturn = true;
                 } else {
                     mouseoverReturn = false;
@@ -655,7 +655,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
             } else if (!myTurn && aiMoveDelay < 50) {
                 aiMoveDelay++;
             }
-        } else {
+        } else if (winner == EnumWinner.None) {
             turn++;
         }
 
