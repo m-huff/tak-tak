@@ -23,6 +23,7 @@ import javax.swing.JFrame;
 
 import tak.com.Piece;
 import tak.com.TakTakMain;
+import tak.config.ConfigLoader;
 import tak.net.ClientHandler;
 import tak.net.ServerHandler;
 import tak.ui.ScoreFader;
@@ -559,14 +560,16 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
             }
         }
 
-        for (int i = 0; i < faders.size(); i++) {
-            faders.get(i).draw(g);
-        }
-
-        if (turnIndicator != null && tellMeWhenItsMyTurn && winner == EnumWinner.None) {
-            turnIndicator.draw(g);
-        } else if (!tellMeWhenItsMyTurn || winner != EnumWinner.None) {
-            turnIndicator = null;
+        if (ConfigLoader.animations) {
+		    for (int i = 0; i < faders.size(); i++) {
+		        faders.get(i).draw(g);
+		    }
+		
+		    if (turnIndicator != null && tellMeWhenItsMyTurn && winner == EnumWinner.None) {
+		        turnIndicator.draw(g);
+		    } else if (!tellMeWhenItsMyTurn || winner != EnumWinner.None) {
+		        turnIndicator = null;
+		    }
         }
 
         gOld.drawImage(image, 0, 0, null);
@@ -743,7 +746,8 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
                     getY(0) + location.getX() * getHeight2() / ROWS, c);
             numPiecesOnBoard -= board[location.getX()][location.getY()].getWholeStack().size();
             board[location.getX()][location.getY()] = null;
-            move = new Sound("sound/chaching.wav");
+            if (ConfigLoader.sfx)
+            	move = new Sound("sound/chaching.wav");
         }
     }
 
@@ -868,6 +872,8 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 
     public void displayAllValidMoves(Graphics2D g, int row, int column, boolean add) {
 
+    	//TODO - implement configurable moves
+    	
         // Show all spaces that the piece can move to, represented by green rectangles
         // The piece can move to a space if it is one space above/below it, or diagonal,
         // depending on the color of the piece. The move is allowed if there is another

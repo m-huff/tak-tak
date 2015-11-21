@@ -19,7 +19,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 import tak.com.Piece;
+import tak.com.TakTakMain;
 import tak.config.ConfigLoader;
+import tak.util.Sound;
 
 @SuppressWarnings("serial")
 public class ConfigWindow extends JFrame implements Runnable {
@@ -47,6 +49,8 @@ public class ConfigWindow extends JFrame implements Runnable {
     private static ImageIcon smallHoverButton = new ImageIcon(MenuWindow.class.getResource("/tak/assets/button_small_hover.png"));
     private static ImageIcon smallButton = new ImageIcon(MenuWindow.class.getResource("/tak/assets/button_small.png"));
     private static ImageIcon arrow = new ImageIcon(MenuWindow.class.getResource("/tak/assets/greenarrow.png"));
+    private static ImageIcon cenaButton = new ImageIcon(MenuWindow.class.getResource("/tak/assets/cenaButton.png"));
+    private static ImageIcon shrekButton = new ImageIcon(MenuWindow.class.getResource("/tak/assets/shrekButton.png"));
     private final ConfigWindow frame = this;
     public static ArrayList<Piece> pieces = new ArrayList<Piece>();
     public static boolean hasChangedSlides;
@@ -55,6 +59,27 @@ public class ConfigWindow extends JFrame implements Runnable {
     public boolean mouseoverReturn;
     public static boolean isWindowOpen;
     
+    //Screen 0
+    public boolean mouseover1;
+    public boolean mouseover2;
+    public boolean mouseover3;
+    public boolean mouseover4;
+    public boolean mouseover5;
+    public boolean mouseover6;
+    public boolean mouseover7;
+    public boolean mouseover8;
+    
+    //Screen 1
+    public boolean mouseoverStopMusic;
+    public boolean mouseoverStopSFX;
+    
+    //Screen 2
+    public boolean mouseoverJohnCena;
+    public boolean mouseoverShrek;
+    
+    //Screen 3
+    public boolean mouseoverAnim;
+
     //Screens 0-3, one for each configuration section
     public static int currentScreen;
     
@@ -101,6 +126,85 @@ public class ConfigWindow extends JFrame implements Runnable {
                 } else {
                     mouseoverReturn = false;
                 }
+                
+                if (currentScreen == 0) {
+                	if (e.getX() > 135 && e.getX() < 235 && e.getY() > 175 && e.getY() < 275) {
+                		mouseover1 = true;
+                	} else {
+                		mouseover1 = false;
+                	}
+                	if (e.getX() > 235 && e.getX() < 335 && e.getY() > 175 && e.getY() < 275) {
+                		mouseover2 = true;
+                	} else {
+                		mouseover2 = false;
+                	}
+                	if (e.getX() > 335 && e.getX() < 435 && e.getY() > 175 && e.getY() < 275) {
+                		mouseover3 = true;
+                	} else {
+                		mouseover3 = false;
+                	}
+                	if (e.getX() > 135 && e.getX() < 235 && e.getY() > 275 && e.getY() < 375) {
+                		mouseover4 = true;
+                	} else {
+                		mouseover4 = false;
+                	}
+                	if (e.getX() > 335 && e.getX() < 435 && e.getY() > 275 && e.getY() < 375) {
+                		mouseover5 = true;
+                	} else {
+                		mouseover5 = false;
+                	}
+                	if (e.getX() > 135 && e.getX() < 235 && e.getY() > 375 && e.getY() < 475) {
+                		mouseover6 = true;
+                	} else {
+                		mouseover6 = false;
+                	}
+                	if (e.getX() > 235 && e.getX() < 335 && e.getY() > 375 && e.getY() < 475) {
+                		mouseover7 = true;
+                	} else {
+                		mouseover7 = false;
+                	}
+                	if (e.getX() > 335 && e.getX() < 435 && e.getY() > 375 && e.getY() < 475) {
+                		mouseover8 = true;
+                	} else {
+                		mouseover8 = false;
+                	}
+                } else if (currentScreen == 1) {
+                	
+                	if (e.getX() > 73 && e.getX() < 213 && e.getY() > 185 && e.getY() < 215) {
+                		mouseoverStopMusic = true;
+                	} else {
+                		mouseoverStopMusic = false;
+                	}
+                	
+                	if (e.getX() > 73 && e.getX() < 213 && e.getY() > 265 && e.getY() < 300) {
+                		mouseoverStopSFX = true;
+                	} else {
+                		mouseoverStopSFX = false;
+                	}
+                	
+                } else if (currentScreen == 2) {
+                	
+                	if (e.getX() > 73 && e.getX() < 213 && e.getY() > 185 && e.getY() < 215) {
+                		mouseoverJohnCena = true;
+                	} else {
+                		mouseoverJohnCena = false;
+                	}
+                	
+                	if (e.getX() > 73 && e.getX() < 213 && e.getY() > 265 && e.getY() < 300) {
+                		mouseoverShrek = true;
+                	} else {
+                		mouseoverShrek = false;
+                	}
+                	
+                } else if (currentScreen == 3) {
+                	
+                	if (e.getX() > 73 && e.getX() < 213 && e.getY() > 185 && e.getY() < 215) {
+                		mouseoverAnim = true;
+                	} else {
+                		mouseoverAnim = false;
+                	}
+                	
+                }
 
                 repaint();
             }
@@ -131,6 +235,90 @@ public class ConfigWindow extends JFrame implements Runnable {
                 }
                 
                 //TODO - change states and button mouseovers depending on the current screen
+                
+                if (currentScreen == 0) {
+                	
+                	if (mouseover1) {
+                		ConfigLoader.moveDiagonalLeftForward = !ConfigLoader.moveDiagonalLeftForward;
+                		ConfigLoader.saveConfig();
+                	}
+                	if (mouseover2) {
+                		ConfigLoader.moveForward = !ConfigLoader.moveForward;
+                		ConfigLoader.saveConfig();
+                	}
+                	if (mouseover3) {
+                		ConfigLoader.moveDiagonalRightForward = !ConfigLoader.moveDiagonalRightForward;
+                		ConfigLoader.saveConfig();
+                	}
+                	if (mouseover4) {
+                		ConfigLoader.moveLeft = !ConfigLoader.moveLeft;
+                		ConfigLoader.saveConfig();
+                	}
+                	if (mouseover5) {
+                		ConfigLoader.moveRight = !ConfigLoader.moveRight;
+                		ConfigLoader.saveConfig();
+                	}
+                	if (mouseover6) {
+                		ConfigLoader.moveDiagonalLeftBack = !ConfigLoader.moveDiagonalLeftBack;
+                		ConfigLoader.saveConfig();
+                	}
+                	if (mouseover7) {
+                		ConfigLoader.moveBackward = !ConfigLoader.moveBackward;
+                		ConfigLoader.saveConfig();
+                	}
+                	if (mouseover8) {
+                		ConfigLoader.moveDiagonalRightBack = !ConfigLoader.moveDiagonalRightBack;
+                		ConfigLoader.saveConfig();
+                	}
+                	
+                } else if (currentScreen == 1) {
+                	
+                	if (mouseoverStopMusic) {
+                		ConfigLoader.music = !ConfigLoader.music;
+                		if (!ConfigLoader.music)
+                			TakTakMain.music.stop();
+                		else if (ConfigLoader.music)
+                			TakTakMain.music = new Sound(ConfigLoader.johnCena ? "sound/time_is_now.wav" : "sound/darude_sandstorm.wav");
+                		ConfigLoader.saveConfig();
+                	}
+                	
+                	if (mouseoverStopSFX) {
+                		ConfigLoader.sfx = !ConfigLoader.sfx;
+                		ConfigLoader.saveConfig();
+                	}
+                	
+                } else if (currentScreen == 2) {
+                	
+                	if (mouseoverJohnCena) {
+                		//Have to set all other themes to false here too
+                		ConfigLoader.johnCena = !ConfigLoader.johnCena;
+                		if (ConfigLoader.johnCena) {
+                			TakTakMain.music.stop();
+                			TakTakMain.music = new Sound("sound/time_is_now.wav");
+                		}
+                		ConfigLoader.shrek = false;
+                		ConfigLoader.saveConfig();
+                	}
+                	
+                	if (mouseoverShrek) {
+                		//Have to set all other themes to false here too
+                		ConfigLoader.shrek = !ConfigLoader.shrek;
+                		if (ConfigLoader.shrek) {
+                			//TakTakMain.music.stop();
+                			//TakTakMain.music = new Sound("sound/all_star.wav");
+                		}
+                		ConfigLoader.johnCena = false;
+                		ConfigLoader.saveConfig();
+                	}
+                	
+                } else if (currentScreen == 3) {
+                	
+                	if (mouseoverAnim) {
+                		ConfigLoader.animations = !ConfigLoader.animations;
+                		ConfigLoader.saveConfig();
+                	}
+                	
+                }
             }
         });
 
@@ -174,7 +362,7 @@ public class ConfigWindow extends JFrame implements Runnable {
         }
 
         g.setColor(new Color(0, 0, 0, 230));
-        g.fillRect(50, 0, WINDOW_WIDTH - 100, WINDOW_HEIGHT);
+        g.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
         if (mouseoverPrev) {
             g.drawImage(smallHoverButton.getImage(), 70, 585, null);
@@ -200,11 +388,11 @@ public class ConfigWindow extends JFrame implements Runnable {
         g.setColor(mouseoverNext ? Color.red : Color.black);
         g.drawString(">", 483, 609);
         g.setColor(mouseoverReturn ? Color.red : Color.black);
-        g.drawString("Return", 260, 563);
+        g.drawString("Return", 261, 563);
 
         g.setColor(new Color(240, 240, 240));
         g.setFont(new Font("Arial", Font.BOLD, 38));
-        g.drawString("TAK-TAK Configuration", 70, 80);
+        g.drawString("TAK-TAK Configuration", 73, 80);
         
         g.setFont(new Font("Arial", Font.BOLD, 16));
         g.setColor(currentScreen == 0 ? Color.orange : Color.white);
@@ -232,6 +420,28 @@ public class ConfigWindow extends JFrame implements Runnable {
         	g.drawLine(135, 275, 435, 275);
         	g.drawLine(135, 375, 435, 375);
 
+            g.setColor(Color.white);
+            g.drawString("Click on the directions you want the pieces to be able to move!", 51, 105);
+        	
+        	g.setColor(new Color(0, 0, 0, 65));
+        	if (mouseover1) {
+        		g.fillRect(135, 175, 100, 100);
+        	} else if (mouseover2) {
+        		g.fillRect(235, 175, 100, 100);
+        	} else if (mouseover3) {
+        		g.fillRect(335, 175, 100, 100);
+        	} else if (mouseover4) {
+        		g.fillRect(135, 275, 100, 100);
+        	} else if (mouseover5) {
+        		g.fillRect(335, 275, 100, 100);
+        	} else if (mouseover6) {
+        		g.fillRect(135, 375, 100, 100);
+        	} else if (mouseover7) {
+        		g.fillRect(235, 375, 100, 100);
+        	} else if (mouseover8) {
+        		g.fillRect(335, 375, 100, 100);
+        	}
+
         	if (ConfigLoader.moveDiagonalLeftForward) {
         		drawArrow(arrow.getImage(), 235, 275, 225, 0.15, 0.2);
         	}
@@ -242,10 +452,10 @@ public class ConfigWindow extends JFrame implements Runnable {
         		drawArrow(arrow.getImage(), 287, 275, -90, 0.15, 0.2);
         	}
         	if (ConfigLoader.moveLeft) {
-        		drawArrow(arrow.getImage(), 240, 325, 180, 0.15, 0.2);
+        		drawArrow(arrow.getImage(), 230, 325, 180, 0.15, 0.2);
         	}
         	if (ConfigLoader.moveRight) {
-        		drawArrow(arrow.getImage(), 330, 325, 0, 0.15, 0.2);
+        		drawArrow(arrow.getImage(), 340, 325, 0, 0.15, 0.2);
         	}
         	if (ConfigLoader.moveDiagonalLeftBack) {
         		drawArrow(arrow.getImage(), 235, 375, 135, 0.15, 0.2);
@@ -261,13 +471,86 @@ public class ConfigWindow extends JFrame implements Runnable {
 
         //Music things	
         } else if (currentScreen == 1) {
+        	
+        	g.setColor(Color.white);
+            g.drawString("Change the configuration of the game's sounds!", 104, 105);
+            
+            g.drawString("Current Track: " + (TakTakMain.music.getSound().contains("sandstorm") ?
+            "Darude - Sandstorm" : "John Cena - Time Is Now"), 73, 155);
+            g.drawString("Music " + (ConfigLoader.music ? "is" : "is not") + " playing", 73, 175);
+            
+            if (mouseoverStopMusic) {
+                g.drawImage(hoverButton.getImage(), 73, 185, null);
+            } else {
+                g.drawImage(button.getImage(), 73, 185, null);
+            }
+
+            g.setFont(new Font("Arial", Font.BOLD, 16));
+            g.setColor(mouseoverStopMusic ? Color.red : Color.black);
+            g.drawString("Stop Music", 100, 208);
+            
+            g.setColor(Color.white);
+            g.drawString("SFX are currently " + (ConfigLoader.sfx ? "on" : "off"), 73, 265);
+            
+            if (mouseoverStopSFX) {
+                g.drawImage(hoverButton.getImage(), 73, 275, null);
+            } else {
+                g.drawImage(button.getImage(), 73, 275, null);
+            }
+
+            g.setFont(new Font("Arial", Font.BOLD, 16));
+            g.setColor(mouseoverStopSFX ? Color.red : Color.black);
+            g.drawString((ConfigLoader.sfx ? "Stop" : "Start") + " SFX", 107, 298);
         
         //Themes, like john Cena	
         } else if (currentScreen == 2) {
         	
+        	g.setColor(Color.white);
+            g.drawString("Change the theme of the entire game!", 151, 105);
+
+            g.drawString("John Cena", 73, 175);
+            
+            if (ConfigLoader.johnCena) {
+                g.drawImage(cenaButton.getImage(), 73, 185, null);
+            } else {
+                g.drawImage(button.getImage(), 73, 185, null);
+            }
+
+            g.setFont(new Font("Arial", Font.BOLD, 16));
+            g.setColor(mouseoverJohnCena ? Color.red : Color.black);
+            g.drawString((ConfigLoader.johnCena ? "" : "Not") + " Selected", ConfigLoader.johnCena ? 104 : 94, 208);
+            
+            g.setColor(Color.white);
+            g.drawString("Shrek", 73, 265);
+            
+            if (ConfigLoader.shrek) {
+                g.drawImage(shrekButton.getImage(), 73, 275, null);
+            } else {
+                g.drawImage(button.getImage(), 73, 275, null);
+            }
+
+            g.setFont(new Font("Arial", Font.BOLD, 16));
+            g.setColor(mouseoverShrek ? Color.red : Color.black);
+            g.drawString((ConfigLoader.shrek ? "" : "Not") + " Selected", ConfigLoader.shrek ? 104 : 94, 298);
+        	
         //General settings	
         } else if (currentScreen == 3) {
         	
+        	g.setColor(Color.white);
+            g.drawString("Configure general things about the game!", 133, 105);
+            
+            g.drawString("Game Animations", 73, 175);
+            
+            if (mouseoverAnim) {
+                g.drawImage(hoverButton.getImage(), 73, 185, null);
+            } else {
+                g.drawImage(button.getImage(), 73, 185, null);
+            }
+
+            g.setFont(new Font("Arial", Font.BOLD, 16));
+            g.setColor(mouseoverAnim ? Color.red : Color.black);
+            g.drawString((ConfigLoader.animations ? "Disable" : "Enable"), 115, 208);
+            
         }
 
         g.setFont(new Font("Arial", Font.BOLD, 12));

@@ -9,6 +9,7 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.SourceDataLine;
 
 import tak.com.TakTakMain;
+import tak.config.ConfigLoader;
 
 public class Sound implements Runnable {
 
@@ -36,7 +37,7 @@ public class Sound implements Runnable {
             byte[] audioData = new byte[16384];
             boolean isMuted = TakTakMain.muted;
             while (read > -1) {
-            	if (TakTakMain.muted) {
+            	if (TakTakMain.muted || !ConfigLoader.music) {
             		source.stop();
             	} else {
             		source.start();
@@ -61,5 +62,9 @@ public class Sound implements Runnable {
     	myThread.stop();
     	src.drain();
     	src.close();
+    }
+    
+    public String getSound() {
+    	return soundFile.toString();
     }
 }

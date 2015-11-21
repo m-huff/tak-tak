@@ -23,6 +23,7 @@ import javax.swing.JFrame;
 
 import tak.com.Piece;
 import tak.com.TakTakMain;
+import tak.config.ConfigLoader;
 import tak.net.ClientHandler;
 import tak.net.ServerHandler;
 import tak.ui.ScoreFader;
@@ -1105,7 +1106,8 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
             if (gameDelayTimer > 0) {
                 gameDelayTimer--;
                 if (gameDelayTimer % 25 == 0) {
-                    tick = new Sound("sound/tick.wav");
+                	if (ConfigLoader.sfx)
+                		tick = new Sound("sound/tick.wav");
                 }
             } else if (gameDelayTimer == 0) {
                 reset();
@@ -1118,14 +1120,16 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
             }
         }
 
-        for (int i = 0; i < faders.size(); i++) {
-            faders.get(i).draw(g);
-        }
-
-        if (turnIndicator != null && tellMeWhenItsMyTurn && winner == EnumWinner.None) {
-            turnIndicator.draw(g);
-        } else if (!tellMeWhenItsMyTurn || winner != EnumWinner.None) {
-            turnIndicator = null;
+        if (ConfigLoader.animations) {
+	        for (int i = 0; i < faders.size(); i++) {
+	            faders.get(i).draw(g);
+	        }
+	
+	        if (turnIndicator != null && tellMeWhenItsMyTurn && winner == EnumWinner.None) {
+	            turnIndicator.draw(g);
+	        } else if (!tellMeWhenItsMyTurn || winner != EnumWinner.None) {
+	            turnIndicator = null;
+	        }
         }
 
         gOld.drawImage(image, 0, 0, null);
@@ -1267,7 +1271,8 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
             if (location.getX() >= 5
                     && board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.black) {
                 if (isClient) {
-                    move = new Sound("sound/chaching.wav");
+                	if (ConfigLoader.sfx)
+                		move = new Sound("sound/chaching.wav");
                     myScore += board[location.getX()][location.getY()].getValue();
                 } else {
                     opponentScore += board[location.getX()][location.getY()].getValue();
@@ -1280,6 +1285,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
                     && board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.white) {
                 if (!isClient) {
                     myScore += board[location.getX()][location.getY()].getValue();
+                    if (ConfigLoader.sfx)
                     move = new Sound("sound/chaching.wav");
                 } else {
                     opponentScore += board[location.getX()][location.getY()].getValue();

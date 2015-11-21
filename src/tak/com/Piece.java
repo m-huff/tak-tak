@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 
+import tak.config.ConfigLoader;
 import tak.window.MenuWindow;
 import tak.window.TakTakSingleplayerWindow;
 
@@ -22,7 +23,7 @@ public class Piece {
     private ImageIcon green = new ImageIcon(Piece.class.getResource("/tak/assets/green.png"));
     private ImageIcon orange = new ImageIcon(Piece.class.getResource("/tak/assets/orange.png"));
     private ImageIcon fade = new ImageIcon(Piece.class.getResource("/tak/assets/fade.png"));
-    private ImageIcon crown = new ImageIcon(Piece.class.getResource((MenuWindow.johnCena ? "/tak/assets/cenaking.png" : "/tak/assets/crown.png")));
+    private ImageIcon crown = new ImageIcon(Piece.class.getResource((ConfigLoader.johnCena ? "/tak/assets/cenaking.png" : ConfigLoader.shrek ? "/tak/assets/shrekking.png" : "/tak/assets/crown.png")));
     private boolean isKing;
 
     public Piece() {
@@ -61,7 +62,7 @@ public class Piece {
     }
 
     public void update() {
-        crown = new ImageIcon(Piece.class.getResource((MenuWindow.johnCena ? "/tak/assets/cenaking.png" : "/tak/assets/crown.png")));
+    	crown = new ImageIcon(Piece.class.getResource((ConfigLoader.johnCena ? "/tak/assets/cenaking.png" : ConfigLoader.shrek ? "/tak/assets/shrekking.png" : "/tak/assets/crown.png")));
     }
 
     public Piece getTopPiece() {

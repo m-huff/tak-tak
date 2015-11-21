@@ -11,7 +11,7 @@ import tak.window.TakTakSingleplayerWindow;
 public class TakTakMain {
 
     public static boolean muted;
-    public static Sound music = new Sound(MenuWindow.johnCena ? "sound/time_is_now.wav" : "sound/darude_sandstorm.wav");
+    public static Sound music = new Sound(ConfigLoader.johnCena ? "sound/time_is_now.wav" : "sound/darude_sandstorm.wav");
 
     public static void main(String[] args) {
     	
@@ -28,7 +28,7 @@ public class TakTakMain {
 
 
             if (music.donePlaying == true) {
-                music = new Sound(MenuWindow.johnCena ? "sound/time_is_now.wav" : "sound/darude_sandstorm.wav");
+                music = new Sound(ConfigLoader.johnCena ? "sound/time_is_now.wav" : "sound/darude_sandstorm.wav");
             }
         }
     }

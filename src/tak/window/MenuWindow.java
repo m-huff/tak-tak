@@ -61,8 +61,6 @@ public class MenuWindow extends JFrame implements Runnable {
     private final MenuWindow frame = this;
     public int textPosition = WINDOW_WIDTH;
     public static ArrayList<Piece> pieces = new ArrayList<Piece>();
-    public static boolean allowJohnCena = true;
-    public static boolean johnCena = false;
     public static boolean isWindowOpen;
 
     public MenuWindow() {
@@ -157,10 +155,6 @@ public class MenuWindow extends JFrame implements Runnable {
                 } else if (MouseEvent.BUTTON1 == e.getButton() && mouseoverRules) {
                     final RulesWindow rw = new RulesWindow();
                     rw.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                } else if (MouseEvent.BUTTON1 == e.getButton() && mouseoverCena) {
-                    johnCena = !johnCena;
-                    TakTakMain.music.stop();
-                    TakTakMain.music = new Sound(johnCena ? "sound/time_is_now.wav" : "sound/darude_sandstorm.wav");
                 } else if (MouseEvent.BUTTON1 == e.getButton() && mouseoverMute) {
                     TakTakMain.muted = !TakTakMain.muted;
                 } else if (MouseEvent.BUTTON1 == e.getButton() && mouseoverConfig) {
@@ -226,7 +220,7 @@ public class MenuWindow extends JFrame implements Runnable {
         }
 
         g.setColor(new Color(0, 0, 0, 190));
-        g.fillRect(0, 0, WINDOW_WIDTH, textPosition + (allowJohnCena ? 150 : 60));
+        g.fillRect(0, 0, WINDOW_WIDTH, textPosition + 150);
 
         g.drawImage(logo.getImage(), textPosition - 28, 35, null);
 
@@ -254,12 +248,6 @@ public class MenuWindow extends JFrame implements Runnable {
             g.drawImage(button.getImage(), 30, textPosition + 10, null);
         }
 
-        if (johnCena) {
-            g.drawImage(cenaButton.getImage(), 247, textPosition + 47, null);
-        } else {
-            g.drawImage(button.getImage(), 247, textPosition + 47, null);
-        }
-
         if (mouseoverMute) {
             g.drawImage(smallHoverButton.getImage(), 590, textPosition + 82, null);
             g.drawImage((TakTakMain.muted ? muted.getImage() : notMuted.getImage()), 590, textPosition + 82, null);
@@ -285,11 +273,6 @@ public class MenuWindow extends JFrame implements Runnable {
         g.drawString("Play as Client", 194, textPosition + 34);
         g.setColor(mouseoverServer ? Color.red : Color.black);
         g.drawString("Play as Server", 335, textPosition + 34);
-
-        g.setFont(new Font("Arial", Font.BOLD, 12));
-
-        g.setColor(mouseoverCena ? Color.red : Color.black);
-        g.drawString("John Cena: " + (johnCena ? "On" : "Off"), 275, textPosition + 70);
 
         gOld.drawImage(image, 0, 0, null);
     }
