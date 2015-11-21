@@ -164,8 +164,8 @@ public class MenuWindow extends JFrame implements Runnable {
                 } else if (MouseEvent.BUTTON1 == e.getButton() && mouseoverMute) {
                     TakTakMain.muted = !TakTakMain.muted;
                 } else if (MouseEvent.BUTTON1 == e.getButton() && mouseoverConfig) {
-                    //TODO - configuration window
-                	//movement, sound, stuff
+                	final ConfigWindow cw = new ConfigWindow();
+                	frame.dispose();
                 }
             }
         });
