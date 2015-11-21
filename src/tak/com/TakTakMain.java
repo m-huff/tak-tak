@@ -1,5 +1,6 @@
 package tak.com;
 
+import tak.config.ConfigLoader;
 import tak.util.Sound;
 import tak.window.MenuWindow;
 import tak.window.NetworkWindow;
@@ -13,6 +14,13 @@ public class TakTakMain {
     public static Sound music = new Sound(MenuWindow.johnCena ? "sound/time_is_now.wav" : "sound/darude_sandstorm.wav");
 
     public static void main(String[] args) {
+    	
+    	if (!ConfigLoader.checkConfigExists()) {
+			ConfigLoader.setToDefaults();
+			ConfigLoader.saveConfig();
+		}
+		ConfigLoader.loadConfig();
+    	
         final MenuWindow ttw = new MenuWindow();
 
         while (MenuWindow.isWindowOpen || NetworkWindow.isWindowOpen || RulesWindow.isWindowOpen

@@ -19,6 +19,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 import tak.com.Piece;
+import tak.config.ConfigLoader;
 
 @SuppressWarnings("serial")
 public class ConfigWindow extends JFrame implements Runnable {
@@ -45,6 +46,7 @@ public class ConfigWindow extends JFrame implements Runnable {
     private static ImageIcon button = new ImageIcon(MenuWindow.class.getResource("/tak/assets/button.png"));
     private static ImageIcon smallHoverButton = new ImageIcon(MenuWindow.class.getResource("/tak/assets/button_small_hover.png"));
     private static ImageIcon smallButton = new ImageIcon(MenuWindow.class.getResource("/tak/assets/button_small.png"));
+    private static ImageIcon arrow = new ImageIcon(MenuWindow.class.getResource("/tak/assets/greenarrow.png"));
     private final ConfigWindow frame = this;
     public static ArrayList<Piece> pieces = new ArrayList<Piece>();
     public static boolean hasChangedSlides;
@@ -55,6 +57,9 @@ public class ConfigWindow extends JFrame implements Runnable {
     
     //Screens 0-3, one for each configuration section
     public static int currentScreen;
+    
+    public Piece p = new Piece((rand.nextInt(4) * 10) + 10, Color.green,
+            rand.nextBoolean() ? Color.black : Color.white);
 
     public ConfigWindow() {
         isWindowOpen = true;
@@ -105,6 +110,7 @@ public class ConfigWindow extends JFrame implements Runnable {
             public void mousePressed(MouseEvent e) {
                 if (MouseEvent.BUTTON1 == e.getButton() && mouseoverReturn) {
                     reset();
+                    new MenuWindow();
                     frame.dispose();
                 }
                 if (MouseEvent.BUTTON1 == e.getButton() && mouseoverPrev) {
@@ -123,6 +129,8 @@ public class ConfigWindow extends JFrame implements Runnable {
                     }
                     hasChangedSlides = true;
                 }
+                
+                //TODO - change states and button mouseovers depending on the current screen
             }
         });
 
@@ -211,6 +219,56 @@ public class ConfigWindow extends JFrame implements Runnable {
         g.drawString(" | ", 215, 609);
         g.drawString(" | ", 282, 609);
         g.drawString(" | ", 363, 609);
+        
+        //Movement things
+        if (currentScreen == 0) {
+        	g.setColor(new Color(50, 50, 50));
+        	g.fillRect(130, 170, 310, 310);
+        	g.setColor(new Color(150, 150, 150));
+        	g.fillRect(135, 175, 300, 300);
+        	g.setColor(new Color(0, 0, 0));
+        	g.drawLine(235, 175, 235, 475);
+        	g.drawLine(335, 175, 335, 475);
+        	g.drawLine(135, 275, 435, 275);
+        	g.drawLine(135, 375, 435, 375);
+
+        	if (ConfigLoader.moveDiagonalLeftForward) {
+        		drawArrow(arrow.getImage(), 235, 275, 225, 0.15, 0.2);
+        	}
+        	if (ConfigLoader.moveDiagonalRightForward) {
+        		drawArrow(arrow.getImage(), 335, 275, 315, 0.15, 0.2);
+        	}
+        	if (ConfigLoader.moveForward) {
+        		drawArrow(arrow.getImage(), 287, 275, -90, 0.15, 0.2);
+        	}
+        	if (ConfigLoader.moveLeft) {
+        		drawArrow(arrow.getImage(), 240, 325, 180, 0.15, 0.2);
+        	}
+        	if (ConfigLoader.moveRight) {
+        		drawArrow(arrow.getImage(), 330, 325, 0, 0.15, 0.2);
+        	}
+        	if (ConfigLoader.moveDiagonalLeftBack) {
+        		drawArrow(arrow.getImage(), 235, 375, 135, 0.15, 0.2);
+        	}
+        	if (ConfigLoader.moveDiagonalRightBack) {
+        		drawArrow(arrow.getImage(), 335, 375, 45, 0.15, 0.2);
+        	}
+        	if (ConfigLoader.moveBackward) {
+        		drawArrow(arrow.getImage(), 287, 375, 90, 0.15, 0.2);
+        	}
+
+        	p.draw(g, 238, 280);
+
+        //Music things	
+        } else if (currentScreen == 1) {
+        
+        //Themes, like john Cena	
+        } else if (currentScreen == 2) {
+        	
+        //General settings	
+        } else if (currentScreen == 3) {
+        	
+        }
 
         g.setFont(new Font("Arial", Font.BOLD, 12));
 
@@ -292,5 +350,25 @@ public class ConfigWindow extends JFrame implements Runnable {
 
     public int getHeight2() {
         return (ysize - 2 * YBORDER - WINDOW_BORDER - YTITLE);
+    }
+    
+    public void drawArrow(Image image, int xpos, int ypos, double rot, double xscale,
+            double yscale) {
+        int width;
+        int height;
+
+        width = arrow.getImage().getWidth(this);
+        height = arrow.getImage().getHeight(this);
+
+        g.translate(xpos, ypos);
+        g.rotate(rot * Math.PI / 180.0);
+        g.scale(xscale, yscale);
+
+        g.drawImage(image, -width / 2, -height / 2,
+                width, height, this);
+
+        g.scale(1.0 / xscale, 1.0 / yscale);
+        g.rotate(-rot * Math.PI / 180.0);
+        g.translate(-xpos, -ypos);
     }
 }
