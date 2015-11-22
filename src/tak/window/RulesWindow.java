@@ -179,10 +179,8 @@ public class RulesWindow extends JFrame implements Runnable {
             for (int y = 0; y < WINDOW_HEIGHT; y += 80) {
 
                 if (index <= pieces.size() - 2 && pieces.get(index) != null) {
-                    if (y < 160 || y >= 160 && x < 80 || y >= 160 && x > 400) {
-                        pieces.get(index).update();
-                        pieces.get(index).draw(g, x, y);
-                    }
+                    pieces.get(index).update();
+                    pieces.get(index).draw(g, x, y);
                     if (index < pieces.size() - 2) {
                         index++;
                     } else {
@@ -191,6 +189,9 @@ public class RulesWindow extends JFrame implements Runnable {
                 }
             }
         }
+
+        g.setColor(new Color(0, 0, 0, 230));
+        g.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
         if (mouseoverPrev) {
             g.drawImage(smallHoverButton.getImage(), 220, 585, null);
@@ -218,13 +219,14 @@ public class RulesWindow extends JFrame implements Runnable {
         g.setColor(mouseoverReturn ? Color.red : Color.black);
         g.drawString("Return", 260, 563);
 
-        g.setColor(new Color(0, 0, 0, 190));
-        g.fillRect(0, 0, WINDOW_WIDTH, 100);
-
         g.setColor(new Color(240, 240, 240));
         g.setFont(new Font("Arial", Font.BOLD, 42));
         g.drawString("TAK-TAK Rules", 30, 80);
 
+        g.setColor(new Color(50, 50, 50));
+        g.fillRect(107, 185, 360, 260);
+        
+        g.setColor(new Color(240, 240, 240));
         g.setFont(new Font("Arial", Font.BOLD, 12));
         g.drawString(imageText[currentSlide], 95, 500);
         g.drawString(imageText2[currentSlide], 95, 520);
