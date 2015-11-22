@@ -285,7 +285,7 @@ public class ConfigWindow extends JFrame implements Runnable {
                 		if (!ConfigLoader.music)
                 			TakTakMain.music.stop();
                 		else if (ConfigLoader.music)
-                			TakTakMain.music = new Sound(ConfigLoader.johnCena ? "sound/time_is_now.wav" : "sound/darude_sandstorm.wav");
+                			TakTakMain.music = new Sound(ConfigLoader.johnCena ? "sound/time_is_now.wav" : ConfigLoader.shrek ? "sound/all_star.wav" : "sound/darude_sandstorm.wav");
                 		ConfigLoader.saveConfig();
                 	}
                 	
@@ -311,8 +311,8 @@ public class ConfigWindow extends JFrame implements Runnable {
                 		//Have to set all other themes to false here too
                 		ConfigLoader.shrek = !ConfigLoader.shrek;
                 		if (ConfigLoader.shrek) {
-                			//TakTakMain.music.stop();
-                			//TakTakMain.music = new Sound("sound/all_star.wav");
+                			TakTakMain.music.stop();
+                			TakTakMain.music = new Sound("sound/all_star.wav");
                 		}
                 		ConfigLoader.johnCena = false;
                 		ConfigLoader.saveConfig();
