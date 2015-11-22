@@ -79,6 +79,7 @@ public class ConfigWindow extends JFrame implements Runnable {
     
     //Screen 3
     public boolean mouseoverAnim;
+    public boolean mouseoverReset;
 
     //Screens 0-3, one for each configuration section
     public static int currentScreen;
@@ -204,6 +205,12 @@ public class ConfigWindow extends JFrame implements Runnable {
                 		mouseoverAnim = false;
                 	}
                 	
+                	if (e.getX() > 73 && e.getX() < 213 && e.getY() > 265 && e.getY() < 300) {
+                		mouseoverReset = true;
+                	} else {
+                		mouseoverReset = false;
+                	}
+                	
                 }
 
                 repaint();
@@ -318,6 +325,11 @@ public class ConfigWindow extends JFrame implements Runnable {
                 		ConfigLoader.saveConfig();
                 	}
                 	
+                	if (mouseoverReset) {
+                		ConfigLoader.setToDefaults();
+                		ConfigLoader.saveConfig();
+                	}
+                	
                 }
             }
         });
@@ -422,6 +434,8 @@ public class ConfigWindow extends JFrame implements Runnable {
 
             g.setColor(Color.white);
             g.drawString("Click on the directions you want the pieces to be able to move!", 51, 105);
+            g.setColor(Color.orange);
+            g.drawString("This will ONLY apply to singleplayer games!", 120, 125);
         	
         	g.setColor(new Color(0, 0, 0, 65));
         	if (mouseover1) {
@@ -549,7 +563,20 @@ public class ConfigWindow extends JFrame implements Runnable {
 
             g.setFont(new Font("Arial", Font.BOLD, 16));
             g.setColor(mouseoverAnim ? Color.red : Color.black);
-            g.drawString((ConfigLoader.animations ? "Disable" : "Enable"), 115, 208);
+            g.drawString((ConfigLoader.animations ? "Disable" : "Enable"), 116, 208);
+            
+            g.setColor(Color.white);
+            g.drawString("Reset All Configuration to Defaults", 73, 265);
+            
+            if (mouseoverReset) {
+                g.drawImage(hoverButton.getImage(), 73, 275, null);
+            } else {
+                g.drawImage(button.getImage(), 73, 275, null);
+            }
+
+            g.setFont(new Font("Arial", Font.BOLD, 16));
+            g.setColor(mouseoverReset ? Color.red : Color.black);
+            g.drawString("Reset", 121, 298);
             
         }
 
@@ -575,7 +602,7 @@ public class ConfigWindow extends JFrame implements Runnable {
         currentScreen = 0;
         hasChangedSlides = false;
 
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 80; i++) {
             Color[] colors = {Color.orange, Color.blue, Color.green};
             Piece p = new Piece((rand.nextInt(4) * 10) + 10, colors[rand.nextInt(colors.length)],
                     rand.nextBoolean() ? Color.black : Color.white);

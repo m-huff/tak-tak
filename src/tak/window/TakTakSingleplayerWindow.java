@@ -872,7 +872,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 
     public void displayAllValidMoves(Graphics2D g, int row, int column, boolean add) {
 
-    	//TODO - implement configurable moves
+    	//TODO - null checks pls
     	
         // Show all spaces that the piece can move to, represented by green rectangles
         // The piece can move to a space if it is one space above/below it, or diagonal,
@@ -888,42 +888,87 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
         Piece p = board[row][column];
         g.setColor(new Color(64, 128, 64, 150));
 
-        if (canPieceMoveToLocation(p.getTopPiece(), row - 1, column)) {
+        if (canPieceMoveToLocation(p.getTopPiece(), row - 1, column) && ConfigLoader.moveForward) {
             if (board[row - 1][column] == null) {
                 p.draw(g2d, getX(0) + column * getWidth2() / COLUMNS,
                         getY(0) + (row - 1) * getHeight2() / ROWS);
             }
             drawArrow(arrow.getImage(), getX(0) + column * getWidth2() / COLUMNS + (getWidth2() / COLUMNS / 2) + 2,
                     getY(0) + (row + 1) * getHeight2() / ROWS - arrowLoc - 45, 270, 0.1, 0.2);
-            p.draw(g, getX(0) + column * getWidth2() / COLUMNS,
-                    getY(0) + (row) * getHeight2() / ROWS);
             if (add)
             	validMoves.add(new OrderedPair(row - 1, column));
         }
-        if (canPieceMoveToLocation(p.getTopPiece(), row - 1, column + 1)) {
+        if (canPieceMoveToLocation(p.getTopPiece(), row - 1, column + 1) && ConfigLoader.moveDiagonalRightForward) {
             if (board[row - 1][column + 1] == null) {
                 p.draw(g2d, getX(0) + (column + 1) * getWidth2() / COLUMNS,
                         getY(0) + (row - 1) * getHeight2() / ROWS);
             }
             drawArrow(arrow.getImage(), getX(0) + column * getWidth2() / COLUMNS + (getWidth2() / COLUMNS / 2) + (arrowLoc / 2),
                     getY(0) + (row + 1) * getHeight2() / ROWS - (arrowLoc / 2) - 47, 315, 0.13, 0.2);
-            p.draw(g, getX(0) + column * getWidth2() / COLUMNS,
-                    getY(0) + (row) * getHeight2() / ROWS);
             if (add)
             	validMoves.add(new OrderedPair(row - 1, column + 1));
         }
-        if (canPieceMoveToLocation(p.getTopPiece(), row - 1, column - 1)) {
+        if (canPieceMoveToLocation(p.getTopPiece(), row - 1, column - 1) && ConfigLoader.moveDiagonalLeftForward) {
             if (board[row - 1][column - 1] == null) {
                 p.draw(g2d, getX(0) + (column - 1) * getWidth2() / COLUMNS,
                         getY(0) + (row - 1) * getHeight2() / ROWS);
             }
             drawArrow(arrow.getImage(), getX(0) + column * getWidth2() / COLUMNS + (getWidth2() / COLUMNS / 2) - (arrowLoc / 2),
                     getY(0) + (row + 1) * getHeight2() / ROWS - (arrowLoc / 2) - 47, 235, 0.13, 0.2);
-            p.draw(g, getX(0) + column * getWidth2() / COLUMNS,
-                    getY(0) + (row) * getHeight2() / ROWS);
             if (add)
             	validMoves.add(new OrderedPair(row - 1, column - 1));
         }
+        if (canPieceMoveToLocation(p.getTopPiece(), row, column - 1) && ConfigLoader.moveLeft) {
+            if (board[row][column - 1] == null) {
+                p.draw(g2d, getX(0) + (column - 1) * getWidth2() / COLUMNS,
+                        getY(0) + (row) * getHeight2() / ROWS);
+            }
+            drawArrow(arrow.getImage(), getX(0) + column * getWidth2() / COLUMNS + (getWidth2() / COLUMNS / 2) + 5 - arrowLoc,
+                    getY(0) + (row + 1) * getHeight2() / ROWS - 45, 180, 0.1, 0.2);
+            if (add)
+            	validMoves.add(new OrderedPair(row, column - 1));
+        }
+        if (canPieceMoveToLocation(p.getTopPiece(), row, column + 1) && ConfigLoader.moveRight) {
+            if (board[row][column + 1] == null) {
+                p.draw(g2d, getX(0) + (column + 1) * getWidth2() / COLUMNS,
+                        getY(0) + (row) * getHeight2() / ROWS);
+            }
+            drawArrow(arrow.getImage(), getX(0) + column * getWidth2() / COLUMNS + (getWidth2() / COLUMNS / 2) - 5 + arrowLoc,
+                    getY(0) + (row + 1) * getHeight2() / ROWS - 45, 0, 0.1, 0.2);
+            if (add)
+            	validMoves.add(new OrderedPair(row, column + 1));
+        }
+        if (canPieceMoveToLocation(p.getTopPiece(), row + 1, column + 1) && ConfigLoader.moveDiagonalRightBack) {
+            if (board[row + 1][column + 1] == null) {
+                p.draw(g2d, getX(0) + (column + 1) * getWidth2() / COLUMNS,
+                        getY(0) + (row + 1) * getHeight2() / ROWS);
+            }
+            drawArrow(arrow.getImage(), getX(0) + column * getWidth2() / COLUMNS + (getWidth2() / COLUMNS / 2) + (arrowLoc / 2),
+                    getY(0) + (row + 1) * getHeight2() / ROWS + (arrowLoc / 2) - 47, 45, 0.13, 0.2);
+            if (add)
+            	validMoves.add(new OrderedPair(row + 1, column + 1));
+        }
+        if (canPieceMoveToLocation(p.getTopPiece(), row + 1, column - 1) && ConfigLoader.moveDiagonalLeftBack) {
+            if (board[row + 1][column - 1] == null) {
+                p.draw(g2d, getX(0) + (column - 1) * getWidth2() / COLUMNS,
+                        getY(0) + (row + 1) * getHeight2() / ROWS);
+            }
+            drawArrow(arrow.getImage(), getX(0) + column * getWidth2() / COLUMNS + (getWidth2() / COLUMNS / 2) - (arrowLoc / 2),
+                    getY(0) + (row + 1) * getHeight2() / ROWS + (arrowLoc / 2) - 47, 135, 0.13, 0.2);
+            if (add)
+            	validMoves.add(new OrderedPair(row + 1, column - 1));
+        }
+        if (canPieceMoveToLocation(p.getTopPiece(), row + 1, column) && ConfigLoader.moveBackward) {
+            if (board[row + 1][column] == null) {
+                p.draw(g2d, getX(0) + column * getWidth2() / COLUMNS,
+                        getY(0) + (row + 1) * getHeight2() / ROWS);
+            }
+            drawArrow(arrow.getImage(), getX(0) + column * getWidth2() / COLUMNS + (getWidth2() / COLUMNS / 2) + 2,
+                    getY(0) + (row + 1) * getHeight2() / ROWS + arrowLoc - 45, 90, 0.1, 0.2);
+            if (add)
+            	validMoves.add(new OrderedPair(row + 1, column));
+        }
+        p.draw(g, getX(0) + (column) * getWidth2() / COLUMNS, getY(0) + (row) * getHeight2() / ROWS);
         p.drawFade(g, getX(0) + column * getWidth2() / COLUMNS, getY(0) + row * getHeight2() / ROWS);
     }
 

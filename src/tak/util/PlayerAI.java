@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 import tak.com.Piece;
+import tak.config.ConfigLoader;
 import tak.window.TakTakSingleplayerWindow;
 
 public class PlayerAI {
@@ -14,15 +15,29 @@ public class PlayerAI {
 
         ArrayList<OrderedPair> moves = new ArrayList<>();
 
-        if (TakTakSingleplayerWindow.canPieceMoveToLocation(p.getTopPiece(), row + 1, column)) {
+        if (TakTakSingleplayerWindow.canPieceMoveToLocation(p.getTopPiece(), row + 1, column) && ConfigLoader.moveForward) {
             moves.add(new OrderedPair(row + 1, column));
         }
-        if (TakTakSingleplayerWindow.canPieceMoveToLocation(p.getTopPiece(), row + 1, column + 1)) {
+        if (TakTakSingleplayerWindow.canPieceMoveToLocation(p.getTopPiece(), row + 1, column + 1) && ConfigLoader.moveDiagonalLeftForward) {
             moves.add(new OrderedPair(row + 1, column + 1));
         }
-        if (TakTakSingleplayerWindow.canPieceMoveToLocation(p.getTopPiece(), row + 1, column - 1)) {
+        if (TakTakSingleplayerWindow.canPieceMoveToLocation(p.getTopPiece(), row + 1, column - 1) && ConfigLoader.moveDiagonalRightForward) {
             moves.add(new OrderedPair(row + 1, column - 1));
-
+        }
+        if (TakTakSingleplayerWindow.canPieceMoveToLocation(p.getTopPiece(), row, column + 1) && ConfigLoader.moveLeft) {
+            moves.add(new OrderedPair(row, column + 1));
+        }
+        if (TakTakSingleplayerWindow.canPieceMoveToLocation(p.getTopPiece(), row, column - 1) && ConfigLoader.moveRight) {
+            moves.add(new OrderedPair(row, column - 1));
+        }
+        if (TakTakSingleplayerWindow.canPieceMoveToLocation(p.getTopPiece(), row - 1, column + 1) && ConfigLoader.moveDiagonalLeftBack) {
+            moves.add(new OrderedPair(row - 1, column + 1));
+        }
+        if (TakTakSingleplayerWindow.canPieceMoveToLocation(p.getTopPiece(), row - 1, column - 1) && ConfigLoader.moveDiagonalRightBack) {
+            moves.add(new OrderedPair(row - 1, column - 1));
+        }
+        if (TakTakSingleplayerWindow.canPieceMoveToLocation(p.getTopPiece(), row - 1, column) && ConfigLoader.moveBackward) {
+            moves.add(new OrderedPair(row - 1, column));
         }
 
         return moves;
