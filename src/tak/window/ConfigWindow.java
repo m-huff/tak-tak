@@ -49,6 +49,7 @@ public class ConfigWindow extends JFrame implements Runnable {
     private static ImageIcon smallHoverButton = new ImageIcon(MenuWindow.class.getResource("/tak/assets/button_small_hover.png"));
     private static ImageIcon smallButton = new ImageIcon(MenuWindow.class.getResource("/tak/assets/button_small.png"));
     private static ImageIcon arrow = new ImageIcon(MenuWindow.class.getResource("/tak/assets/greenarrow.png"));
+    private static ImageIcon bigButton = new ImageIcon(MenuWindow.class.getResource("/tak/assets/big_button.png"));
     private static ImageIcon cenaButton = new ImageIcon(MenuWindow.class.getResource("/tak/assets/cenaButton.png"));
     private static ImageIcon shrekButton = new ImageIcon(MenuWindow.class.getResource("/tak/assets/shrekButton.png"));
     private final ConfigWindow frame = this;
@@ -76,6 +77,7 @@ public class ConfigWindow extends JFrame implements Runnable {
     //Screen 2
     public boolean mouseoverJohnCena;
     public boolean mouseoverShrek;
+    public boolean mouseoverDefault;
     
     //Screen 3
     public boolean mouseoverAnim;
@@ -185,16 +187,22 @@ public class ConfigWindow extends JFrame implements Runnable {
                 	
                 } else if (currentScreen == 2) {
                 	
-                	if (e.getX() > 73 && e.getX() < 213 && e.getY() > 185 && e.getY() < 215) {
+                	if (e.getX() > 113 && e.getX() < 463 && e.getY() > 135 && e.getY() < 260) {
                 		mouseoverJohnCena = true;
                 	} else {
                 		mouseoverJohnCena = false;
                 	}
                 	
-                	if (e.getX() > 73 && e.getX() < 213 && e.getY() > 265 && e.getY() < 300) {
+                	if (e.getX() > 113 && e.getX() < 463 && e.getY() > 270 && e.getY() < 395) {
                 		mouseoverShrek = true;
                 	} else {
                 		mouseoverShrek = false;
+                	}
+                	
+                	if (e.getX() > 113 && e.getX() < 463 && e.getY() > 405 && e.getY() < 530) {
+                		mouseoverDefault = true;
+                	} else {
+                		mouseoverDefault = false;
                 	}
                 	
                 } else if (currentScreen == 3) {
@@ -298,23 +306,28 @@ public class ConfigWindow extends JFrame implements Runnable {
                 	
                 	if (mouseoverJohnCena) {
                 		//Have to set all other themes to false here too
-                		ConfigLoader.johnCena = !ConfigLoader.johnCena;
-                		if (ConfigLoader.johnCena) {
-                			TakTakMain.music.stop();
-                			TakTakMain.music = new Sound("sound/time_is_now.wav");
-                		}
+                		ConfigLoader.johnCena = true;
+                		TakTakMain.music.stop();
+                		TakTakMain.music = new Sound("sound/time_is_now.wav");
                 		ConfigLoader.shrek = false;
                 		ConfigLoader.saveConfig();
                 	}
                 	
                 	if (mouseoverShrek) {
                 		//Have to set all other themes to false here too
-                		ConfigLoader.shrek = !ConfigLoader.shrek;
-                		if (ConfigLoader.shrek) {
-                			TakTakMain.music.stop();
-                			TakTakMain.music = new Sound("sound/all_star.wav");
-                		}
+                		ConfigLoader.shrek = true;
+                		TakTakMain.music.stop();
+                		TakTakMain.music = new Sound("sound/all_star.wav");
                 		ConfigLoader.johnCena = false;
+                		ConfigLoader.saveConfig();
+                	}
+                	
+                	if (mouseoverDefault) {
+                		//Have to set all other themes to false here too
+                		ConfigLoader.shrek = false;
+                		ConfigLoader.johnCena = false;
+                		TakTakMain.music.stop();
+                		TakTakMain.music = new Sound("sound/darude_sandstorm.wav");
                 		ConfigLoader.saveConfig();
                 	}
                 	
@@ -522,30 +535,29 @@ public class ConfigWindow extends JFrame implements Runnable {
         	g.setColor(Color.white);
             g.drawString("Change the theme of the entire game!", 151, 105);
 
-            g.drawString("John Cena", 73, 175);
-            
             if (ConfigLoader.johnCena) {
-                g.drawImage(cenaButton.getImage(), 73, 185, null);
+                g.drawImage(cenaButton.getImage(), 113, 135, null);
             } else {
-                g.drawImage(button.getImage(), 73, 185, null);
+                g.drawImage(bigButton.getImage(), 113, 135, null);
             }
 
-            g.setFont(new Font("Arial", Font.BOLD, 16));
-            g.setColor(mouseoverJohnCena ? Color.red : Color.black);
-            g.drawString((ConfigLoader.johnCena ? "" : "Not") + " Selected", ConfigLoader.johnCena ? 104 : 94, 208);
-            
-            g.setColor(Color.white);
-            g.drawString("Shrek", 73, 265);
-            
+            g.setFont(new Font("Arial", Font.BOLD, 30));
+            g.setColor(ConfigLoader.johnCena ? Color.red : Color.black);
+            g.drawString("John Cena", 215, 208);
+
             if (ConfigLoader.shrek) {
-                g.drawImage(shrekButton.getImage(), 73, 275, null);
+                g.drawImage(shrekButton.getImage(), 113, 270, null);
             } else {
-                g.drawImage(button.getImage(), 73, 275, null);
+                g.drawImage(bigButton.getImage(), 113, 270, null);
             }
+            
+            g.setColor(ConfigLoader.shrek ? Color.red : Color.black);
+            g.drawString("Shrek", 245, 343);
 
-            g.setFont(new Font("Arial", Font.BOLD, 16));
-            g.setColor(mouseoverShrek ? Color.red : Color.black);
-            g.drawString((ConfigLoader.shrek ? "" : "Not") + " Selected", ConfigLoader.shrek ? 104 : 94, 298);
+            g.drawImage(bigButton.getImage(), 113, 405, null);
+
+            g.setColor(!ConfigLoader.shrek && !ConfigLoader.johnCena ? Color.red : Color.black);
+            g.drawString("Default", 235, 478);
         	
         //General settings	
         } else if (currentScreen == 3) {
