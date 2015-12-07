@@ -1273,26 +1273,26 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
                 if (isClient) {
                 	if (ConfigLoader.sfx)
                 		move = new Sound("sound/chaching.wav");
-                    myScore += board[location.getX()][location.getY()].getValue();
+                    myScore += board[location.getX()][location.getY()].getStackValue();
                 } else {
-                    opponentScore += board[location.getX()][location.getY()].getValue();
+                    opponentScore += board[location.getX()][location.getY()].getStackValue();
                 }
 
                 numBlackPiecesOnBoard--;
-                chat.add("GAME: Black +" + board[location.getX()][location.getY()].getValue() + "!");
+                chat.add("GAME: Black +" + board[location.getX()][location.getY()].getStackValue() + "!");
             } //"my" pieces are white if I'm a server
             else if (location.getX() < 2
                     && board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.white) {
                 if (!isClient) {
-                    myScore += board[location.getX()][location.getY()].getValue();
+                    myScore += board[location.getX()][location.getY()].getStackValue();
                     if (ConfigLoader.sfx)
                     move = new Sound("sound/chaching.wav");
                 } else {
-                    opponentScore += board[location.getX()][location.getY()].getValue();
+                    opponentScore += board[location.getX()][location.getY()].getStackValue();
                 }
 
                 numWhitePiecesOnBoard--;
-                chat.add("GAME: White +" + board[location.getX()][location.getY()].getValue() + "!");
+                chat.add("GAME: White +" + board[location.getX()][location.getY()].getStackValue() + "!");
             }
 
             Color c;
@@ -1311,7 +1311,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
                     && board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.black
                     || location.getX() < 2 && board[location.getX()][location.getY()].getTopPiece()
                     .getBackgroundColor() == Color.white) {
-                ScoreFader sf = new ScoreFader(board[location.getX()][location.getY()].getValue(),
+                ScoreFader sf = new ScoreFader(board[location.getX()][location.getY()].getStackValue(),
                         getX(0) + location.getY() * getWidth2() / COLUMNS,
                         getY(0) + location.getX() * getHeight2() / ROWS, c);
 

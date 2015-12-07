@@ -728,10 +728,10 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
         if (location.getX() >= 5 && board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.black
                 || location.getX() < 2 && board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.white) {
             if (board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.black) {
-                aiScore += board[location.getX()][location.getY()].getValue();
+                aiScore += board[location.getX()][location.getY()].getStackValue();
                 numBlackPiecesOnBoard--;
             } else {
-                myScore += board[location.getX()][location.getY()].getValue();
+                myScore += board[location.getX()][location.getY()].getStackValue();
                 numWhitePiecesOnBoard--;
             }
 
