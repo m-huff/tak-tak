@@ -15,6 +15,7 @@ public class Piece {
 
     private ArrayList<Piece> stack = new ArrayList<Piece>();
     private int value;
+    private int totalStackValue;
     private Color backColor;
     private Color frontColor;
     private ImageIcon white = new ImageIcon(Piece.class.getResource("/tak/assets/white.png"));
@@ -31,6 +32,7 @@ public class Piece {
         backColor = Color.white;
         frontColor = Color.orange;
         stack.add(this);
+        totalStackValue = value;
     }
 
     public Piece(int _value, Color _frontColor, Color _backColor) {
@@ -39,6 +41,7 @@ public class Piece {
         backColor = _backColor;
         stack.add(this);
         update();
+        totalStackValue = value;
     }
 
     public void setValue(int _value) {
@@ -47,11 +50,15 @@ public class Piece {
     }
 
     public void addValue(int _value) {
-        value += _value;
+        totalStackValue += _value;
     }
 
     public int getValue() {
         return value;
+    }
+    
+    public int getStackValue() {
+        return totalStackValue;
     }
 
     public void addStackToStack(ArrayList<Piece> _stack) {
@@ -137,7 +144,7 @@ public class Piece {
         g.setColor(new Color(50, 50, 50));
         g.setColor(Color.WHITE);
         g.setFont(new Font("Arial Bold", Font.BOLD, 11));
-        g.drawString("Total value is " + value, mousex + 8, mousey + 14);
+        g.drawString("Total value is " + totalStackValue, mousex + 8, mousey + 14);
         g.setFont(new Font("Arial Bold", Font.BOLD, 11));
         if (stack.size() == 1) {
             g.drawString(stack.size() + " piece in stack", mousex + 8, mousey + 60 + (stack.size() * 8));
