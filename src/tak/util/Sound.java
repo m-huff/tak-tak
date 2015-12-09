@@ -37,12 +37,12 @@ public class Sound implements Runnable {
             byte[] audioData = new byte[16384];
             boolean isMuted = TakTakMain.muted;
             while (read > -1) {
-            	if (TakTakMain.muted || !ConfigLoader.music) {
-            		source.stop();
-            	} else {
-            		source.start();
-            	}
-            	
+                if (TakTakMain.muted || !ConfigLoader.music) {
+                    source.stop();
+                } else {
+                    source.start();
+                }
+
                 read = ais.read(audioData, 0, audioData.length);
                 if (read >= 0) {
                     source.write(audioData, 0, read);
@@ -57,14 +57,14 @@ public class Sound implements Runnable {
             exc.printStackTrace();
         }
     }
-    
+
     public void stop() {
-    	myThread.stop();
-    	src.drain();
-    	src.close();
+        myThread.stop();
+        src.drain();
+        src.close();
     }
-    
+
     public String getSound() {
-    	return soundFile.toString();
+        return soundFile.toString();
     }
 }

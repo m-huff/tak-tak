@@ -14,15 +14,15 @@ public class TakTakMain {
     public static Sound music;
 
     public static void main(String[] args) {
-    	
-    	if (!ConfigLoader.checkConfigExists()) {
-			ConfigLoader.setToDefaults();
-			ConfigLoader.saveConfig();
-		}
-		ConfigLoader.loadConfig();
-		
-		music = new Sound(ConfigLoader.johnCena ? "sound/time_is_now.wav" : ConfigLoader.shrek ? "sound/all_star.wav" : "sound/darude_sandstorm.wav");
-    	
+
+        if (!ConfigLoader.checkConfigExists()) {
+            ConfigLoader.setToDefaults();
+            ConfigLoader.saveConfig();
+        }
+        ConfigLoader.loadConfig();
+
+        music = new Sound(ConfigLoader.johnCena ? "sound/time_is_now.wav" : ConfigLoader.shrek ? "sound/all_star.wav" : "sound/darude_sandstorm.wav");
+
         final MenuWindow ttw = new MenuWindow();
 
         while (MenuWindow.isWindowOpen || NetworkWindow.isWindowOpen || RulesWindow.isWindowOpen

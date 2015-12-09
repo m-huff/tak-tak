@@ -248,63 +248,63 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
                         currentColumn = 0;
                     }
 
-                	if (validMoves.isEmpty()) {
-                		selectedRow = 999;
-                		selectedColumn = 999;
-                	}
-                    
+                    if (validMoves.isEmpty()) {
+                        selectedRow = 999;
+                        selectedColumn = 999;
+                    }
+
                     //If we have no piece selected, and we click on a space
                     //where there is a piece of our color
                     if (selectedRow == 999 && board[currentRow][currentColumn] != null) {
-                    	if (board[currentRow][currentColumn].getTopPiece().getBackgroundColor() == Color.white) {
-                    		selectedRow = currentRow;
+                        if (board[currentRow][currentColumn].getTopPiece().getBackgroundColor() == Color.white) {
+                            selectedRow = currentRow;
                             selectedColumn = currentColumn;
                             arrowLoc = 0;
                             arrowAnim = 0;
-                    	}
-                    //If we've already selected a piece
+                        }
+                        //If we've already selected a piece
                     } else if (selectedRow != 999) {
-                    	int moveIndex = 0;
-                    	
-                    	//Let's loop through the 'available' moves and see if where
-                    	//we clicked is one of them
+                        int moveIndex = 0;
 
-                    	while (moveIndex < validMoves.size()) {
-                    		if (isMoveInArray(new OrderedPair(currentRow, currentColumn))) {
+                        //Let's loop through the 'available' moves and see if where
+                        //we clicked is one of them
 
-                    			//Move the piece
-                    			movePieceToLocation(new OrderedPair(selectedRow, selectedColumn),
-                                new OrderedPair(currentRow, currentColumn));
-                    			
-                    			//Reset the state after the move is made
-                    			selectedRow = 999;
-                    			selectedColumn = 999;
-                    			validMoves.clear();
+                        while (moveIndex < validMoves.size()) {
+                            if (isMoveInArray(new OrderedPair(currentRow, currentColumn))) {
+
+                                //Move the piece
+                                movePieceToLocation(new OrderedPair(selectedRow, selectedColumn),
+                                        new OrderedPair(currentRow, currentColumn));
+
+                                //Reset the state after the move is made
+                                selectedRow = 999;
+                                selectedColumn = 999;
+                                validMoves.clear();
                                 myTurn = !myTurn;
                                 break;
-                    			
-                    		//If the piece CANT move here and the place is empty or not my color
-                    		} else if (board[currentRow][currentColumn] == null || 
-                    				   board[currentRow][currentColumn] != null &&
-                    				   board[currentRow][currentColumn].getTopPiece().getBackgroundColor()
-                    				   != Color.white) {
-                    			
-                    			selectedRow = 999;
-                    			selectedColumn = 999;
-                    			validMoves.clear();
-                    			break;
-                    		//If the piece CANT move here and it's another one of my pieces
-                    		} else if (board[currentRow][currentColumn] != null && board[currentRow][currentColumn]
-                                       .getTopPiece().getBackgroundColor() == Color.white) {
-                    			selectedRow = currentRow;
+
+                                //If the piece CANT move here and the place is empty or not my color
+                            } else if (board[currentRow][currentColumn] == null
+                                    || board[currentRow][currentColumn] != null
+                                    && board[currentRow][currentColumn].getTopPiece().getBackgroundColor()
+                                    != Color.white) {
+
+                                selectedRow = 999;
+                                selectedColumn = 999;
+                                validMoves.clear();
+                                break;
+                                //If the piece CANT move here and it's another one of my pieces
+                            } else if (board[currentRow][currentColumn] != null && board[currentRow][currentColumn]
+                                    .getTopPiece().getBackgroundColor() == Color.white) {
+                                selectedRow = currentRow;
                                 selectedColumn = currentColumn;
                                 arrowLoc = 0;
                                 arrowAnim = 0;
                                 validMoves.clear();
                                 break;
-                    		}
-                    		moveIndex++;
-                    	}
+                            }
+                            moveIndex++;
+                        }
                     }
                 }
                 if (MouseEvent.BUTTON3 == e.getButton()) {
@@ -417,26 +417,26 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
             g.drawLine(getX(0) + i * getWidth2() / COLUMNS, getY(0), getX(0) + i * getWidth2() / COLUMNS,
                     getY(getHeight2()));
         }
-        
+
         //Checkerboard look
         for (int zRow = 0; zRow < ROWS; zRow++) {
             for (int zColumn = 0; zColumn < COLUMNS; zColumn++) {
-            	if (zRow % 2 == 0) {
-            		if (zColumn % 2 == 1) {
-            		g.setColor(new Color(0, 0, 0, 35));
-            		g.fillRect(getX(0) + zColumn * getWidth2() / COLUMNS,
-                            getY(0) + zRow * getHeight2() / ROWS, getWidth2() / COLUMNS,
-                            getHeight2() / ROWS);
-            		}
-            	}
-            	if (zRow % 2 == 1) {
-            		if (zColumn % 2 == 0) {
-            		g.setColor(new Color(0, 0, 0, 35));
-            		g.fillRect(getX(0) + zColumn * getWidth2() / COLUMNS,
-                            getY(0) + zRow * getHeight2() / ROWS, getWidth2() / COLUMNS,
-                            getHeight2() / ROWS);
-            		}
-            	}
+                if (zRow % 2 == 0) {
+                    if (zColumn % 2 == 1) {
+                        g.setColor(new Color(0, 0, 0, 35));
+                        g.fillRect(getX(0) + zColumn * getWidth2() / COLUMNS,
+                                getY(0) + zRow * getHeight2() / ROWS, getWidth2() / COLUMNS,
+                                getHeight2() / ROWS);
+                    }
+                }
+                if (zRow % 2 == 1) {
+                    if (zColumn % 2 == 0) {
+                        g.setColor(new Color(0, 0, 0, 35));
+                        g.fillRect(getX(0) + zColumn * getWidth2() / COLUMNS,
+                                getY(0) + zRow * getHeight2() / ROWS, getWidth2() / COLUMNS,
+                                getHeight2() / ROWS);
+                    }
+                }
             }
         }
 
@@ -561,15 +561,15 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
         }
 
         if (ConfigLoader.animations) {
-		    for (int i = 0; i < faders.size(); i++) {
-		        faders.get(i).draw(g);
-		    }
-		
-		    if (turnIndicator != null && tellMeWhenItsMyTurn && winner == EnumWinner.None) {
-		        turnIndicator.draw(g);
-		    } else if (!tellMeWhenItsMyTurn || winner != EnumWinner.None) {
-		        turnIndicator = null;
-		    }
+            for (int i = 0; i < faders.size(); i++) {
+                faders.get(i).draw(g);
+            }
+
+            if (turnIndicator != null && tellMeWhenItsMyTurn && winner == EnumWinner.None) {
+                turnIndicator.draw(g);
+            } else if (!tellMeWhenItsMyTurn || winner != EnumWinner.None) {
+                turnIndicator = null;
+            }
         }
 
         gOld.drawImage(image, 0, 0, null);
@@ -746,8 +746,9 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
                     getY(0) + location.getX() * getHeight2() / ROWS, c);
             numPiecesOnBoard -= board[location.getX()][location.getY()].getWholeStack().size();
             board[location.getX()][location.getY()] = null;
-            if (ConfigLoader.sfx)
-            	move = new Sound("sound/chaching.wav");
+            if (ConfigLoader.sfx) {
+                move = new Sound("sound/chaching.wav");
+            }
         }
     }
 
@@ -872,8 +873,8 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
 
     public void displayAllValidMoves(Graphics2D g, int row, int column, boolean add) {
 
-    	//TODO - null checks pls
-    	
+        //TODO - null checks pls
+
         // Show all spaces that the piece can move to, represented by green rectangles
         // The piece can move to a space if it is one space above/below it, or diagonal,
         // depending on the color of the piece. The move is allowed if there is another
@@ -881,7 +882,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
         // same color or value as the piece you're moving. Kings can move onto any piece,
         // no matter what the value or color. If a piece/stack is a king, then a move to
         // that space is not possible.
-    	
+
         Graphics2D g2d = (Graphics2D) image.getGraphics();
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
 
@@ -895,8 +896,9 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
             }
             drawArrow(arrow.getImage(), getX(0) + column * getWidth2() / COLUMNS + (getWidth2() / COLUMNS / 2) + 2,
                     getY(0) + (row + 1) * getHeight2() / ROWS - arrowLoc - 45, 270, 0.1, 0.2);
-            if (add)
-            	validMoves.add(new OrderedPair(row - 1, column));
+            if (add) {
+                validMoves.add(new OrderedPair(row - 1, column));
+            }
         }
         if (canPieceMoveToLocation(p.getTopPiece(), row - 1, column + 1) && ConfigLoader.moveDiagonalRightForward) {
             if (board[row - 1][column + 1] == null) {
@@ -905,8 +907,9 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
             }
             drawArrow(arrow.getImage(), getX(0) + column * getWidth2() / COLUMNS + (getWidth2() / COLUMNS / 2) + (arrowLoc / 2),
                     getY(0) + (row + 1) * getHeight2() / ROWS - (arrowLoc / 2) - 47, 315, 0.13, 0.2);
-            if (add)
-            	validMoves.add(new OrderedPair(row - 1, column + 1));
+            if (add) {
+                validMoves.add(new OrderedPair(row - 1, column + 1));
+            }
         }
         if (canPieceMoveToLocation(p.getTopPiece(), row - 1, column - 1) && ConfigLoader.moveDiagonalLeftForward) {
             if (board[row - 1][column - 1] == null) {
@@ -915,8 +918,9 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
             }
             drawArrow(arrow.getImage(), getX(0) + column * getWidth2() / COLUMNS + (getWidth2() / COLUMNS / 2) - (arrowLoc / 2),
                     getY(0) + (row + 1) * getHeight2() / ROWS - (arrowLoc / 2) - 47, 235, 0.13, 0.2);
-            if (add)
-            	validMoves.add(new OrderedPair(row - 1, column - 1));
+            if (add) {
+                validMoves.add(new OrderedPair(row - 1, column - 1));
+            }
         }
         if (canPieceMoveToLocation(p.getTopPiece(), row, column - 1) && ConfigLoader.moveLeft) {
             if (board[row][column - 1] == null) {
@@ -925,8 +929,9 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
             }
             drawArrow(arrow.getImage(), getX(0) + column * getWidth2() / COLUMNS + (getWidth2() / COLUMNS / 2) + 5 - arrowLoc,
                     getY(0) + (row + 1) * getHeight2() / ROWS - 45, 180, 0.1, 0.2);
-            if (add)
-            	validMoves.add(new OrderedPair(row, column - 1));
+            if (add) {
+                validMoves.add(new OrderedPair(row, column - 1));
+            }
         }
         if (canPieceMoveToLocation(p.getTopPiece(), row, column + 1) && ConfigLoader.moveRight) {
             if (board[row][column + 1] == null) {
@@ -935,8 +940,9 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
             }
             drawArrow(arrow.getImage(), getX(0) + column * getWidth2() / COLUMNS + (getWidth2() / COLUMNS / 2) - 5 + arrowLoc,
                     getY(0) + (row + 1) * getHeight2() / ROWS - 45, 0, 0.1, 0.2);
-            if (add)
-            	validMoves.add(new OrderedPair(row, column + 1));
+            if (add) {
+                validMoves.add(new OrderedPair(row, column + 1));
+            }
         }
         if (canPieceMoveToLocation(p.getTopPiece(), row + 1, column + 1) && ConfigLoader.moveDiagonalRightBack) {
             if (board[row + 1][column + 1] == null) {
@@ -945,8 +951,9 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
             }
             drawArrow(arrow.getImage(), getX(0) + column * getWidth2() / COLUMNS + (getWidth2() / COLUMNS / 2) + (arrowLoc / 2),
                     getY(0) + (row + 1) * getHeight2() / ROWS + (arrowLoc / 2) - 47, 45, 0.13, 0.2);
-            if (add)
-            	validMoves.add(new OrderedPair(row + 1, column + 1));
+            if (add) {
+                validMoves.add(new OrderedPair(row + 1, column + 1));
+            }
         }
         if (canPieceMoveToLocation(p.getTopPiece(), row + 1, column - 1) && ConfigLoader.moveDiagonalLeftBack) {
             if (board[row + 1][column - 1] == null) {
@@ -955,8 +962,9 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
             }
             drawArrow(arrow.getImage(), getX(0) + column * getWidth2() / COLUMNS + (getWidth2() / COLUMNS / 2) - (arrowLoc / 2),
                     getY(0) + (row + 1) * getHeight2() / ROWS + (arrowLoc / 2) - 47, 135, 0.13, 0.2);
-            if (add)
-            	validMoves.add(new OrderedPair(row + 1, column - 1));
+            if (add) {
+                validMoves.add(new OrderedPair(row + 1, column - 1));
+            }
         }
         if (canPieceMoveToLocation(p.getTopPiece(), row + 1, column) && ConfigLoader.moveBackward) {
             if (board[row + 1][column] == null) {
@@ -965,8 +973,9 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
             }
             drawArrow(arrow.getImage(), getX(0) + column * getWidth2() / COLUMNS + (getWidth2() / COLUMNS / 2) + 2,
                     getY(0) + (row + 1) * getHeight2() / ROWS + arrowLoc - 45, 90, 0.1, 0.2);
-            if (add)
-            	validMoves.add(new OrderedPair(row + 1, column));
+            if (add) {
+                validMoves.add(new OrderedPair(row + 1, column));
+            }
         }
         p.draw(g, getX(0) + (column) * getWidth2() / COLUMNS, getY(0) + (row) * getHeight2() / ROWS);
         p.drawFade(g, getX(0) + column * getWidth2() / COLUMNS, getY(0) + row * getHeight2() / ROWS);
@@ -1059,22 +1068,24 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
     public static int getHeight2() {
         return (WINDOW_HEIGHT - getY(0) - YBORDER);
     }
-    
+
     public static void p(String print) {
-    	System.out.println(print);
+        System.out.println(print);
     }
-    
+
     public static boolean doMovesMatch(OrderedPair start, OrderedPair end) {
-    	if (start.getX() == end.getX() && start.getY() == end.getY())
-    		return true;
-    	return false;
+        if (start.getX() == end.getX() && start.getY() == end.getY()) {
+            return true;
+        }
+        return false;
     }
-    
+
     public static boolean isMoveInArray(OrderedPair move) {
-    	for (int i = 0; i < validMoves.size(); i++) {
-    		if (doMovesMatch(move, validMoves.get(i)))
-    			return true;
-    	}
-    	return false;
+        for (int i = 0; i < validMoves.size(); i++) {
+            if (doMovesMatch(move, validMoves.get(i))) {
+                return true;
+            }
+        }
+        return false;
     }
 }

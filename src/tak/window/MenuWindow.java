@@ -128,11 +128,11 @@ public class MenuWindow extends JFrame implements Runnable {
                 } else {
                     mouseoverMute = false;
                 }
-                
+
                 if (ypos >= textPosition + 82 && ypos <= textPosition + 117 && xpos >= 550 && xpos <= 585) {
                     mouseoverConfig = true;
                 } else {
-                	mouseoverConfig = false;
+                    mouseoverConfig = false;
                 }
 
                 repaint();
@@ -158,8 +158,8 @@ public class MenuWindow extends JFrame implements Runnable {
                 } else if (MouseEvent.BUTTON1 == e.getButton() && mouseoverMute) {
                     TakTakMain.muted = !TakTakMain.muted;
                 } else if (MouseEvent.BUTTON1 == e.getButton() && mouseoverConfig) {
-                	final ConfigWindow cw = new ConfigWindow();
-                	frame.dispose();
+                    final ConfigWindow cw = new ConfigWindow();
+                    frame.dispose();
                 }
             }
         });
@@ -255,7 +255,7 @@ public class MenuWindow extends JFrame implements Runnable {
             g.drawImage(smallButton.getImage(), 590, textPosition + 82, null);
             g.drawImage((TakTakMain.muted ? muted.getImage() : notMuted.getImage()), 590, textPosition + 82, null);
         }
-        
+
         if (mouseoverConfig) {
             g.drawImage(smallHoverButton.getImage(), 550, textPosition + 82, null);
         } else {

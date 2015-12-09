@@ -225,7 +225,7 @@ public class RulesWindow extends JFrame implements Runnable {
 
         g.setColor(new Color(50, 50, 50));
         g.fillRect(107, 185, 360, 260);
-        
+
         g.setColor(new Color(240, 240, 240));
         g.setFont(new Font("Arial", Font.BOLD, 12));
         g.drawString(imageText[currentSlide], 95, 500);
