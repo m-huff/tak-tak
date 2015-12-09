@@ -742,7 +742,7 @@ public class TakTakSingleplayerWindow extends JFrame implements Runnable {
                 c = new Color(64, 180, 64);
             }
 
-            ScoreFader sf = new ScoreFader(board[location.getX()][location.getY()].getValue(), getX(0) + location.getY() * getWidth2() / COLUMNS,
+            ScoreFader sf = new ScoreFader(board[location.getX()][location.getY()].getStackValue(), getX(0) + location.getY() * getWidth2() / COLUMNS,
                     getY(0) + location.getX() * getHeight2() / ROWS, c);
             numPiecesOnBoard -= board[location.getX()][location.getY()].getWholeStack().size();
             board[location.getX()][location.getY()] = null;
