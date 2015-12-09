@@ -53,8 +53,6 @@ public class ServerHandler {
     public static void sendPieceMove(int initrow, int initcol, int movedrow, int movedcol) {
         if (connected) {
             serverOut.println(initrow + ":" + initcol + ":" + movedrow + ":" + movedcol);
-            TakTakMultiplayerWindow.myTurn = !TakTakMultiplayerWindow.myTurn;
-            TakTakMultiplayerWindow.turn++;
             TakTakMultiplayerWindow.movePieceToLocation(new OrderedPair(initrow, initcol), new OrderedPair(movedrow, movedcol));
         }
     }
@@ -98,7 +96,6 @@ public class ServerHandler {
                                 TakTakMultiplayerWindow.initCol = initcolpost;
                                 TakTakMultiplayerWindow.movedRow = movedrowpost;
                                 TakTakMultiplayerWindow.movedCol = movedcolpost;
-                                TakTakMultiplayerWindow.myTurn = !TakTakMultiplayerWindow.myTurn;
                                 TakTakMultiplayerWindow.movePieceToLocation(new OrderedPair(initrowpost, initcolpost), new OrderedPair(movedrowpost, movedcolpost));
                                 TakTakMultiplayerWindow.turnIndicator = new TurnIndicator();
                             } else {

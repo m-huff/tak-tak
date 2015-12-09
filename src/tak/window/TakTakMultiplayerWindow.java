@@ -261,7 +261,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
                     			selectedColumn = 999;
                     			validMoves.clear();
                                 myTurn = !myTurn;
-                                break;
+                                //break;
                     			
                     		//If the piece CANT move here and the place is empty or not my color
                     		} else if (board[currentRow][currentColumn] == null || 
@@ -271,7 +271,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
                     			selectedRow = 999;
                     			selectedColumn = 999;
                     			validMoves.clear();
-                    			break;
+                    			//break;
                     		//If the piece CANT move here and it's another one of my pieces
                     		} else if (board[currentRow][currentColumn] != null && board[currentRow][currentColumn]
                                        .getTopPiece().getBackgroundColor() == myColor) {
@@ -280,7 +280,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
                                 arrowLoc = 0;
                                 arrowAnim = 0;
                                 validMoves.clear();
-                                break;
+                                //break;
                     		}
                     		moveIndex++;
                     	}
@@ -1246,8 +1246,11 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
     }
 
     public static void movePieceToLocation(OrderedPair piece, OrderedPair location) {
+        myTurn = !myTurn;
+        if (board[piece.getX()][piece.getY()] != null && board[piece.getX()][piece.getY()].getTopPiece().getBackgroundColor() == Color.WHITE)
+            turn++;
 
-        if (board[location.getX()][location.getY()] != null) {
+        if (location != null && board[location.getX()][location.getY()] != null) {
 
             if (board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.black) {
                 numBlackPiecesOnBoard--;
@@ -1255,7 +1258,8 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
                 numWhitePiecesOnBoard--;
             }
 
-            board[location.getX()][location.getY()].addStackToStack(board[piece.getX()][piece.getY()].getWholeStack());
+            if (board[location.getX()][location.getY()] != null && board[piece.getX()][piece.getY()] != null)
+                board[location.getX()][location.getY()].addStackToStack(board[piece.getX()][piece.getY()].getWholeStack());
             board[piece.getX()][piece.getY()] = null;
         } else {
             board[location.getX()][location.getY()] = board[piece.getX()][piece.getY()];
@@ -1281,7 +1285,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
                 numBlackPiecesOnBoard--;
                 chat.add("GAME: Black +" + board[location.getX()][location.getY()].getStackValue() + "!");
             } //"my" pieces are white if I'm a server
-            else if (location.getX() < 2
+            else if (location.getX() < 2 && board[location.getX()][location.getY()] != null
                     && board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.white) {
                 if (!isClient) {
                     myScore += board[location.getX()][location.getY()].getStackValue();
@@ -1296,10 +1300,10 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
             }
 
             Color c;
-            if (location.getX() >= 5
+            if (location.getX() >= 5 && board[location.getX()][location.getY()] != null
                     && board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.black
                     && isClient
-                    || location.getX() < 2
+                    || location.getX() < 2 && board[location.getX()][location.getY()] != null
                     && board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.white
                     && !isClient) {
                 c = new Color(64, 180, 64);
@@ -1307,9 +1311,9 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
                 c = new Color(128, 64, 64);
             }
 
-            if (location.getX() >= 5
+            if (location.getX() >= 5 && board[location.getX()][location.getY()] != null
                     && board[location.getX()][location.getY()].getTopPiece().getBackgroundColor() == Color.black
-                    || location.getX() < 2 && board[location.getX()][location.getY()].getTopPiece()
+                    || location.getX() < 2 && board[location.getX()][location.getY()] != null && board[location.getX()][location.getY()].getTopPiece()
                     .getBackgroundColor() == Color.white) {
                 ScoreFader sf = new ScoreFader(board[location.getX()][location.getY()].getStackValue(),
                         getX(0) + location.getY() * getWidth2() / COLUMNS,
@@ -1440,11 +1444,15 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
         g.setColor(new Color(10, 10, 10, 150));
 
         Piece p = board[row][column];
-        int pieceDirection = (p.getTopPiece().getBackgroundColor() == Color.black ? 0 : 1);
+        int pieceDirection;
+        if (p != null)
+            pieceDirection = (p.getTopPiece().getBackgroundColor() == Color.black ? 0 : 1);
+        else
+            pieceDirection = 0;
 
         g.setColor(new Color(64, 128, 64, 150));
 
-        if (pieceDirection == 1) {
+        if (pieceDirection == 1 && p != null) {
             if (canPieceMoveToLocation(p.getTopPiece(), row - 1, column)) {
                 if (board[row - 1][column] == null) {
                     p.draw(g2d, getX(0) + column * getWidth2() / COLUMNS, getY(0) + (row - 1) * getHeight2() / ROWS);
@@ -1482,7 +1490,7 @@ public class TakTakMultiplayerWindow extends JFrame implements Runnable {
             p.drawFade(g, getX(0) + column * getWidth2() / COLUMNS, getY(0) + row * getHeight2() / ROWS);
         }
 
-        if (pieceDirection == 0) {
+        if (pieceDirection == 0 && p != null) {
             if (canPieceMoveToLocation(p.getTopPiece(), row + 1, column)) {
                 if (board[row + 1][column] == null) {
                     p.draw(g2d, getX(0) + column * getWidth2() / COLUMNS, getY(0) + (row + 1) * getHeight2() / ROWS);
